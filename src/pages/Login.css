@@ -1,0 +1,5 @@
+
+@reference "tailwindcss";
+.login-container{
+    @apply min-h-screen bg-red-900 flex items-start justify-center px-4 py-12 sm:py-16;
+}
