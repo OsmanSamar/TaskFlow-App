@@ -1,35 +1,71 @@
-
+// import { useState } from "react";
+import { Link } from "react-router-dom";
 import "./Login.css";
-const Login = ({ loginData, setLoginData, handleLogin }) => {
+
+const Login = ({ loginData, setLoginData, handleLogin  }) => {
   return (
-    <div className="login-container">
-      <h1>Login Page</h1>
-      <div>
-        <input
-          type="text"
-          className="e-mail"
-          value={loginData.email}
-          onChange={(e) => {
-            setLoginData({ ...loginData, email: e.target.value });
-          }}
-        />
-        <input
-          type="password"
-          className="password"
-          value={loginData.password}
-          onChange={(e) => {
-            setLoginData({ ...loginData, password: e.target.value });
-          }}
-        />
+    <div className="login-page">
+      <div className="login-card">
+        <main className="login-panel">
+          <div className="form-field">
+            <label className="form-label" htmlFor="email">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              placeholder="name@company.com"
+              // className={`form-input${errors.email ? " form-input--error" : ""}`}
+              value={loginData.email}
+              onChange={(e) =>
+                setLoginData({ ...loginData, email: e.target.value })
+              }
+             
+            />
+          </div>
 
-        <div>Remember me Forgot password?</div>
+          <div className="form-field">
+            <label className="form-label" htmlFor="password">
+              Password
+            </label>
+            <div className="form-input-wrap">
+              <input
+                id="password"
+                // type={showPassword ? "text" : "password"}
+                name="password"
+                // autoComplete="current-password"
+                placeholder="Enter your password"
+                value={loginData.password}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, password: e.target.value })
+                }
+              
+              />
+            </div>
+          </div>
 
-        <button type="button" className="sign-btn"
-        onClick={handleLogin}
-        >
-          Login
-        </button>
-        <div>Dont have an account? Register</div>
+          <div className="form-row">
+            <label className="form-checkbox">
+              <input />
+              <span>Remember me</span>
+            </label>
+            <Link className="form-link" to="/forgotpassword">
+              Forgot password?
+            </Link>
+          </div>
+
+          <button type="submit" className="btn btn--primary" onClick={handleLogin}>
+            Sign in
+          </button>
+
+          <p className="login-footer">
+            <Link className="login-footer-link" to="/register">
+              Sign up
+            </Link>
+          </p>
+        </main>
       </div>
     </div>
   );
