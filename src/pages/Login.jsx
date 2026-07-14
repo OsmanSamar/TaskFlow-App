@@ -6,6 +6,18 @@ const Login = ({ loginData, setLoginData, handleLogin, errors, setErrors }) => {
   return (
     <div className="login-page">
       <div className="login-card">
+        <aside className="login-hero" aria-hidden="true">
+          <img src="/favicon.svg" alt="" className="login-hero__logo" />
+          <p className="login-hero__eyebrow">User Management</p>
+          <p className="login-hero__desc login-hero__desc--mobile">
+            Streamline user access for modern development teams.
+          </p>
+          <p className="login-hero__desc login-hero__desc--desktop">
+            Streamline user access, roles, and permissions — built for modern
+            development teams.
+          </p>
+          <h1 className="login-hero__title">DevPortal</h1>
+        </aside>
         <main className="login-panel">
           <div className="form-field">
             <label className="form-label" htmlFor="email">

@@ -1,8 +1,16 @@
-*{
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&family=Instrument+Serif:ital@0;1&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+}
+
+* {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: Arial,  sans-serif;
+  font-family: var(--font-sans);
 }
