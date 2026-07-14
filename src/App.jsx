@@ -17,7 +17,7 @@ function App() {
   const handleLogin = () => {
     // console.log(loginData);
     const newErrors = {};
-    // Regex
+    // Regex en test()
     const emailPattern= /[a-z]+@[a-z]+\.[a-z]+/;
     if (loginData.email.trim() === "") {
       newErrors.email = "Email is requirad";
