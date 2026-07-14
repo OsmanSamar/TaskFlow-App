@@ -219,8 +219,6 @@
 
 .form-row {
   @apply flex items-center justify-between gap-4 mt-2 inline-flex items-center gap-2 font-sans font-medium text-sm text-gray-700 cursor-pointer;
-
-
 }
 
 .form-checkbox input {

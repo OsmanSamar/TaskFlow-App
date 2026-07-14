@@ -63,7 +63,14 @@ const Login = ({ loginData, setLoginData, handleLogin, errors, setErrors }) => {
 
           <div className="form-row">
             <label className="form-checkbox">
-              <input />
+              <input
+              type="checkbox"
+              checked={loginData.remember}
+              onChange={(e)=>{
+                setLoginData({ ...loginData, remember: e.target.checked });
+              }}
+              
+              />
               <span>Remember me</span>
             </label>
             <Link className="form-link" to="/forgotpassword">
