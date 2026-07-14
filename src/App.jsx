@@ -18,7 +18,10 @@ function App() {
     // console.log(loginData);
     const newErrors = {};
     // Regex en test()
-    const emailPattern= /[a-z]+@[a-z]+\.[a-z]+/;
+   // const emailPattern= /[a-z]+@[a-z]+\.[a-z]+/;
+    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    const passwordPattern =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+   // const passwordPattern =/^.{8,}$/;
     if (loginData.email.trim() === "") {
       newErrors.email = "Email is requirad";
     } 
@@ -30,6 +33,12 @@ function App() {
 
     if (loginData.password.trim() === "") {
       newErrors.password = "Password is requirad";
+    }
+    else {
+      if (!passwordPattern.test(loginData.password)) {
+        newErrors.password = "Invalid  password";
+      }
+    
     }
 
     setErrors(newErrors);
