@@ -16,7 +16,7 @@ const Login = ({ loginData, setLoginData, handleLogin, errors, setErrors }) => {
             Streamline user access, roles, and permissions — built for modern
             development teams.
           </p>
-          <h1 className="login-hero__title">DevPortal</h1>
+          <h1 className="login-hero__title">Code blauw</h1>
         </aside>
         <main className="login-panel">
           <div className="form-field">
