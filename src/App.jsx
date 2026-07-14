@@ -12,20 +12,28 @@ function App() {
     password: "",
     remember: false,
   });
- const[errors, setErrors]= useState({});
+  const [errors, setErrors] = useState({});
 
-  const handleLogin=()=>{
+  const handleLogin = () => {
     // console.log(loginData);
-    const newErrors={};
-    if(loginData.email.trim()===""){
-      newErrors.email="Email is requirad"
+    const newErrors = {};
+    // Regex
+    const emailPattern= /[a-z]+@[a-z]+\.[a-z]+/;
+    if (loginData.email.trim() === "") {
+      newErrors.email = "Email is requirad";
+    } 
+    else {
+      if (!emailPattern.test(loginData.email)) {
+        newErrors.email = "Invalid email address";
+      }
     }
-    if(loginData.password.trim()===""){
-      newErrors.password="Password is requirad"
-    }
-    setErrors(newErrors);
 
-  }
+    if (loginData.password.trim() === "") {
+      newErrors.password = "Password is requirad";
+    }
+
+    setErrors(newErrors);
+  };
 
   return (
     <Routes>
@@ -37,6 +45,7 @@ function App() {
             setLoginData={setLoginData}
             handleLogin={handleLogin}
             errors={errors}
+            setErrors={setErrors}
           />
         }
       />

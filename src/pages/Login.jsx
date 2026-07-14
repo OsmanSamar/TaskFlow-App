@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import "./Login.css";
 
-const Login = ({ loginData, setLoginData, handleLogin, errors }) => {
+const Login = ({ loginData, setLoginData, handleLogin, errors, setErrors }) => {
   return (
     <div className="login-page">
       <div className="login-card">
@@ -19,9 +19,12 @@ const Login = ({ loginData, setLoginData, handleLogin, errors }) => {
               placeholder="name@company.com"
               className={`form-input${errors.email ? " form-input--error" : ""}`}
               value={loginData.email}
-              onChange={(e) =>
-                setLoginData({ ...loginData, email: e.target.value })
-              }
+              onChange={(e) => {
+                setLoginData({ ...loginData, email: e.target.value });
+                if (e.target.value.trim() !== "") {
+                  setErrors(false);
+                }
+              }}
             />
             {errors.email ? (
               <span className="form-error ">{errors.email}</span>
@@ -43,9 +46,12 @@ const Login = ({ loginData, setLoginData, handleLogin, errors }) => {
                 placeholder="Enter your password"
                 className={`form-input${errors.password ? " form-input--error" : ""}`}
                 value={loginData.password}
-                onChange={(e) =>
-                  setLoginData({ ...loginData, password: e.target.value })
-                }
+                onChange={(e) => {
+                  setLoginData({ ...loginData, password: e.target.value });
+                  if (e.target.value.trim() !== "") {
+                    setErrors(false);
+                  }
+                }}
               />
               {errors.password ? (
                 <span className="form-error">{errors.password}</span>
