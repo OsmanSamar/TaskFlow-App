@@ -15,7 +15,7 @@ function App() {
  const[errors, setErrors]= useState({});
 
   const handleLogin=()=>{
-    console.log(loginData);
+    // console.log(loginData);
     const newErrors={};
     if(loginData.email.trim()===""){
       newErrors.email="Email is requirad"

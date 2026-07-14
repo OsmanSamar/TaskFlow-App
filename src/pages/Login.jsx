@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import "./Login.css";
 
-const Login = ({ loginData, setLoginData, handleLogin  }) => {
+const Login = ({ loginData, setLoginData, handleLogin, errors }) => {
   return (
     <div className="login-page">
       <div className="login-card">
@@ -17,13 +17,17 @@ const Login = ({ loginData, setLoginData, handleLogin  }) => {
               name="email"
               autoComplete="email"
               placeholder="name@company.com"
-              // className={`form-input${errors.email ? " form-input--error" : ""}`}
+              className={`form-input${errors.email ? " form-input--error" : ""}`}
               value={loginData.email}
               onChange={(e) =>
                 setLoginData({ ...loginData, email: e.target.value })
               }
-             
             />
+            {errors.email ? (
+              <span className="form-error ">{errors.email}</span>
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="form-field">
@@ -33,16 +37,21 @@ const Login = ({ loginData, setLoginData, handleLogin  }) => {
             <div className="form-input-wrap">
               <input
                 id="password"
-                // type={showPassword ? "text" : "password"}
+                type="password"
                 name="password"
-                // autoComplete="current-password"
+                autoComplete="current-password"
                 placeholder="Enter your password"
+                className={`form-input${errors.password ? " form-input--error" : ""}`}
                 value={loginData.password}
                 onChange={(e) =>
                   setLoginData({ ...loginData, password: e.target.value })
                 }
-              
               />
+              {errors.password ? (
+                <span className="form-error">{errors.password}</span>
+              ) : (
+                ""
+              )}
             </div>
           </div>
 
@@ -56,7 +65,11 @@ const Login = ({ loginData, setLoginData, handleLogin  }) => {
             </Link>
           </div>
 
-          <button type="submit" className="btn btn--primary" onClick={handleLogin}>
+          <button
+            type="submit"
+            className="btn btn--primary"
+            onClick={handleLogin}
+          >
             Sign in
           </button>
 
