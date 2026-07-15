@@ -75,6 +75,14 @@
     @apply relative;
   }
 
+  .form-input-wrap .form-input {
+    @apply pr-10;
+  }
+
+  .form-input__eye {
+    @apply absolute right-3 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-gray-500 transition-colors hover:text-gray-700;
+  }
+
   .form-input {
     @apply w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 outline-none transition-all duration-150 placeholder:text-gray-400 hover:border-gray-300 hover:bg-gray-100 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20;
   }
@@ -118,7 +126,6 @@
   .login-footer-link {
     @apply font-semibold text-gray-900 no-underline transition-colors hover:text-indigo-600 hover:underline focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
   }
-
   @media (max-width: 768px) {
     .login-page {
       @apply items-start pt-10;

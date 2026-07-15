@@ -1,8 +1,12 @@
 // import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = ({ loginData, setLoginData, handleLogin, errors, setErrors }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="login-page">
       <div className="login-card">
@@ -52,7 +56,7 @@ const Login = ({ loginData, setLoginData, handleLogin, errors, setErrors }) => {
             <div className="form-input-wrap">
               <input
                 id="password"
-                type="password"
+                type={!showPassword ? "password" : "text"}
                 name="password"
                 autoComplete="current-password"
                 placeholder="Enter your password"
@@ -65,23 +69,30 @@ const Login = ({ loginData, setLoginData, handleLogin, errors, setErrors }) => {
                   }
                 }}
               />
-              {errors.password ? (
-                <span className="form-error">{errors.password}</span>
-              ) : (
-                ""
-              )}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="form-input__eye"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
+            {errors.password ? (
+              <span className="form-error">{errors.password}</span>
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="form-row">
             <label className="form-checkbox">
               <input
-              type="checkbox"
-              checked={loginData.remember}
-              onChange={(e)=>{
-                setLoginData({ ...loginData, remember: e.target.checked });
-              }}
-              
+                type="checkbox"
+                checked={loginData.remember}
+                onChange={(e) => {
+                  setLoginData({ ...loginData, remember: e.target.checked });
+                }}
               />
               <span>Remember me</span>
             </label>
