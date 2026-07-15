@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Register.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const [registerData, setRegisterData] = useState({
@@ -8,15 +9,34 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
-  
+
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = () => {
     const newErrors = {};
-    // const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    const passwordPattern =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
     if (registerData.email.trim() === "") {
       newErrors.email = "Email is requirad";
+    } else {
+      if (!emailPattern.test(registerData.email)) {
+        newErrors.email = "Invalid email address";
+      }
     }
+
+    if (registerData.password.trim() === "") {
+      newErrors.password = "Password is requirad";
+    } else {
+      if (!passwordPattern.test(registerData.password)) {
+        newErrors.password =
+          "Password must be at least 8 characters and include uppercase, lowercase, number and special character";
+      }
+    }
+
+    setErrors(newErrors);
   };
 
   return (
@@ -55,11 +75,11 @@ const Register = () => {
           <div className="form-input-wrap">
             <input
               id="password"
-              type="password"
+              type={!showPassword ? "password" : "text"}
               name="password"
               autoComplete="new-password"
               placeholder="Enter your password"
-              className="form-input"
+              className={`form-input${errors.password ? " form-input--error" : ""}`}
               value={registerData.password}
               onChange={(e) => {
                 setRegisterData({ ...registerData, password: e.target.value });
@@ -68,7 +88,21 @@ const Register = () => {
                 }
               }}
             />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="form-input__eye"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
+          {errors.password ? (
+            <span className="form-error ">{errors.password}</span>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="form-field">
