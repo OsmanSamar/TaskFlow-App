@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
@@ -13,6 +13,7 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -47,6 +48,11 @@ const Register = () => {
     }
 
     setErrors(newErrors);
+
+    // to ask if the object has errors
+    if (Object.keys(newErrors).length === 0) {
+      navigate("/login");
+    }
   };
 
   return (
