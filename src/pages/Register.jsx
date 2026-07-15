@@ -12,7 +12,7 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [showCofirmPassword, setShowConfirmPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -132,7 +132,7 @@ const Register = () => {
             <div className="form-input-wrap">
               <input
                 id="confirmPassword"
-                type={!showCofirmPassword ? "password" : "text"}
+                type={!showConfirmPassword ? "password" : "text"}
                 name="confirmPassword"
                 autoComplete="new-password"
                 placeholder="Confirm your password"
@@ -154,15 +154,15 @@ const Register = () => {
 
               <button
                 type="button"
-                onClick={() => setShowConfirmPassword(!showCofirmPassword)}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="form-input__eye"
                 aria-label={
-                  showCofirmPassword
+                  showConfirmPassword
                     ? "Hide confirm password"
                     : "Show confirm password"
                 }
               >
-                {showCofirmPassword ? <FaEyeSlash /> : <FaEye />}
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
             {errors.confirmPassword ? (
