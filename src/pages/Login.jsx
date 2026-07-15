@@ -73,7 +73,10 @@ const Login = () => {
                 onChange={(e) => {
                   setLoginData({ ...loginData, email: e.target.value });
                   if (e.target.value.trim() !== "") {
-                    setErrors(false);
+                    setErrors((prev) => ({
+                      ...prev,
+                      email: "",
+                    }));
                   }
                 }}
               />
@@ -100,7 +103,10 @@ const Login = () => {
                   onChange={(e) => {
                     setLoginData({ ...loginData, password: e.target.value });
                     if (e.target.value.trim() !== "") {
-                      setErrors(false);
+                      setErrors((prev) => ({
+                        ...prev,
+                        password: "",
+                      }));
                     }
                   }}
                 />

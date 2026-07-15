@@ -68,10 +68,10 @@ const Register = () => {
               onChange={(e) => {
                 setRegisterData({ ...registerData, email: e.target.value });
                 if (e.target.value.trim() !== "") {
-                  setErrors({
-                    ...errors,
+                  setErrors((prev) => ({
+                    ...prev,
                     email: "",
-                  });
+                  }));
                 }
               }}
             />
@@ -101,10 +101,10 @@ const Register = () => {
                     password: e.target.value,
                   });
                   if (e.target.value.trim() !== "") {
-                    setErrors({
-                      ...errors,
+                    setErrors((prev) => ({
+                      ...prev,
                       password: "",
-                    });
+                    }));
                   }
                 }}
               />
@@ -144,10 +144,10 @@ const Register = () => {
                     confirmPassword: e.target.value,
                   });
                   if (e.target.value.trim() !== "") {
-                    setErrors({
-                      ...errors,
+                    setErrors((prev) => ({
+                      ...prev,
                       confirmPassword: "",
-                    });
+                    }));
                   }
                 }}
               />
