@@ -2,13 +2,21 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Register.css";
 
-const Register = ({handleRegister, errors, setErrors}) => {
+const Register = () => {
 
+  const [errors, setErrors] = useState({});
   const [registerData, setRegisterData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const handleRegister = () => {
+    const newErrors = {};
+    // const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (registerData.email.trim() === "") {
+      newErrors.email = "Email is requirad";
+    }
+  };
 
   return (
     <div className="register-page">
@@ -25,18 +33,18 @@ const Register = ({handleRegister, errors, setErrors}) => {
             placeholder="name@company.com"
             className={`form-input${errors.email ? " form-input--error" : ""}`}
             value={registerData.email}
-            onChange={(e)=>{
-              setRegisterData({...registerData, email: e.target.value});
-              if(e.target.value.trim() !==""){
+            onChange={(e) => {
+              setRegisterData({ ...registerData, email: e.target.value });
+              if (e.target.value.trim() !== "") {
                 setErrors(false);
               }
             }}
           />
-           {errors.email ? (
-              <span className="form-error ">{errors.email}</span>
-            ) : (
-              ""
-            )}
+          {errors.email ? (
+            <span className="form-error ">{errors.email}</span>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="form-field">
@@ -52,9 +60,9 @@ const Register = ({handleRegister, errors, setErrors}) => {
               placeholder="Enter your password"
               className="form-input"
               value={registerData.password}
-              onChange={(e)=>{
-                setRegisterData({...registerData, password: e.target.value});
-                if(e.target.value.trim() !==""){
+              onChange={(e) => {
+                setRegisterData({ ...registerData, password: e.target.value });
+                if (e.target.value.trim() !== "") {
                   setErrors(false);
                 }
               }}
@@ -75,26 +83,30 @@ const Register = ({handleRegister, errors, setErrors}) => {
               placeholder="Confirm your password"
               className="form-input"
               value={registerData.confirmPassword}
-              onChange={(e)=>{
-                setRegisterData({...registerData, confirmPassword: e.target.value});
-
+              onChange={(e) => {
+                setRegisterData({
+                  ...registerData,
+                  confirmPassword: e.target.value,
+                });
               }}
             />
           </div>
         </div>
 
-        <button type="submit" className="btn btn--primary"
-         onClick={handleRegister}
+        <button
+          type="submit"
+          className="btn btn--primary"
+          onClick={handleRegister}
         >
           Sign Up
         </button>
 
         <p className="login-footer">
-          Already have an account? 
-            <Link className="login-footer-link" to="/login">
-               Sign up
-            </Link>
-          </p>
+          Already have an account?
+          <Link className="login-footer-link" to="/login">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );
