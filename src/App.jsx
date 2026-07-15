@@ -44,6 +44,11 @@ function App() {
     setErrors(newErrors);
   };
 
+
+  const handleRegister=()=>{
+
+  }
+
   return (
     <Routes>
       <Route
@@ -58,7 +63,11 @@ function App() {
           />
         }
       />
-      <Route path="/register" element={<Register />} />
+      <Route path="/register" element={<Register
+       handleRegister={handleRegister}
+      errors={errors}
+      setErrors={setErrors}
+      />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="forgotpassword" element={<ForgotPassword />} />
     </Routes>

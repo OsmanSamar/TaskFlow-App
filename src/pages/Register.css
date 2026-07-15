@@ -1,0 +1,63 @@
+@reference "tailwindcss";
+@layer components {
+  .register-page {
+    @apply flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-4 md:p-6;
+    background-image:
+      radial-gradient(
+        ellipse 80% 60% at 15% 85%,
+        rgba(99, 102, 241, 0.35),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 70% 55% at 85% 15%,
+        rgba(139, 92, 246, 0.3),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 50% 40% at 50% 50%,
+        rgba(59, 130, 246, 0.15),
+        transparent
+      );
+  }
+
+  .register-card {
+    @apply relative flex w-full max-w-md flex-col gap-2 overflow-hidden rounded-2xl bg-white p-8 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.55)] md:p-10;
+  }
+
+  .form-field {
+    @apply mb-4 flex flex-col gap-2;
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-gray-700;
+  }
+
+  .form-input-wrap {
+    @apply relative;
+  }
+
+  .form-input-wrap .form-input {
+    @apply pr-10;
+  }
+
+  .form-input {
+    @apply w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 outline-none transition-all duration-150 placeholder:text-gray-400 hover:border-gray-300 hover:bg-gray-100 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20;
+  }
+
+
+  .form-input--error {
+    @apply border-red-400 bg-red-50 focus:border-red-400 focus:ring-red-500/20;
+  }
+  .form-error {
+    @apply text-sm font-medium text-red-500;
+  }
+
+
+  .login-footer {
+    @apply mt-6 text-center text-sm text-gray-500;
+  }
+
+  .login-footer-link {
+    @apply font-semibold text-gray-900 no-underline transition-colors hover:text-indigo-600 hover:underline focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
+  }
+}

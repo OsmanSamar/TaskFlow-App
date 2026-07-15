@@ -109,7 +109,7 @@ const Login = ({ loginData, setLoginData, handleLogin, errors, setErrors }) => {
             Sign in
           </button>
 
-          <p className="login-footer">
+           <p className="login-footer">
             <Link className="login-footer-link" to="/register">
               Sign up
             </Link>
