@@ -13,8 +13,8 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
 
-  const handleLogin = () => {
-    // console.log(loginData);
+  const handleLogin = (e) => {
+    e.preventDefault();
     const newErrors = {};
     // Regex en test()
     // const emailPattern= /[a-z]+@[a-z]+\.[a-z]+/;
@@ -57,91 +57,89 @@ const Login = () => {
           <h1 className="login-hero__title">Code blauw</h1>
         </aside>
         <main className="login-panel">
-          <div className="form-field">
-            <label className="form-label" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              placeholder="name@company.com"
-              className={`form-input${errors.email ? " form-input--error" : ""}`}
-              value={loginData.email}
-              onChange={(e) => {
-                setLoginData({ ...loginData, email: e.target.value });
-                if (e.target.value.trim() !== "") {
-                  setErrors(false);
-                }
-              }}
-            />
-            {errors.email ? (
-              <span className="form-error ">{errors.email}</span>
-            ) : (
-              ""
-            )}
-          </div>
-
-          <div className="form-field">
-            <label className="form-label" htmlFor="password">
-              Password
-            </label>
-            <div className="form-input-wrap">
+          <form onSubmit={handleLogin}>
+            <div className="form-field">
+              <label className="form-label" htmlFor="email">
+                Email
+              </label>
               <input
-                id="password"
-                type={!showPassword ? "password" : "text"}
-                name="password"
-                autoComplete="current-password"
-                placeholder="Enter your password"
-                className={`form-input${errors.password ? " form-input--error" : ""}`}
-                value={loginData.password}
+                id="email"
+                type="email"
+                name="email"
+                autoComplete="email"
+                placeholder="name@company.com"
+                className={`form-input${errors.email ? " form-input--error" : ""}`}
+                value={loginData.email}
                 onChange={(e) => {
-                  setLoginData({ ...loginData, password: e.target.value });
+                  setLoginData({ ...loginData, email: e.target.value });
                   if (e.target.value.trim() !== "") {
                     setErrors(false);
                   }
                 }}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="form-input__eye"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
+              {errors.email ? (
+                <span className="form-error ">{errors.email}</span>
+              ) : (
+                ""
+              )}
             </div>
-            {errors.password ? (
-              <span className="form-error">{errors.password}</span>
-            ) : (
-              ""
-            )}
-          </div>
 
-          <div className="form-row">
-            <label className="form-checkbox">
-              <input
-                type="checkbox"
-                checked={loginData.remember}
-                onChange={(e) => {
-                  setLoginData({ ...loginData, remember: e.target.checked });
-                }}
-              />
-              <span>Remember me</span>
-            </label>
-            <Link className="form-link" to="/forgotpassword">
-              Forgot password?
-            </Link>
-          </div>
+            <div className="form-field">
+              <label className="form-label" htmlFor="password">
+                Password
+              </label>
+              <div className="form-input-wrap">
+                <input
+                  id="password"
+                  type={!showPassword ? "password" : "text"}
+                  name="password"
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  className={`form-input${errors.password ? " form-input--error" : ""}`}
+                  value={loginData.password}
+                  onChange={(e) => {
+                    setLoginData({ ...loginData, password: e.target.value });
+                    if (e.target.value.trim() !== "") {
+                      setErrors(false);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="form-input__eye"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+              {errors.password ? (
+                <span className="form-error">{errors.password}</span>
+              ) : (
+                ""
+              )}
+            </div>
 
-          <button
-            type="submit"
-            className="btn btn--primary"
-            onClick={handleLogin}
-          >
-            Sign in
-          </button>
+            <div className="form-row">
+              <label className="form-checkbox">
+                <input
+                  type="checkbox"
+                  checked={loginData.remember}
+                  onChange={(e) => {
+                    setLoginData({ ...loginData, remember: e.target.checked });
+                  }}
+                />
+                <span>Remember me</span>
+              </label>
+              <Link className="form-link" to="/forgotpassword">
+                Forgot password?
+              </Link>
+            </div>
+
+            <button type="submit" className="btn btn--primary">
+              Sign in
+            </button>
+          </form>
 
           <p className="login-footer">
             <Link className="login-footer-link" to="/register">
