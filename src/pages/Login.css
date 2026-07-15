@@ -29,10 +29,6 @@
     @apply mb-8 h-8 w-8 shrink-0 md:h-9 md:w-9;
   }
 
-  .login-hero__eyebrow {
-    @apply text-[0.6875rem] font-semibold uppercase tracking-widest text-white/50;
-  }
-
   .login-hero__desc {
     @apply mt-4 text-xs leading-relaxed text-white/70 md:mt-6 md:text-[0.9375rem];
   }
@@ -53,14 +49,12 @@
     @apply col-start-1 row-start-2 flex w-full max-w-md flex-col justify-center bg-white p-8 md:col-start-2 md:row-start-1 md:mx-auto md:p-10;
   }
 
-  .login-panel::before {
-    content: "Sign in";
-    @apply mb-1 block font-serif text-3xl tracking-tight text-gray-900;
+  .login-panel__title {
+    @apply mb-1 font-serif text-3xl tracking-tight text-gray-900;
   }
 
-  .login-panel::after {
-    content: "Enter your credentials to access your account.";
-    @apply mb-8 block text-[0.9375rem] text-gray-500;
+  .login-panel__subtitle {
+    @apply mb-8 text-[0.9375rem] text-gray-500;
   }
 
   .form-field {
@@ -80,7 +74,7 @@
   }
 
   .form-input__eye {
-    @apply absolute right-3 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-gray-500 transition-colors hover:text-gray-700;
+    @apply absolute right-3 top-1/2 -translate-y-1/2 z-10 flex h-5 w-5  cursor-pointer items-center justify-center border-none bg-transparent p-0 text-gray-500 transition-colors hover:text-gray-700;
   }
 
   .form-input {
@@ -126,6 +120,7 @@
   .login-footer-link {
     @apply font-semibold text-gray-900 no-underline transition-colors hover:text-indigo-600 hover:underline focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
   }
+
   @media (max-width: 768px) {
     .login-page {
       @apply items-start pt-10;
@@ -142,10 +137,10 @@
     .login-hero__logo {
       @apply mb-6 h-8 w-8;
     }
-
+/* 
     .login-hero__eyebrow {
       @apply hidden;
-    }
+    } */
 
     .login-panel {
       @apply max-w-none p-6;

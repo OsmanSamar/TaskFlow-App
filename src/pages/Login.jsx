@@ -57,6 +57,10 @@ const Login = () => {
           <h1 className="login-hero__title">Code blauw</h1>
         </aside>
         <main className="login-panel">
+          <h1 className="login-panel__title">Sign in</h1>
+          <p className="login-panel__subtitle">
+            Enter your credentials to access your account.
+          </p>
           <form onSubmit={handleLogin}>
             <div className="form-field">
               <label className="form-label" htmlFor="email">
