@@ -2,7 +2,7 @@
 
 @layer components {
   .login-page {
-    @apply flex min-h-screen items-center justify-center bg-zinc-950 p-4 md:p-6;
+    @apply flex min-h-screen items-center justify-center  p-4 md:p-6;
     background-image:
       radial-gradient(ellipse 80% 60% at 15% 85%, rgba(99, 102, 241, 0.35), transparent),
       radial-gradient(ellipse 70% 55% at 85% 15%, rgba(139, 92, 246, 0.3), transparent),
@@ -46,7 +46,7 @@
   }
 
   .login-panel {
-    @apply col-start-1 row-start-2 flex w-full max-w-md flex-col justify-center bg-white p-8 md:col-start-2 md:row-start-1 md:mx-auto md:p-10;
+    @apply col-start-1 row-start-2 flex w-full max-w-lg flex-col justify-center bg-white p-8 md:col-start-2 md:row-start-1 md:mx-auto md:p-10;
   }
 
   .login-panel__title {
