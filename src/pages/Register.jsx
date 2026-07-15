@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import "./Register.css";
 
 const Register = () => {
-
-  const [errors, setErrors] = useState({});
   const [registerData, setRegisterData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
+  
+  const [errors, setErrors] = useState({});
+
   const handleRegister = () => {
     const newErrors = {};
     // const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;

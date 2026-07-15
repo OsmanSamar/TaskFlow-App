@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
 import { useState } from "react";
@@ -144,7 +143,7 @@ const Login = () => {
             Sign in
           </button>
 
-           <p className="login-footer">
+          <p className="login-footer">
             <Link className="login-footer-link" to="/register">
               Sign up
             </Link>
