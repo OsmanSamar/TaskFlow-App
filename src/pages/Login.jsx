@@ -23,7 +23,7 @@ const Login = () => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
     // const passwordPattern =/^.{8,}$/;
     if (loginData.email.trim() === "") {
-      newErrors.email = "Email is requirad";
+      newErrors.email = "Email is required";
     } else {
       if (!emailPattern.test(loginData.email)) {
         newErrors.email = "Invalid email address";
@@ -31,7 +31,7 @@ const Login = () => {
     }
 
     if (loginData.password.trim() === "") {
-      newErrors.password = "Password is requirad";
+      newErrors.password = "Password is required";
     } else {
       if (!passwordPattern.test(loginData.password)) {
         newErrors.password = "Invalid  password";

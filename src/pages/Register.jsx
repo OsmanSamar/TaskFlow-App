@@ -22,7 +22,7 @@ const Register = () => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
     if (registerData.email.trim() === "") {
-      newErrors.email = "Email is requirad";
+      newErrors.email = "Email is required";
     } else {
       if (!emailPattern.test(registerData.email)) {
         newErrors.email = "Invalid email address";
@@ -30,7 +30,7 @@ const Register = () => {
     }
 
     if (registerData.password.trim() === "") {
-      newErrors.password = "Password is requirad";
+      newErrors.password = "Password is required";
     } else {
       if (!passwordPattern.test(registerData.password)) {
         newErrors.password =
@@ -39,7 +39,7 @@ const Register = () => {
     }
 
     if (registerData.confirmPassword.trim() === "") {
-      newErrors.confirmPassword = "Confirm password is requirad";
+      newErrors.confirmPassword = "Confirm password is required";
     } else {
       if (registerData.confirmPassword !== registerData.password) {
         newErrors.confirmPassword = "Password  do not match";
