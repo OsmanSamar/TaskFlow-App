@@ -20,6 +20,29 @@ export const validateEmail = (email) => {
   return "";
 };
 
+export const getPasswordCriteria = (password) => [
+  {
+    id: "length",
+    label: "At least 8 characters",
+    met: password.length >= 8,
+  },
+  {
+    id: "case",
+    label: "Uppercase and lowercase letter",
+    met: /[a-z]/.test(password) && /[A-Z]/.test(password),
+  },
+  {
+    id: "number",
+    label: "At least one number",
+    met: /\d/.test(password),
+  },
+  {
+    id: "special",
+    label: "At least one special character (@$!%*?&)",
+    met: /[@$!%*?&]/.test(password),
+  },
+];
+
 export const validatePassword = (password) => {
   if (password.trim() === "") {
     return "Password is required";

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { validatePassword, validateConfirmPassword } from "../utils/validators";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { PasswordCriteria } from "../components/PasswordCriteria";
+import "./reset-password.css";
 
 export const ResetPassword = () => {
   const [restData, setRestData] = useState({
@@ -39,9 +41,9 @@ export const ResetPassword = () => {
   };
 
   return (
-    <div className="register-page">
-      <div className="register-card">
-        <h1 className="register-panel__title">Reset password </h1>
+    <div className="reset-password-page">
+      <div className="reset-password-card">
+        <h1 className="reset-password-panel__title">Reset password </h1>
         <form onSubmit={handleRestData}>
           <div className="form-field">
             <label className="form-label" htmlFor="password">
@@ -79,6 +81,7 @@ export const ResetPassword = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
+            <PasswordCriteria password={restData.password} />
             {errors.password ? (
               <span className="form-error ">{errors.password}</span>
             ) : (
