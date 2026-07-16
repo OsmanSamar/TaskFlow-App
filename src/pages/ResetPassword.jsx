@@ -34,10 +34,10 @@ export const ResetPassword = () => {
 
     setErrors(newErrors);
 
-      // to ask if the object has errors
-      if (Object.keys(newErrors).length === 0) {
-        navigate("/login");
-      }
+    // to ask if the object has errors
+    if (Object.keys(newErrors).length === 0) {
+      navigate("/login");
+    }
   };
 
   return (
@@ -137,7 +137,7 @@ export const ResetPassword = () => {
           </div>
 
           <button type="submit" className="btn btn--primary">
-           Reset Password
+            Reset Password
           </button>
         </form>
       </div>
