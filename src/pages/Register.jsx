@@ -53,6 +53,7 @@ const Register = () => {
   return (
     <div className="register-page">
       <div className="register-card">
+      <h1 className="register-panel__title">Create an account </h1>
         <form onSubmit={handleRegister}>
           <div className="form-field">
             <label className="form-label" htmlFor="email">
