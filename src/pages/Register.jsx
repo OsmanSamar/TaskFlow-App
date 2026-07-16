@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Register.css";
+import "./register.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  validateEmail,
+  validatePassword,
+  validateConfirmPassword,
+} from "../utils/validators";
 
 const Register = () => {
   const [registerData, setRegisterData] = useState({
@@ -18,41 +23,31 @@ const Register = () => {
   const handleRegister = (e) => {
     e.preventDefault();
     const newErrors = {};
-    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    const passwordPattern =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-    if (registerData.email.trim() === "") {
-      newErrors.email = "Email is required";
-    } else {
-      if (!emailPattern.test(registerData.email)) {
-        newErrors.email = "Invalid email address";
-      }
+    const emailError = validateEmail(registerData.email);
+    if (emailError) {
+      newErrors.email = emailError;
     }
 
-    if (registerData.password.trim() === "") {
-      newErrors.password = "Password is required";
-    } else {
-      if (!passwordPattern.test(registerData.password)) {
-        newErrors.password =
-          "Password must be at least 8 characters and include uppercase, lowercase, number and special character";
-      }
+    const passwordError = validatePassword(registerData.password);
+    if (passwordError) {
+      newErrors.password = passwordError;
     }
 
-    if (registerData.confirmPassword.trim() === "") {
-      newErrors.confirmPassword = "Confirm password is required";
-    } else {
-      if (registerData.confirmPassword !== registerData.password) {
-        newErrors.confirmPassword = "Password  do not match";
-      }
+    const ConfirmpasswordError = validateConfirmPassword(
+      registerData.password,
+      registerData.confirmPassword,
+    );
+    if (ConfirmpasswordError) {
+      newErrors.confirmPassword = ConfirmpasswordError;
     }
-
-    setErrors(newErrors);
 
     // to ask if the object has errors
     if (Object.keys(newErrors).length === 0) {
       navigate("/login");
     }
+
+    setErrors(newErrors);
   };
 
   return (

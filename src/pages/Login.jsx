@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import "./Login.css";
+import "./login.css";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { validateEmail, validatePassword } from "../utils/validators";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,26 +17,15 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     const newErrors = {};
-    // Regex en test()
-    // const emailPattern= /[a-z]+@[a-z]+\.[a-z]+/;
-    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    const passwordPattern =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
-    // const passwordPattern =/^.{8,}$/;
-    if (loginData.email.trim() === "") {
-      newErrors.email = "Email is required";
-    } else {
-      if (!emailPattern.test(loginData.email)) {
-        newErrors.email = "Invalid email address";
-      }
+
+    const emailError = validateEmail(loginData.email);
+    if (emailError) {
+      newErrors.email = emailError;
     }
 
-    if (loginData.password.trim() === "") {
-      newErrors.password = "Password is required";
-    } else {
-      if (!passwordPattern.test(loginData.password)) {
-        newErrors.password = "Invalid  password";
-      }
+    const passwordError = validatePassword(loginData.password);
+    if (passwordError) {
+      newErrors.password = passwordError;
     }
 
     setErrors(newErrors);
