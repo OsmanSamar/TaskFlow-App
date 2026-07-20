@@ -17,26 +17,28 @@ const Sidebar = () => {
         <h2 className="dashboard-sidebar__title">TaskFlow</h2>
       </div>
 
-      <nav className="dashboard-nav">
-        <NavLink className="dashboard-nav__link" to="/dashboard">
-          <FaTachometerAlt />
-          <span>Dashboard</span>
-        </NavLink>
-        <NavLink className="dashboard-nav__link" to="/profile">
-          <FaUser />
-          <span>Profile</span>
-        </NavLink>
-      </nav>
+      <div className="dashboard-sidebar__content">
+        <nav className="dashboard-nav">
+          <NavLink className="dashboard-nav__link" to="/dashboard">
+            <FaTachometerAlt />
+            <span>Dashboard</span>
+          </NavLink>
+          <NavLink className="dashboard-nav__link" to="/profile">
+            <FaUser />
+            <span>Profile</span>
+          </NavLink>
+        </nav>
 
-      <div className="sidebar-bottom">
-        <NavLink className="dashboard-nav__link" to="/settings">
-          <FaCog />
-          <span>Settings</span>
-        </NavLink>
-        <button type="button" className="sidebar-logout">
-          <FaSignOutAlt />
-          <span>Logout</span>
-        </button>
+        <div className="sidebar-bottom">
+          <NavLink className="dashboard-nav__link" to="/settings">
+            <FaCog />
+            <span>Settings</span>
+          </NavLink>
+          <button type="button" className="sidebar-logout">
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
     </aside>
   );

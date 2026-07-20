@@ -53,8 +53,12 @@
     @apply text-indigo-300;
   }
 
+  .dashboard-sidebar__content {
+    @apply flex flex-col flex-1 justify-between;
+  }
+
   .sidebar-bottom {
-    @apply mt-auto flex w-full flex-col gap-1 border-t border-white/10 pt-4;
+    @apply flex w-full flex-col gap-1 border-t border-white/10 pt-4;
   }
 
   .sidebar-logout {
