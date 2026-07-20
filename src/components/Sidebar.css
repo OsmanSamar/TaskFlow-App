@@ -1,0 +1,26 @@
+@reference "tailwindcss";
+@layer components {
+  .dashboard-sidebar {
+    @apply w-60 h-screen flex flex-col items-start bg-zinc-950 text-white p-8;
+    background-image:
+      radial-gradient(
+        ellipse 80% 60% at 15% 85%,
+        rgba(99, 102, 241, 0.35),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 70% 55% at 85% 15%,
+        rgba(139, 92, 246, 0.3),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 50% 40% at 50% 50%,
+        rgba(59, 130, 246, 0.15),
+        transparent
+      );
+  }
+
+  nav {
+    @apply flex flex-col items-start;
+  }
+}
