@@ -6,7 +6,7 @@ import { PasswordCriteria } from "../components/PasswordCriteria";
 import "./reset-password.css";
 
 export const ResetPassword = () => {
-  const [restData, setRestData] = useState({
+  const [resetData, setResetData] = useState({
     password: "",
     confirmPassword: "",
   });
@@ -15,18 +15,18 @@ export const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleRestData = (e) => {
+  const handleResetData = (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    const passwordError = validatePassword(restData.password);
+    const passwordError = validatePassword(resetData.password);
     if (passwordError) {
       newErrors.password = passwordError;
     }
 
     const ConfirmpasswordError = validateConfirmPassword(
-      restData.password,
-      restData.confirmPassword,
+      resetData.password,
+      resetData.confirmPassword,
     );
     if (ConfirmpasswordError) {
       newErrors.confirmPassword = ConfirmpasswordError;
@@ -44,7 +44,7 @@ export const ResetPassword = () => {
     <div className="reset-password-page">
       <div className="reset-password-card">
         <h1 className="reset-password-panel__title">Reset password </h1>
-        <form onSubmit={handleRestData}>
+        <form onSubmit={handleResetData}>
           <div className="form-field">
             <label className="form-label" htmlFor="password">
               New password
@@ -57,10 +57,10 @@ export const ResetPassword = () => {
                 autoComplete="new-password"
                 placeholder="Enter your password"
                 className={`form-input${errors.password ? " form-input--error" : ""}`}
-                value={restData.password}
+                value={resetData.password}
                 onChange={(e) => {
-                  setRestData({
-                    ...restData,
+                  setResetData({
+                    ...resetData,
                     password: e.target.value,
                   });
                   if (e.target.value.trim() !== "") {
@@ -81,7 +81,7 @@ export const ResetPassword = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
-            <PasswordCriteria password={restData.password} />
+            <PasswordCriteria password={resetData.password} />
             {errors.password ? (
               <span className="form-error ">{errors.password}</span>
             ) : (
@@ -101,10 +101,10 @@ export const ResetPassword = () => {
                 autoComplete="new-password"
                 placeholder="Enter your password"
                 className={`form-input${errors.confirmPassword ? " form-input--error" : ""}`}
-                value={restData.confirmPassword}
+                value={resetData.confirmPassword}
                 onChange={(e) => {
-                  setRestData({
-                    ...restData,
+                  setResetData({
+                    ...resetData,
                     confirmPassword: e.target.value,
                   });
                   if (e.target.value.trim() !== "") {
