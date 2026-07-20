@@ -20,8 +20,9 @@
   .dashboard-sidebar__logo-container {
     @apply mb-8 flex items-center gap-2 border-b border-white/10 pb-6 text-white;
   }
-  .dashboard-sidebar__logo {
-    @apply h-8 w-8 shrink-0;
+
+  .dashboard-sidebar__logo-container svg {
+    @apply h-5 w-5 shrink-0 text-white;
   }
 
   .dashboard-sidebar__title {

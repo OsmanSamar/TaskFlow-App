@@ -1,13 +1,19 @@
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 
-import { FaTachometerAlt, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaTachometerAlt,
+  FaUser,
+  FaCog,
+  FaSignOutAlt,
+  FaTasks 
+} from "react-icons/fa";
 
 const Sidebar = () => {
   return (
     <aside className="dashboard-sidebar">
       <div className="dashboard-sidebar__logo-container">
-        <img src="/favicon.svg" alt="" className="dashboard-sidebar__logo" />
+        <FaTasks  />
         <h2 className="dashboard-sidebar__title">TaskFlow</h2>
       </div>
 
