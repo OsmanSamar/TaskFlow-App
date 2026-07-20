@@ -1,0 +1,10 @@
+@reference "tailwindcss";
+
+@layer components {
+    .dashboard-page{
+        @apply flex min-h-screen;
+    }
+    .dashboard-main{
+        @apply flex  flex-col  flex-1 min-w-0;
+    }
+}

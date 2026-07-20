@@ -1,0 +1,43 @@
+@reference "tailwindcss";
+
+@layer components {
+  .dashboard-header {
+    @apply flex flex-row items-center justify-between border-b border-white/10 bg-[#0a0a0f] p-6 text-white;
+    background-image:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 32%),
+      radial-gradient(
+        ellipse 80% 60% at 15% 85%,
+        rgba(99, 102, 241, 0.22),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 70% 55% at 85% 15%,
+        rgba(139, 92, 246, 0.18),
+        transparent
+      );
+  }
+
+  .dashboard-header h1 {
+    @apply font-serif text-2xl font-semibold tracking-tight;
+  }
+
+  .header-user {
+    @apply flex items-center gap-3;
+  }
+
+  .header-icon-btn {
+    @apply cursor-pointer rounded-lg border-0 bg-transparent p-2 transition-colors duration-150 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
+  }
+
+  .header-icon-btn svg {
+    @apply h-4 w-4 shrink-0 text-zinc-400 transition-colors duration-150;
+  }
+
+  .header-icon-btn:hover svg {
+    @apply text-white;
+  }
+
+  .header-user__name {
+    @apply font-serif text-sm font-medium text-zinc-300 no-underline transition-colors duration-150 hover:text-white;
+  }
+}

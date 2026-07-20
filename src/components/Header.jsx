@@ -1,12 +1,23 @@
-const Header = () => {
+import "./header.css";
+import { IoIosNotifications } from "react-icons/io";
+import { FaUser } from "react-icons/fa";
+
+const Header = ({ title }) => {
   return (
     <header className="dashboard-header">
-      <h1>Dashboard</h1>
+      <h1>{title}</h1>
       <div className="header-user">
-        {/* page title
+        {/* 
         Search 
-        Notifications */}
-        <span>Welcome, user </span>
+        */}
+        <button className="header-icon-btn">
+          <IoIosNotifications />
+        </button>
+        <button className="header-icon-btn">
+          <FaUser />
+        </button>
+
+        <span className="header-user__name">Welcome, user </span>
       </div>
     </header>
   );
