@@ -44,7 +44,7 @@ const Login = () => {
             Streamline user access, roles, and permissions — built for modern
             development teams.
           </p>
-          <h1 className="login-hero__title">Code blauw</h1>
+          <h1 className="login-hero__title">TaskFlow</h1>
         </aside>
         <main className="login-panel">
           <h1 className="login-panel__title">Sign in</h1>

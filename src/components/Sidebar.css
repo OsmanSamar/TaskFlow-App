@@ -1,26 +1,66 @@
 @reference "tailwindcss";
+
 @layer components {
   .dashboard-sidebar {
-    @apply w-60 h-screen flex flex-col items-start bg-zinc-950 text-white p-8;
+    @apply flex h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#0a0a0f] p-6 text-white;
     background-image:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 32%),
       radial-gradient(
         ellipse 80% 60% at 15% 85%,
-        rgba(99, 102, 241, 0.35),
+        rgba(99, 102, 241, 0.22),
         transparent
       ),
       radial-gradient(
         ellipse 70% 55% at 85% 15%,
-        rgba(139, 92, 246, 0.3),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 50% 40% at 50% 50%,
-        rgba(59, 130, 246, 0.15),
+        rgba(139, 92, 246, 0.18),
         transparent
       );
   }
 
-  nav {
-    @apply flex flex-col items-start;
+  .dashboard-sidebar__logo-container {
+    @apply mb-8 flex items-center gap-2 border-b border-white/10 pb-6 text-white;
+  }
+  .dashboard-sidebar__logo {
+    @apply h-8 w-8 shrink-0;
+  }
+
+  .dashboard-sidebar__title {
+    @apply font-serif text-lg font-semibold tracking-tight text-white;
+  }
+
+  .dashboard-nav {
+    @apply flex w-full flex-col gap-1;
+  }
+
+  .dashboard-nav__link {
+    @apply flex w-full cursor-pointer flex-row items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-400 no-underline transition-all duration-150 hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
+  }
+
+  .dashboard-nav__link svg {
+    @apply h-4 w-4 shrink-0 text-zinc-500 transition-colors duration-150;
+  }
+
+  .dashboard-nav__link:hover svg {
+    @apply text-zinc-300;
+  }
+
+  .dashboard-nav__link[aria-current="page"] {
+    @apply bg-indigo-500/15 text-white shadow-[inset_3px_0_0_0_rgba(99,102,241,0.9)];
+  }
+
+  .dashboard-nav__link[aria-current="page"] svg {
+    @apply text-indigo-300;
+  }
+
+  .sidebar-bottom {
+    @apply mt-auto flex w-full flex-col gap-1 border-t border-white/10 pt-4;
+  }
+
+  .sidebar-logout {
+    @apply flex w-full cursor-pointer items-center gap-3 rounded-lg border border-red-500/20 bg-red-500/5 px-3 py-2.5 text-sm font-medium text-red-300 transition-all duration-150 hover:border-red-500/35 hover:bg-red-500/10 hover:text-red-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500;
+  }
+
+  .sidebar-logout svg {
+    @apply h-4 w-4 shrink-0;
   }
 }
