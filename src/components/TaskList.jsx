@@ -1,5 +1,5 @@
-// TODE i changed the name of    filteredTasks,
 import TaskItem from "./TaskItem";
+
 const TaskList = ({
   filteredTasks,
   toggleDone,
@@ -9,13 +9,13 @@ const TaskList = ({
   setEditId,
   editText,
   setEditText,
-  deleteTask,
-  // setShowModal
+  requestDelete,
 }) => {
   return (
     <ul className="task-list">
       {filteredTasks.map((task) => (
         <TaskItem
+          key={task.id}
           task={task}
           editTask={editTask}
           toggleDone={toggleDone}
@@ -24,8 +24,7 @@ const TaskList = ({
           setEditId={setEditId}
           editText={editText}
           setEditText={setEditText}
-          deleteTask={deleteTask}
-          // setShowModal={setShowModal}
+          requestDelete={requestDelete}
         />
       ))}
     </ul>

@@ -9,9 +9,7 @@ const TaskItem = ({
   setEditId,
   editText,
   setEditText,
-  deleteTask,
-
-  // setShowModal
+  requestDelete,
 }) => {
   const inputRef = useRef(null);
   useEffect(() => {
@@ -21,7 +19,7 @@ const TaskItem = ({
   }, [editId]);
 
   return (
-    <li className="task-item" key={task.id}>
+    <li className="task-item">
       {/* ToggleDone btn */}
       <button
         type="button"
@@ -102,11 +100,10 @@ const TaskItem = ({
         </button>
       )}
 
-      {/* Delete btn */}
+      {/* Delete btn — opens confirm popup */}
       <button
         type="button"
-        onClick={() => deleteTask(task.id)}
-        // onClick={() => setShowModal(true)}
+        onClick={() => requestDelete(task)}
         className="delete-btn"
       >
         Delete

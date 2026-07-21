@@ -13,6 +13,7 @@ const Tasks = () => {
   // Null thers are no tasks beign modified
   const [editText, setEditText] = useState("");
   const [showError, setShowError] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem("tasks");
@@ -47,9 +48,19 @@ const Tasks = () => {
     setInput("");
   };
 
-  // Delete function
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+  // Delete: open confirm popup first
+  const requestDelete = (task) => {
+    setTaskToDelete(task);
+  };
+
+  const confirmDelete = () => {
+    if (!taskToDelete) return;
+    setTasks(tasks.filter((task) => task.id !== taskToDelete.id));
+    setTaskToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setTaskToDelete(null);
   };
 
   const toggleDone = (id) => {
@@ -134,7 +145,7 @@ const Tasks = () => {
               setEditId={setEditId}
               editText={editText}
               setEditText={setEditText}
-              deleteTask={deleteTask}
+              requestDelete={requestDelete}
             />
 
             {filteredTasks.length === 0 && (
@@ -165,6 +176,43 @@ const Tasks = () => {
           </div>
         </div>
       </div>
+
+      {taskToDelete && (
+        <div className="tasks-modal-overlay" role="presentation" onClick={cancelDelete}>
+          <div
+            className="tasks-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-task-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="delete-task-title" className="tasks-modal__title">
+              Delete task?
+            </h2>
+            <p className="tasks-modal__text">
+              Are you sure you want to delete{" "}
+              <strong>&ldquo;{taskToDelete.text}&rdquo;</strong>? This cannot be
+              undone.
+            </p>
+            <div className="tasks-modal__actions">
+              <button
+                type="button"
+                className="tasks-modal__btn tasks-modal__btn--cancel"
+                onClick={cancelDelete}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="tasks-modal__btn tasks-modal__btn--danger"
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
