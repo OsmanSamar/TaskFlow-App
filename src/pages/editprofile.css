@@ -1,0 +1,126 @@
+@reference "tailwindcss";
+
+@layer components {
+  .editprofile-page {
+    @apply flex min-h-screen;
+  }
+  .editprofile-main {
+    @apply flex min-w-0 flex-1 flex-col;
+  }
+
+  .editprofile-content {
+    @apply flex flex-1 flex-col gap-6 p-6;
+    background-image:
+      radial-gradient(
+        ellipse 80% 60% at 15% 85%,
+        rgba(99, 102, 241, 0.35),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 70% 55% at 85% 15%,
+        rgba(139, 92, 246, 0.3),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 50% 40% at 50% 50%,
+        rgba(59, 130, 246, 0.15),
+        transparent
+      );
+  }
+
+  .editprofile-header {
+    @apply flex flex-col items-center gap-4 rounded-2xl border border-zinc-200/80 bg-white p-6 text-center shadow-sm sm:flex-row sm:text-left;
+  }
+
+  .editprofile-header__avatar-wrap {
+    @apply flex flex-col items-center gap-3;
+  }
+
+  .editprofile-header__avatar {
+    @apply h-24 w-24 rounded-full object-cover ring-4 ring-indigo-100;
+  }
+
+  .editprofile-header__photo-btn {
+    @apply inline-flex cursor-default items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700;
+  }
+
+  .editprofile-header__photo-btn svg {
+    @apply h-3.5 w-3.5;
+  }
+
+  .editprofile-header__info h1 {
+    @apply font-serif text-2xl font-semibold tracking-tight text-zinc-900;
+  }
+
+  .editprofile-header__info p {
+    @apply mt-1 text-sm text-zinc-500;
+  }
+
+  .editprofile-sections {
+    @apply flex max-w-2xl flex-col gap-4;
+  }
+
+  .editprofile-card {
+    @apply rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-sm md:p-6;
+  }
+
+  .editprofile-card__title {
+    @apply mb-4 font-serif text-lg font-semibold tracking-tight text-zinc-900;
+  }
+
+  .editprofile-field {
+    @apply mb-4 flex flex-col gap-2 last:mb-0;
+  }
+
+  .editprofile-label {
+    @apply text-sm font-medium text-zinc-700;
+  }
+
+  .editprofile-input {
+    @apply w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-400;
+  }
+
+  .editprofile-readonly {
+    @apply flex flex-col gap-3;
+  }
+
+  .editprofile-readonly__row {
+    @apply flex flex-col gap-1 border-b border-zinc-100 pb-3 last:border-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .editprofile-readonly__label {
+    @apply flex items-center gap-2 text-sm text-zinc-500;
+  }
+
+  .editprofile-readonly__icon {
+    @apply h-3.5 w-3.5 text-zinc-400;
+  }
+
+  .editprofile-readonly__value {
+    @apply text-sm font-medium text-zinc-800;
+  }
+
+  .editprofile-chip {
+    @apply w-fit rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+
+  .editprofile-chip--success {
+    @apply bg-emerald-50 text-emerald-700;
+  }
+
+  .editprofile-actions {
+    @apply flex flex-col gap-3 sm:flex-row;
+  }
+
+  .editprofile-btn {
+    @apply inline-flex cursor-default items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold no-underline transition-colors duration-150;
+  }
+
+  .editprofile-btn--primary {
+    @apply border-0 bg-indigo-600 text-white;
+  }
+
+  .editprofile-btn--ghost {
+    @apply border border-zinc-200 bg-white text-zinc-700;
+  }
+}
