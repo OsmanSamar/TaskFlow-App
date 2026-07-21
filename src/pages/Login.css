@@ -4,9 +4,21 @@
   .login-page {
     @apply flex min-h-screen items-center justify-center  p-4 md:p-6;
     background-image:
-      radial-gradient(ellipse 80% 60% at 15% 85%, rgba(99, 102, 241, 0.35), transparent),
-      radial-gradient(ellipse 70% 55% at 85% 15%, rgba(139, 92, 246, 0.3), transparent),
-      radial-gradient(ellipse 50% 40% at 50% 50%, rgba(59, 130, 246, 0.15), transparent);
+      radial-gradient(
+        ellipse 80% 60% at 15% 85%,
+        rgba(99, 102, 241, 0.35),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 70% 55% at 85% 15%,
+        rgba(139, 92, 246, 0.3),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 50% 40% at 50% 50%,
+        rgba(59, 130, 246, 0.15),
+        transparent
+      );
   }
 
   .login-card {
@@ -17,9 +29,21 @@
     @apply col-start-1 row-start-1 flex min-h-48 flex-col bg-[#0a0a0f] p-8 pb-16 md:min-h-0 md:p-10 md:pb-[5.5rem];
     background-image:
       linear-gradient(160deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%),
-      radial-gradient(ellipse 90% 70% at 20% 90%, rgba(99, 102, 241, 0.7), transparent 55%),
-      radial-gradient(ellipse 80% 60% at 80% 20%, rgba(139, 92, 246, 0.55), transparent 50%),
-      radial-gradient(ellipse 60% 50% at 55% 45%, rgba(59, 130, 246, 0.25), transparent 60%);
+      radial-gradient(
+        ellipse 90% 70% at 20% 90%,
+        rgba(99, 102, 241, 0.7),
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 80% 60% at 80% 20%,
+        rgba(139, 92, 246, 0.55),
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 60% 50% at 55% 45%,
+        rgba(59, 130, 246, 0.25),
+        transparent 60%
+      );
     background-repeat: no-repeat;
     background-position: center, center, center, center;
     background-size: cover, cover, cover, cover;
@@ -137,10 +161,6 @@
     .login-hero__logo {
       @apply mb-6 h-8 w-8;
     }
-/* 
-    .login-hero__eyebrow {
-      @apply hidden;
-    } */
 
     .login-panel {
       @apply max-w-none p-6;
