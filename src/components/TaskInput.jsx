@@ -1,6 +1,6 @@
 const TaskInput = ({ input, setInput, addTask, showError, setShowError }) => {
     return (
-      <div className="input-row">
+      <div className="tasks-input-row">
         <input
           className="task-input"
           type="text"
@@ -20,11 +20,11 @@ const TaskInput = ({ input, setInput, addTask, showError, setShowError }) => {
         />
   
         {showError === true ? (
-          <p className="error-message">Please enter your task.</p>
+          <p className="tasks-error-message">Please enter your task.</p>
         ) : (
           ""
         )}
-        <button onClick={addTask} className="add-btn">
+        <button onClick={addTask} className="tasks-add-btn">
           Add
         </button>
       </div>
