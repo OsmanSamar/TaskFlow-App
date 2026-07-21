@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import "./dashboard.css";
 import "./profile.css";
 import { FaCalendarAlt } from "react-icons/fa";
 
