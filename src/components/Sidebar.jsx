@@ -6,14 +6,14 @@ import {
   FaUser,
   FaCog,
   FaSignOutAlt,
-  FaTasks 
+  FaTasks,
 } from "react-icons/fa";
 
 const Sidebar = () => {
   return (
     <aside className="dashboard-sidebar">
       <div className="dashboard-sidebar__logo-container">
-        <FaTasks  />
+        <FaTasks />
         <h2 className="dashboard-sidebar__title">TaskFlow</h2>
       </div>
 
@@ -22,6 +22,10 @@ const Sidebar = () => {
           <NavLink className="dashboard-nav__link" to="/dashboard">
             <FaTachometerAlt />
             <span>Dashboard</span>
+          </NavLink>
+          <NavLink className="dashboard-nav__link" to="/tasks">
+            <FaTasks />
+            <span>Tasks</span>
           </NavLink>
           <NavLink className="dashboard-nav__link" to="/profile">
             <FaUser />

@@ -8,11 +8,13 @@ import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import EditProfile from "./pages/EditProfile";
 import Settings from "./pages/Settings";
+import Tasks from "./pages/Tasks";
 
 function App() {
   return (
     <Routes>
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/tasks" element={<Tasks />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -20,6 +22,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/editprofile" element={<EditProfile />} />
       <Route path="/settings" element={<Settings />} />
+    
     </Routes>
   );
 }
