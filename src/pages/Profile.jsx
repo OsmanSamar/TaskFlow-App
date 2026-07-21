@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "./dashboard.css";
@@ -23,11 +24,12 @@ const Profile = () => {
                   alt="John Doe"
                 />
                 <h2 className="profile-aside__name">John Doe</h2>
-               
+
                 <span className="profile-aside__badge">TaskFlow User</span>
-                <button type="button" className="profile-aside__edit">
+
+                <Link className="profile-aside__edit" to="/editprofile">
                   Edit Profile
-                </button>
+                </Link>
               </div>
             </aside>
 
@@ -97,12 +99,13 @@ const Profile = () => {
                         Update your password regularly
                       </p>
                     </div>
-                    <button
-                      type="button"
+
+                    <Link
                       className="profile-btn profile-btn--ghost"
+                      to="/resetpassword"
                     >
                       Change
-                    </button>
+                    </Link>
                   </div>
                 </section>
               </div>
