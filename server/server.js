@@ -11,6 +11,28 @@ app.use(express.json());
 const PORT = 3000;
 const users = [];
 
+// Post Create
+app.post("/api/users", (req, res) => {
+  // Validation
+  if (!req.body.name || !req.body.email) {
+    return res.status(400).json({
+      message: " Name and email are required",
+    });
+  }
+
+  const newUser = {
+    id: randomUUID(),
+
+    ...req.body,
+  };
+
+  users.push(newUser);
+
+  res.status(201).json(newUser);
+
+  // 201 means Succesfully created new user
+});
+
 // Get Read
 app.get("/api/users", (req, res) => {
   res.json(users);
@@ -50,12 +72,12 @@ app.put("/api/users/:id", (req, res) => {
   res.json(user);
 });
 
-// Patch
+// Patch user by id
 
 app.patch("/api/users/:id", (req, res) => {
   const userId = req.params.id;
 
-  const user = users.find((user )=> user.id === userId);
+  const user = users.find((user) => user.id === userId);
 
   if (!user) {
     return res.status(404).json({
@@ -72,28 +94,6 @@ app.patch("/api/users/:id", (req, res) => {
   }
 
   res.json(user);
-});
-
-// Post Create
-app.post("/api/users", (req, res) => {
-  // Validation
-  if (!req.body.name || !req.body.email) {
-    return res.status(400).json({
-      message: " Name and email are required",
-    });
-  }
-
-  const newUser = {
-    id: randomUUID(),
-
-    ...req.body,
-  };
-
-  users.push(newUser);
-
-  res.status(201).json(newUser);
-
-  // 201 means Succesfully created new user
 });
 
 // Delete by id
