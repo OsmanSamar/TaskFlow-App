@@ -21,6 +21,13 @@ app.get("/api/users/:id", (req, res) => {
   const userId = req.params.id;
 
   const user = users.find((user) => user.id === userId);
+
+  // Error Handling
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
   res.json(user);
 });
 
@@ -30,14 +37,52 @@ app.put("/api/users/:id", (req, res) => {
 
   const user = users.find((user) => user.id === userId);
 
+  // Error Handling
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
   user.name = req.body.name;
   user.email = req.body.email;
 
   res.json(user);
 });
 
+// Patch
+
+app.patch("/api/users/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const user = users.find((user )=> user.id === userId);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  if (req.body.name) {
+    user.name = req.body.name;
+  }
+
+  if (req.body.email) {
+    user.email = req.body.email;
+  }
+
+  res.json(user);
+});
+
 // Post Create
 app.post("/api/users", (req, res) => {
+  // Validation
+  if (!req.body.name || !req.body.email) {
+    return res.status(400).json({
+      message: " Name and email are required",
+    });
+  }
+
   const newUser = {
     id: randomUUID(),
 
@@ -52,11 +97,17 @@ app.post("/api/users", (req, res) => {
 });
 
 // Delete by id
-
 app.delete("/api/users/:id", (req, res) => {
   const userId = req.params.id;
 
   const userIndex = users.findIndex((user) => user.id === userId);
+
+  // Error Handling
+  if (userIndex === -1) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
 
   users.splice(userIndex, 1);
 
