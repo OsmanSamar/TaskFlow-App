@@ -1,4 +1,5 @@
 import express from "express";
+import { randomUUID } from "crypto";
 
 const app = express();
 
@@ -8,10 +9,65 @@ const app = express();
 
 app.use(express.json());
 const PORT = 3000;
+const users = [];
+
+// Get Read
+app.get("/api/users", (req, res) => {
+  res.json(users);
+});
+
+// Get user by id Read
+app.get("/api/users/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const user = users.find((user) => user.id === userId);
+  res.json(user);
+});
+
+// Update user by id Put
+app.put("/api/users/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const user = users.find((user) => user.id === userId);
+
+  user.name = req.body.name;
+  user.email = req.body.email;
+
+  res.json(user);
+});
+
+// Post Create
+app.post("/api/users", (req, res) => {
+  const newUser = {
+    id: randomUUID(),
+
+    ...req.body,
+  };
+
+  users.push(newUser);
+
+  res.status(201).json(newUser);
+
+  // 201 means Succesfully created new user
+});
+
+// Delete by id
+
+app.delete("/api/users/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const userIndex = users.findIndex((user) => user.id === userId);
+
+  users.splice(userIndex, 1);
+
+  res.json({
+    message: "User deleted successfully",
+  });
+});
 
 // Created GEt route
 //  / = The route inside the API
-app.get("/", (reg, res) => {
+app.get("/", (req, res) => {
   res.json({
     message: "TaskFlow API is running",
   });
