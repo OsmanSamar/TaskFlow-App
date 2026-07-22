@@ -198,7 +198,7 @@ User-management-app/
 | `npm run build` | Build frontend for production  |
 | `npm run preview` | Preview production build     |
 | `npm run lint`  | Run ESLint                     |
-| `node server.js`| Start Express backend          |
+| `node server/server.js`| Start Express backend          |
 
 ---
 
