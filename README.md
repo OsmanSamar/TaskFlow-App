@@ -148,7 +148,7 @@ project-root/server.js
 ### 4. Start the backend server
 
 ```bash
-node server.js
+node server/server.js
 ```
 
 The API will run on:
