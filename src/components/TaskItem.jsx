@@ -11,7 +11,11 @@ const TaskItem = ({
   setEditText,
   requestDelete,
 }) => {
+  // useRef keeps a reference to the DOM input element without causing a re-render.
+  // We use it here to automatically focus the input when editing a task starts.
   const inputRef = useRef(null);
+  // When editId changes, the edit input appears.
+  // useEffect runs after render, then focus() places the cursor inside the input.
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
