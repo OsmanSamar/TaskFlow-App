@@ -208,3 +208,14 @@ User-management-app/
 - Add SQLite database
 - Implement user authentication API
 - Persist tasks on the backend
+
+
+## Database SQLite 
+
+- We will use SQLite as our database  to persist application data instead of storing users temporarily inmemory.
+- We will use `better-sqlite3` as the bridge between Node.js and the SQLite database.
+
+### Installing SQLite Driver
+
+```bash
+ npm install better-sqlite3
