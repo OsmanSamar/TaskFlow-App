@@ -219,3 +219,65 @@ User-management-app/
 
 ```bash
  npm install better-sqlite3
+
+ 
+ ### Database Folder
+
+We created a dedicated `database` folder inside the `server` directory to keep all database-related files organized.
+
+```text
+server/
+├── server.js
+├── routes/
+├── data/
+└── database/
+```
+
+The SQLite database file will be created automatically later when we establish the database connection. We do not create the `.sqlite` file manually at this stage.
+
+
+
+### Creating the SQLite Database
+
+We created a `database.js` file inside the `server/database` folder to connect the Node.js application to SQLite using `better-sqlite3`.
+
+The database connection is created with:
+
+```js
+const db = new Database("./server/database/database.sqlite");
+```
+
+If the database file does not exist, `better-sqlite3` creates it automatically.
+
+We also created the `users` table using SQL:
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL
+);
+```
+
+The table structure is:
+
+```text
+users
+├── id
+├── name
+└── email
+```
+
+The database file is stored locally at:
+
+```text
+server/database/database.sqlite
+```
+
+To verify the database connection and create the database file, we ran:
+
+```bash
+node server/database/database.js
+```
+
+This successfully created the SQLite database file.

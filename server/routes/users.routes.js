@@ -1,30 +1,39 @@
-
 // CRUD
 import express from "express";
 import { randomUUID } from "crypto";
-import users from "../data/users.js";
+import db from "../database/database.js";
 
 const router = express.Router();
 
-// Get read Router
 
+
+// Get read Router
 router.get("/", (req, res) => {
+  const users = db.prepare("SELECT * FROM users").all();
+
   res.json(users);
 });
 
-// Get user by id Read
 
+
+
+// Get user by id Read
 router.get("/:id", (req, res) => {
   const userId = req.params.id;
-  const user = users.find((user) => user.id === userId);
+
+  const user = db.prepare("SELECT * FROM users WHERE id =?").get(userId);
+
   // Error Handling
   if (!user) {
     return res.status(404).json({
       message: "User not found",
     });
   }
+
   res.json(user);
 });
+
+
 
 // Post Create
 router.post("/", (req, res) => {
@@ -41,18 +50,25 @@ router.post("/", (req, res) => {
     ...req.body,
   };
 
-  users.push(newUser);
+  db.prepare(` INSERT INTO users (id, name, email) VALUES (?, ?, ?)`).run(
+    newUser.id,
+    newUser.name,
+    newUser.email,
+  );
 
   res.status(201).json(newUser);
 
   // 201 means Succesfully created new user
 });
 
+
+
+
 // Update user by id Put
 router.put("/:id", (req, res) => {
   const userId = req.params.id;
 
-  const user = users.find((user) => user.id === userId);
+  const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userId);
 
   // Error Handling
   if (!user) {
@@ -64,15 +80,23 @@ router.put("/:id", (req, res) => {
   user.name = req.body.name;
   user.email = req.body.email;
 
+  db.prepare(
+    `
+    UPDATE users SET name = ? , email = ?
+     WHERE id = ?
+    `,
+  ).run(user.name, user.email, userId);
+
   res.json(user);
 });
 
-// Patch user by id
 
+
+// Patch user by id
 router.patch("/:id", (req, res) => {
   const userId = req.params.id;
 
-  const user = users.find((user) => user.id === userId);
+  const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userId);
 
   if (!user) {
     return res.status(404).json({
@@ -80,31 +104,43 @@ router.patch("/:id", (req, res) => {
     });
   }
 
-  if (req.body.name) {
+  // TODO  : Validation PATCH fields here
+
+  if (req.body.name !== undefined) {
     user.name = req.body.name;
   }
 
-  if (req.body.email) {
+  if (req.body.email !== undefined) {
     user.email = req.body.email;
   }
 
+  db.prepare(
+    ` 
+    UPDATE users
+    SET name = ? , email = ? 
+    WHERE id = ?
+    `,
+  ).run(user.name, user.email, userId);
+
   res.json(user);
 });
+
+
 
 // Delete by id
 router.delete("/:id", (req, res) => {
   const userId = req.params.id;
 
-  const userIndex = users.findIndex((user) => user.id === userId);
+  const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userId);
 
   // Error Handling
-  if (userIndex === -1) {
+  if (!user) {
     return res.status(404).json({
       message: "User not found",
     });
   }
 
-  users.splice(userIndex, 1);
+  db.prepare("DELETE FROM users WHERE id = ?").run(userId);
 
   res.json({
     message: "User deleted successfully",
