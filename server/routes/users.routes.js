@@ -92,7 +92,18 @@ router.patch("/:id", (req, res) => {
     });
   }
 
-  // TODO  : Validation PATCH fields here
+  // Validation PATCH fields here
+  if (req.body.name !== undefined && req.body.name.trim() === "") {
+    return res.status(400).json({
+      message: "Name cannot be empty",
+    });
+  }
+
+  if (req.body.email !== undefined && req.body.email.trim() === "") {
+    return res.status(400).json({
+      message: "Email cannot be empty",
+    });
+  }
 
   if (req.body.name !== undefined) {
     user.name = req.body.name;
