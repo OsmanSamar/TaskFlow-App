@@ -281,3 +281,67 @@ node server/database/database.js
 ```
 
 This successfully created the SQLite database file.
+
+
+
+### Connecting SQLite to the Existing Express CRUD
+
+After creating the SQLite database and the `users` table, we connected SQLite to the existing Express CRUD routes.
+
+The API no longer uses the old in-memory `users` array from the `data` folder. Instead, all user data is now stored and managed in the SQLite database.
+
+The current project structure is:
+
+```text
+server/
+├── database/
+│   ├── database.js
+│   └── database.sqlite
+├── routes/
+│   └── users.routes.js
+└── server.js
+```
+
+The database connection is imported into the routes:
+
+```js
+import db from "../database/database.js";
+```
+
+The CRUD operations now use SQL queries through `better-sqlite3`:
+
+```text
+GET     → SELECT
+POST    → INSERT
+PUT     → UPDATE
+PATCH   → UPDATE
+DELETE  → DELETE
+```
+
+Examples:
+
+```sql
+SELECT * FROM users;
+```
+
+```sql
+INSERT INTO users (id, name, email)
+VALUES (?, ?, ?);
+```
+
+```sql
+UPDATE users
+SET name = ?, email = ?
+WHERE id = ?;
+```
+
+```sql
+DELETE FROM users
+WHERE id = ?;
+```
+
+We also use parameterized queries with `?` placeholders to safely pass values to SQLite.
+
+The API was tested using Postman, and the data was verified using SQLite database tools, including DB Browser for SQLite and the SQLite3 Editor extension in VS Code.
+
+This confirms that the Express API is now connected to a persistent SQLite database instead of storing users only in memory.

@@ -5,17 +5,12 @@ import db from "../database/database.js";
 
 const router = express.Router();
 
-
-
 // Get read Router
 router.get("/", (req, res) => {
   const users = db.prepare("SELECT * FROM users").all();
 
   res.json(users);
 });
-
-
-
 
 // Get user by id Read
 router.get("/:id", (req, res) => {
@@ -32,8 +27,6 @@ router.get("/:id", (req, res) => {
 
   res.json(user);
 });
-
-
 
 // Post Create
 router.post("/", (req, res) => {
@@ -61,9 +54,6 @@ router.post("/", (req, res) => {
   // 201 means Succesfully created new user
 });
 
-
-
-
 // Update user by id Put
 router.put("/:id", (req, res) => {
   const userId = req.params.id;
@@ -89,8 +79,6 @@ router.put("/:id", (req, res) => {
 
   res.json(user);
 });
-
-
 
 // Patch user by id
 router.patch("/:id", (req, res) => {
@@ -124,8 +112,6 @@ router.patch("/:id", (req, res) => {
 
   res.json(user);
 });
-
-
 
 // Delete by id
 router.delete("/:id", (req, res) => {
