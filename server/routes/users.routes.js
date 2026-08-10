@@ -117,22 +117,22 @@ router.put("/:id", (req, res) => {
 
   try {
     db.prepare(
-    `
+      `
     UPDATE users SET name = ? , email = ?
     WHERE id = ?
     `,
     ).run(user.name, user.email, userId);
-    } catch (error) {
+  } catch (error) {
     if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
-    return res.status(409).json({
-    message: "Email already exists",
-    });
+      return res.status(409).json({
+        message: "Email already exists",
+      });
     }
-    
+
     return res.status(500).json({
-    message: "Database error",
+      message: "Database error",
     });
-    }
+  }
 
   res.json(user);
 });
@@ -171,13 +171,25 @@ router.patch("/:id", (req, res) => {
     user.email = req.body.email;
   }
 
-  db.prepare(
-    ` 
+  try {
+    db.prepare(
+      `
     UPDATE users
-    SET name = ? , email = ? 
+    SET name = ?, email = ?
     WHERE id = ?
     `,
-  ).run(user.name, user.email, userId);
+    ).run(user.name, user.email, userId);
+  } catch (error) {
+    if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
+      return res.status(409).json({
+        message: "Email already exists",
+      });
+    }
+
+    return res.status(500).json({
+      message: "Database error",
+    });
+  }
 
   res.json(user);
 });
