@@ -29,23 +29,20 @@ router.get("/:id", (req, res) => {
   res.json(user);
 });
 
-
-
 // Post Create
 router.post("/", (req, res) => {
   // Validation
- if(!req.body.name || req.body.name.trim()===""){
-  return res.status(400).json({
-    message:"Name is required",
-  });
- }
+  if (!req.body.name || req.body.name.trim() === "") {
+    return res.status(400).json({
+      message: "Name is required",
+    });
+  }
 
- if(!req.body.email || !validator.isEmail(req.body.email)){
-
-  return res.status(400).json({
-    message:"A valid email is required",
-  });
- }
+  if (!req.body.email || !validator.isEmail(req.body.email)) {
+    return res.status(400).json({
+      message: "A valid email is required",
+    });
+  }
 
   const newUser = {
     id: randomUUID(),
@@ -53,26 +50,38 @@ router.post("/", (req, res) => {
     ...req.body,
   };
 
+  // try {
+  //   db.prepare(`
+  //   INSERT INTO users (id, name, email)
+  //   VALUES (?, ?, ?)
+  //   `).run(
+  //   newUser.id,
+  //   newUser.name,
+  //   newUser.email,
+  //   );
+  //   } catch (error) {
+  //   console.log(error);
+  //   console.log("Error code:", error.code);
+  //   }
+
   try {
-    db.prepare(`
+    db.prepare(
+      `
     INSERT INTO users (id, name, email)
     VALUES (?, ?, ?)
-    `).run(
-    newUser.id,
-    newUser.name,
-    newUser.email,
-    );
-    } catch (error) {
+    `,
+    ).run(newUser.id, newUser.name, newUser.email);
+  } catch (error) {
     if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
-    return res.status(409).json({
-    message: "Email already exists",
-    });
+      return res.status(409).json({
+        message: "Email already exists",
+      });
     }
-    
+
     return res.status(500).json({
-    message: "Database error",
+      message: "Database error",
     });
-    }
+  }
   res.status(201).json(newUser);
 
   // 201 means Succesfully created new user
@@ -106,12 +115,24 @@ router.put("/:id", (req, res) => {
   user.name = req.body.name;
   user.email = req.body.email;
 
-  db.prepare(
+  try {
+    db.prepare(
     `
     UPDATE users SET name = ? , email = ?
-     WHERE id = ?
+    WHERE id = ?
     `,
-  ).run(user.name, user.email, userId);
+    ).run(user.name, user.email, userId);
+    } catch (error) {
+    if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
+    return res.status(409).json({
+    message: "Email already exists",
+    });
+    }
+    
+    return res.status(500).json({
+    message: "Database error",
+    });
+    }
 
   res.json(user);
 });
@@ -140,7 +161,6 @@ router.patch("/:id", (req, res) => {
       message: " A valid email is required",
     });
   }
-
 
   // Apply validated fields to the user
   if (req.body.name !== undefined) {
