@@ -29,6 +29,8 @@ router.get("/:id", (req, res) => {
   res.json(user);
 });
 
+
+
 // Post Create
 router.post("/", (req, res) => {
   // Validation
@@ -51,12 +53,26 @@ router.post("/", (req, res) => {
     ...req.body,
   };
 
-  db.prepare(` INSERT INTO users (id, name, email) VALUES (?, ?, ?)`).run(
+  try {
+    db.prepare(`
+    INSERT INTO users (id, name, email)
+    VALUES (?, ?, ?)
+    `).run(
     newUser.id,
     newUser.name,
     newUser.email,
-  );
-
+    );
+    } catch (error) {
+    if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
+    return res.status(409).json({
+    message: "Email already exists",
+    });
+    }
+    
+    return res.status(500).json({
+    message: "Database error",
+    });
+    }
   res.status(201).json(newUser);
 
   // 201 means Succesfully created new user
