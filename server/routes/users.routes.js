@@ -32,11 +32,18 @@ router.get("/:id", (req, res) => {
 // Post Create
 router.post("/", (req, res) => {
   // Validation
-  if (!req.body.name || !req.body.email) {
-    return res.status(400).json({
-      message: " Name and email are required",
-    });
-  }
+ if(!req.body.name || req.body.name.trim()===""){
+  return res.status(400).json({
+    message:"Name is required",
+  });
+ }
+
+ if(!req.body.email || !validator.isEmail(req.body.email)){
+
+  return res.status(400).json({
+    message:"A valid email is required",
+  });
+ }
 
   const newUser = {
     id: randomUUID(),
