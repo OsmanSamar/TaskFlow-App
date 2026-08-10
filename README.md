@@ -345,3 +345,47 @@ We also use parameterized queries with `?` placeholders to safely pass values to
 The API was tested using Postman, and the data was verified using SQLite database tools, including DB Browser for SQLite and the SQLite3 Editor extension in VS Code.
 
 This confirms that the Express API is now connected to a persistent SQLite database instead of storing users only in memory.
+
+---
+
+## Input Validation
+
+We added input validation to the user routes using the `validator` package.
+
+Install the package:
+
+```bash
+npm install validator
+```
+
+Import it in `users.routes.js`:
+
+```js
+import validator from "validator";
+```
+
+### POST /users
+
+- `name` must exist and must not be an empty string.
+- `email` must exist and must be a valid email address (`validator.isEmail(...)`).
+- Invalid input returns HTTP `400`.
+
+### PUT /users/:id
+
+- `name` must exist and must not be empty.
+- `email` must exist and must be a valid email address.
+- Invalid input returns HTTP `400`.
+
+### PATCH /users/:id
+
+- `name` is validated only when it is included in the request, and must not be an empty string.
+- `email` is validated only when it is included in the request, and must be a valid email address.
+- Invalid input returns HTTP `400`.
+
+### Testing
+
+Validation was tested with Postman:
+
+- Invalid email was rejected.
+- Empty name was rejected.
+- Valid POST data successfully created a user and returned HTTP `201 Created`.
