@@ -2,6 +2,7 @@
 import express from "express";
 import { randomUUID } from "crypto";
 import db from "../database/database.js";
+import validator from "validator";
 
 const router = express.Router();
 
@@ -67,6 +68,18 @@ router.put("/:id", (req, res) => {
     });
   }
 
+  if (!req.body.name || req.body.name.trim() === "") {
+    return res.status(400).json({
+      message: " Name is required",
+    });
+  }
+
+  if (!req.body.email || !validator.isEmail(req.body.email)) {
+    return res.status(400).json({
+      message: " A valid email is required",
+    });
+  }
+
   user.name = req.body.name;
   user.email = req.body.email;
 
@@ -95,16 +108,18 @@ router.patch("/:id", (req, res) => {
   // Validation PATCH fields here
   if (req.body.name !== undefined && req.body.name.trim() === "") {
     return res.status(400).json({
-      message: "Name cannot be empty",
+      message: "Name is required",
     });
   }
 
-  if (req.body.email !== undefined && req.body.email.trim() === "") {
+  if (req.body.email !== undefined && !validator.isEmail(req.body.email)) {
     return res.status(400).json({
-      message: "Email cannot be empty",
+      message: " A valid email is required",
     });
   }
 
+
+  // Apply validated fields to the user
   if (req.body.name !== undefined) {
     user.name = req.body.name;
   }
