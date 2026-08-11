@@ -13,8 +13,8 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
-
-  const handleLogin = (e) => {
+  const [loginError, setLoginError] = useState({});
+  const handleLogin = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -28,7 +28,41 @@ const Login = () => {
       newErrors.password = passwordError;
     }
 
-    setErrors(newErrors);
+    // Stop here if frontend validation has errors
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: loginData.email,
+          password: loginData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setErrors({
+          general: data.message,
+        });
+        return;
+      }
+
+      console.log("Login successful:", data);
+    } catch (error) {
+      console.error("Login error:", error);
+
+      setErrors({
+        general: "Something went wrong. Please try again.",
+      });
+    }
   };
 
   return (

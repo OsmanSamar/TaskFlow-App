@@ -4,11 +4,14 @@
  */
 import express from "express";
 import usersRouter from "./routes/users.routes.js";
+import cors from "cors";
 
 
 // يشغل Express
 const app = express();
 const PORT = 3000;
+app.use(cors());
+app.use(express.json());
 
 // Parse incoming JSON request bodies  يجهز Middleware
 app.use(express.json());
