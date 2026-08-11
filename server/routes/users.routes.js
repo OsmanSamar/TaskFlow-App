@@ -4,9 +4,7 @@ import { randomUUID } from "crypto";
 import db from "../database/database.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
-import {
-  isValidEmail, isValidPassword
-} from "../utils/validators.js"
+import { isValidEmail, isValidPassword } from "../utils/validators.js";
 
 
 // To check
@@ -20,9 +18,8 @@ import {
 // run node server/server.js
 // output Password matches true/flase
 
-
-
 const router = express.Router();
+console.log("LOGIN ROUTE HIT");
 
 // Get read Router
 router.get("/", (req, res) => {
@@ -31,25 +28,9 @@ router.get("/", (req, res) => {
   res.json(users);
 });
 
-// Get user by id Read
-router.get("/:id", (req, res) => {
-  const userId = req.params.id;
-
-  const user = db.prepare("SELECT * FROM users WHERE id =?").get(userId);
-
-  // Error Handling
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found",
-    });
-  }
-
-  res.json(user);
-});
 
 // Post Create
-router.post("/", async(req, res) => {
-
+router.post("/", async (req, res) => {
   // Validation
   if (!req.body.name || req.body.name.trim() === "") {
     return res.status(400).json({
@@ -63,28 +44,21 @@ router.post("/", async(req, res) => {
     });
   }
 
-if(!req.body.password || !isValidPassword(req.body.password)){
-  return res.status(400).json({
-    message: "Password must be at least 8 characters and include uppercase, lowercase, number and specail charater",
-  });
-}
+  if (!req.body.password || !isValidPassword(req.body.password)) {
+    return res.status(400).json({
+      message:
+        "Password must be at least 8 characters and include uppercase, lowercase, number and specail charater",
+    });
+  }
 
+  // Hash password before storing it in the database
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-// Hash password before storing it in the database
-const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-const newUser = {
-id: randomUUID(),
-name: req.body.name,
-email: req.body.email,
-};
-
-
-  // const newUser = {
-  //   id: randomUUID(),
-
-  //   ...req.body,
-  // };
+  const newUser = {
+    id: randomUUID(),
+    name: req.body.name,
+    email: req.body.email,
+  };
 
   // try {
   //   db.prepare(`
@@ -106,7 +80,7 @@ email: req.body.email,
     INSERT INTO users (id, name, email, password)
     VALUES (?, ?, ?, ?)
     `,
-    ).run(newUser.id, newUser.name, newUser.email, hashedPassword,);
+    ).run(newUser.id, newUser.name, newUser.email, hashedPassword);
   } catch (error) {
     if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
       return res.status(409).json({
@@ -127,7 +101,76 @@ email: req.body.email,
   // 201 means Succesfully created new user
 });
 
-// Update user by id Put
+
+// Login user(POST)
+// Cretae endpoint for login
+router.post("/login", async (req, res) => {
+
+  console.log("LOGIN ROUTE HIT");
+  const { email, password } = req.body;
+
+  // Validation
+  if (!email || !isValidEmail(email)) {
+    return res.status(400).json({
+      message: "A valid email is required",
+    });
+  }
+
+  if (!password) {
+    return res.status(400).json({
+      message: "Password is required",
+    });
+  }
+
+  // Find user by email
+  const user = db.prepare("SELECT * FROM users WHERE email =?").get(email);
+
+  if (!user) {
+    return res.status(401).json({
+      message: "Invalid email or password",
+    });
+  }
+
+  // Compare entered password with sorted bcrypt hash
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(401).json({
+      message: "Invalid email or password",
+    });
+  }
+
+  // Login successful
+
+  res.json({
+    message: "Login successful",
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    },
+  });
+});
+
+
+// Get user by id Read
+router.get("/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const user = db.prepare("SELECT * FROM users WHERE id =?").get(userId);
+
+  // Error Handling
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  res.json(user);
+});
+
+
+// Update user by id Put(PUT)
 router.put("/:id", (req, res) => {
   const userId = req.params.id;
 

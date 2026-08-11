@@ -16,6 +16,10 @@ app.use(express.json());
 // API routes
 app.use("/api/users", usersRouter);
 
+// for test
+console.log("Users routes mounted at /api/users");
+
+
 // Health check
 app.get("/", (req, res) => {
   res.json({
