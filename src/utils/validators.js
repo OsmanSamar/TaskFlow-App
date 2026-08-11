@@ -3,6 +3,13 @@ export const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 export const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
+export const validateName = (name) => {
+  if (name.trim() === "") {
+    return "Name is required";
+  }
+  return "";
+};
+
 export const validateEmail = (email) => {
   if (email.trim() === "") {
     return "Email is required";

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./register.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {
+  validateName,
   validateEmail,
   validatePassword,
   validateConfirmPassword,
@@ -10,6 +11,7 @@ import {
 
 const Register = () => {
   const [registerData, setRegisterData] = useState({
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -23,6 +25,11 @@ const Register = () => {
   const handleRegister = (e) => {
     e.preventDefault();
     const newErrors = {};
+
+    const nameError = validateName(registerData.name);
+    if (nameError) {
+      newErrors.name = nameError;
+    }
 
     const emailError = validateEmail(registerData.email);
     if (emailError) {
@@ -53,9 +60,35 @@ const Register = () => {
   return (
     <div className="register-page">
       <div className="register-card">
-      <h1 className="register-panel__title">Create an account </h1>
+        <h1 className="register-panel__title">Create an account </h1>
         <form onSubmit={handleRegister}>
           <div className="form-field">
+            <label className="form-label" htmlFor="name">
+              Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              autoComplete="name"
+              placeholder="jone"
+              className={`form-input${errors.name ? " form-input--error" : ""}`}
+              value={registerData.name}
+              onChange={(e) => {
+                setRegisterData({ ...registerData, name: e.target.value });
+                if (e.target.value.trim() !== "") {
+                  setErrors((prev) => ({
+                    ...prev,
+                    name: "",
+                  }));
+                }
+              }}
+            />
+              {errors.name ? (
+              <span className="form-error ">{errors.name}</span>
+            ) : (
+              ""
+            )}
             <label className="form-label" htmlFor="email">
               Email
             </label>

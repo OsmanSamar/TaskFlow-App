@@ -3,7 +3,7 @@ import express from "express";
 import { randomUUID } from "crypto";
 import db from "../database/database.js";
 import validator from "validator";
-import bcrypt from "bcrypt";
+//import bcrypt from "bcrypt";
 
 
 // To check
