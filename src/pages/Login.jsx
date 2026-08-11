@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import "./login.css";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { validateEmail, validatePassword } from "../utils/validators";
+import { validateEmail } from "../utils/validators";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,26 +13,45 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [loginError, setLoginError] = useState({});
+  const [loginError, setLoginError] = useState("");
+
+  const emailError = validateEmail(loginData.email);
+  // const passwordError = validatePassword(loginData.password);
+  const passwordError = "";
+  const isFormValid = !emailError && !passwordError;
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    setLoginData({ ...loginData, email });
+    setLoginError("");
+    setErrors((prev) => ({
+      ...prev,
+      email: validateEmail(email),
+    }));
+  };
+
+  const handlePasswordChange = (e) => {
+    const password = e.target.value;
+    setLoginData({ ...loginData, password });
+    // setLoginError("");
+    // setErrors((prev) => ({
+    //   ...prev,
+    //   password: validatePassword(password),
+    // }));
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    const newErrors = {};
 
-    const emailError = validateEmail(loginData.email);
-    if (emailError) {
-      newErrors.email = emailError;
-    }
-
-    const passwordError = validatePassword(loginData.password);
-    if (passwordError) {
-      newErrors.password = passwordError;
-    }
-
-    // Stop here if frontend validation has errors
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    if (!isFormValid) {
+      setErrors({
+        email: emailError,
+        password: passwordError,
+      });
       return;
     }
+
+    setLoginError("");
 
     try {
       const response = await fetch("http://localhost:3000/api/users/login", {
@@ -49,19 +68,14 @@ const Login = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrors({
-          general: data.message,
-        });
+        setLoginError("Login incorrect");
         return;
       }
 
       console.log("Login successful:", data);
     } catch (error) {
       console.error("Login error:", error);
-
-      setErrors({
-        general: "Something went wrong. Please try again.",
-      });
+      setLoginError("Login incorrect");
     }
   };
 
@@ -96,23 +110,14 @@ const Login = () => {
                 name="email"
                 autoComplete="email"
                 placeholder="name@company.com"
-                className={`form-input${errors.email ? " form-input--error" : ""}`}
+                // className={`form-input${errors.email ? " form-input--error" : ""}`}
+                className="form-input"
                 value={loginData.email}
-                onChange={(e) => {
-                  setLoginData({ ...loginData, email: e.target.value });
-                  if (e.target.value.trim() !== "") {
-                    setErrors((prev) => ({
-                      ...prev,
-                      email: "",
-                    }));
-                  }
-                }}
+                onChange={handleEmailChange}
               />
-              {errors.email ? (
-                <span className="form-error ">{errors.email}</span>
-              ) : (
-                ""
-              )}
+              {/* {errors.email ? (
+                <span className="form-error">{errors.email}</span>
+              ) : null} */}
             </div>
 
             <div className="form-field">
@@ -126,17 +131,10 @@ const Login = () => {
                   name="password"
                   autoComplete="current-password"
                   placeholder="Enter your password"
-                  className={`form-input${errors.password ? " form-input--error" : ""}`}
+                  // className={`form-input${errors.password ? " form-input--error" : ""}`}
+                  className="form-input"
                   value={loginData.password}
-                  onChange={(e) => {
-                    setLoginData({ ...loginData, password: e.target.value });
-                    if (e.target.value.trim() !== "") {
-                      setErrors((prev) => ({
-                        ...prev,
-                        password: "",
-                      }));
-                    }
-                  }}
+                  onChange={handlePasswordChange}
                 />
                 <button
                   type="button"
@@ -147,11 +145,9 @@ const Login = () => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.password ? (
+              {/* {errors.password ? (
                 <span className="form-error">{errors.password}</span>
-              ) : (
-                ""
-              )}
+              ) : null} */}
             </div>
 
             <div className="form-row">
@@ -170,7 +166,15 @@ const Login = () => {
               </Link>
             </div>
 
-            <button type="submit" className="btn btn--primary">
+            {loginError ? (
+              <span className="form-error form-error--login">{loginError}</span>
+            ) : null}
+
+            <button
+              type="submit"
+              className="btn btn--primary"
+              disabled={!isFormValid}
+            >
               Sign in
             </button>
           </form>

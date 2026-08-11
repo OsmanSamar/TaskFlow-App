@@ -113,6 +113,10 @@
     @apply text-sm font-medium text-red-500;
   }
 
+  .form-error--login {
+    @apply mb-2 block w-full text-center;
+  }
+
   .form-row {
     @apply mb-1 mt-1 flex items-center justify-between gap-4;
   }
@@ -134,7 +138,7 @@
   }
 
   .btn--primary {
-    @apply mt-2 border-none bg-gray-900 text-white shadow-sm hover:bg-gray-800;
+    @apply mt-2 border-none bg-gray-900 text-white shadow-sm hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:shadow-none disabled:hover:bg-gray-400;
   }
 
   .login-footer {
