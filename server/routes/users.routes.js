@@ -3,6 +3,19 @@ import express from "express";
 import { randomUUID } from "crypto";
 import db from "../database/database.js";
 import validator from "validator";
+import bcrypt from "bcrypt";
+
+
+// To check
+// const password = "MyPassword@123";
+// const hashedPassword = await bcrypt.hash(password, 10);
+// console.log("Original password:", password);
+// console.log("Hashed", hashedPassword);
+
+// const isMatch = await bcrypt.compare("MyPassword@123", hashedPassword,);
+// console.log("Password matches", isMatch);
+// run node server/server.js
+// output Password matches true/flase
 
 const router = express.Router();
 
