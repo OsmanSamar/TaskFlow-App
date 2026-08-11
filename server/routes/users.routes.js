@@ -3,7 +3,10 @@ import express from "express";
 import { randomUUID } from "crypto";
 import db from "../database/database.js";
 import validator from "validator";
-//import bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
+import {
+  isValidEmail, isValidPassword
+} from "../utils/validators.js"
 
 
 // To check
@@ -16,6 +19,8 @@ import validator from "validator";
 // console.log("Password matches", isMatch);
 // run node server/server.js
 // output Password matches true/flase
+
+
 
 const router = express.Router();
 
@@ -43,7 +48,8 @@ router.get("/:id", (req, res) => {
 });
 
 // Post Create
-router.post("/", (req, res) => {
+router.post("/", async(req, res) => {
+
   // Validation
   if (!req.body.name || req.body.name.trim() === "") {
     return res.status(400).json({
@@ -51,17 +57,34 @@ router.post("/", (req, res) => {
     });
   }
 
-  if (!req.body.email || !validator.isEmail(req.body.email)) {
+  if (!req.body.email || !isValidEmail(req.body.email)) {
     return res.status(400).json({
       message: "A valid email is required",
     });
   }
 
-  const newUser = {
-    id: randomUUID(),
+if(!req.body.password || !isValidPassword(req.body.password)){
+  return res.status(400).json({
+    message: "Password must be at least 8 characters and include uppercase, lowercase, number and specail charater",
+  });
+}
 
-    ...req.body,
-  };
+
+// Hash password before storing it in the database
+const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+const newUser = {
+id: randomUUID(),
+name: req.body.name,
+email: req.body.email,
+};
+
+
+  // const newUser = {
+  //   id: randomUUID(),
+
+  //   ...req.body,
+  // };
 
   // try {
   //   db.prepare(`
@@ -80,10 +103,10 @@ router.post("/", (req, res) => {
   try {
     db.prepare(
       `
-    INSERT INTO users (id, name, email)
-    VALUES (?, ?, ?)
+    INSERT INTO users (id, name, email, password)
+    VALUES (?, ?, ?, ?)
     `,
-    ).run(newUser.id, newUser.name, newUser.email);
+    ).run(newUser.id, newUser.name, newUser.email, hashedPassword,);
   } catch (error) {
     if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
       return res.status(409).json({
@@ -91,10 +114,14 @@ router.post("/", (req, res) => {
       });
     }
 
+    console.log("Database error:", error);
+    console.log("Error code:", error.code);
+
     return res.status(500).json({
       message: "Database error",
     });
   }
+  // Return user data without password or password hash
   res.status(201).json(newUser);
 
   // 201 means Succesfully created new user
