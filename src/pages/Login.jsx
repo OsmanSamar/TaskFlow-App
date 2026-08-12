@@ -1,11 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
-import { useState, useContext} from "react";
+import { useState, useContext } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { validateEmail } from "../utils/validators";
-import {AuthContext} from "../context/AuthContext"
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
+
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({
     email: "",
@@ -15,7 +18,7 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
-  const{user, setUser}=useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   const emailError = validateEmail(loginData.email);
   // const passwordError = validatePassword(loginData.password);
@@ -74,7 +77,10 @@ const Login = () => {
         return;
       }
       setUser(data.user);
+      navigate("/dashboard");
+
       console.log("Login successful:", data);
+ 
     } catch (error) {
       console.error("Login error:", error);
       setLoginError("Login incorrect");
