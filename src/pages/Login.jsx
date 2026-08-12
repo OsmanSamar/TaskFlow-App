@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import "./login.css";
-import { useState } from "react";
+import { useState, useContext} from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { validateEmail } from "../utils/validators";
+import {AuthContext} from "../context/AuthContext"
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,7 +15,7 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
-  const[user, setUser]=useState(null);
+  const{user, setUser}=useContext(AuthContext);
 
   const emailError = validateEmail(loginData.email);
   // const passwordError = validatePassword(loginData.password);
