@@ -14,6 +14,7 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
+  const[user, setUser]=useState(null);
 
   const emailError = validateEmail(loginData.email);
   // const passwordError = validatePassword(loginData.password);
@@ -71,7 +72,7 @@ const Login = () => {
         setLoginError("Login incorrect");
         return;
       }
-
+      setUser(data.user);
       console.log("Login successful:", data);
     } catch (error) {
       console.error("Login error:", error);
