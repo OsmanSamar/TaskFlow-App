@@ -3,8 +3,11 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "./profile.css";
 import { FaCalendarAlt } from "react-icons/fa";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Profile = () => {
+  const {user} =useContext(AuthContext);
   return (
     <div className="profile-page">
       <Sidebar />
@@ -22,7 +25,7 @@ const Profile = () => {
                   src="https://i.pravatar.cc/160?u=john-doe"
                   alt="John Doe"
                 />
-                <h2 className="profile-aside__name">John Doe</h2>
+                <h2 className="profile-aside__name">{user?.name}</h2>
 
                 <span className="profile-aside__badge">TaskFlow User</span>
 
@@ -47,11 +50,11 @@ const Profile = () => {
                   <dl className="profile-info">
                     <div className="profile-info__row">
                       <dt>Full name</dt>
-                      <dd>John Doe</dd>
+                      <dd>{user?.name}</dd>
                     </div>
                     <div className="profile-info__row">
                       <dt>Email</dt>
-                      <dd>john.doe@company.com</dd>
+                      <dd>{user?.email}</dd>
                     </div>
                     <div className="profile-info__row">
                       <dt>

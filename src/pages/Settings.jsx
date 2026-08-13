@@ -11,8 +11,11 @@ import {
   FaClock,
   FaExclamationTriangle,
 } from "react-icons/fa";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Settings = () => {
+  const {user} =useContext(AuthContext);
   return (
     <div className="dashboard-page settings-page">
       <Sidebar />
@@ -41,7 +44,7 @@ const Settings = () => {
                     Your login email for TaskFlow
                   </p>
                 </div>
-                <p className="settings-row__value">user@taskflow.com</p>
+                <p className="settings-row__value">{user?.email}</p>
               </div>
 
               <div className="settings-row">

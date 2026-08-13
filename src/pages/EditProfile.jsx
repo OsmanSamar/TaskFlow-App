@@ -3,8 +3,11 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "./editprofile.css";
 import { FaCamera, FaCalendarAlt } from "react-icons/fa";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const EditProfile = () => {
+  const {user} =useContext(AuthContext);
   return (
     <div className="editprofile-page">
       <Sidebar />
@@ -43,7 +46,7 @@ const EditProfile = () => {
                   id="full-name"
                   type="text"
                   className="editprofile-input"
-                  defaultValue="John Doe"
+                  defaultValue={user?.name}
                  
                 />
               </div>
@@ -56,7 +59,7 @@ const EditProfile = () => {
                   id="email"
                   type="email"
                   className="editprofile-input"
-                  defaultValue="john.doe@company.com"
+                  defaultValue={user?.email}
                   readOnly
                 />
               </div>
