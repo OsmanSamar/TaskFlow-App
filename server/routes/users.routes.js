@@ -153,6 +153,47 @@ router.post("/login", async (req, res) => {
   });
 });
 
+
+//Get the currently authenticated user
+// Uses the user ID stored in the session
+router.get("/me", (req, res) => {
+  // Check if a user ID exists in the current session
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Find the user by the ID stored in the session
+  const user = db
+    .prepare("SELECT id, name, email FROM users WHERE id = ?")
+    .get(req.session.userId);
+
+  // The user may have been deleted after the session was created
+  if (!user) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Return the authenticated user's safe data
+  res.json({
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    },
+  });
+});
+
+
+
+
+
+
+
+
+
 // Get user by id Read
 router.get("/:id", (req, res) => {
   const userId = req.params.id;
