@@ -6,7 +6,6 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import { isValidEmail, isValidPassword } from "../utils/validators.js";
 
-
 // To check
 // const password = "MyPassword@123";
 // const hashedPassword = await bcrypt.hash(password, 10);
@@ -27,7 +26,6 @@ router.get("/", (req, res) => {
 
   res.json(users);
 });
-
 
 // Post Create
 router.post("/", async (req, res) => {
@@ -101,11 +99,9 @@ router.post("/", async (req, res) => {
   // 201 means Succesfully created new user
 });
 
-
 // Login user(POST)
 // Cretae endpoint for login
 router.post("/login", async (req, res) => {
-
   console.log("LOGIN ROUTE HIT");
   const { email, password } = req.body;
 
@@ -134,11 +130,16 @@ router.post("/login", async (req, res) => {
   // Compare entered password with sorted bcrypt hash
 
   const isMatch = await bcrypt.compare(password, user.password);
+
   if (!isMatch) {
     return res.status(401).json({
       message: "Login incorrect",
     });
   }
+
+  // Store the authenticated user's ID in the session
+  // This allows the server to remember the logged-in user
+  req.session.userId = user.id;
 
   // Login successful
 
@@ -151,7 +152,6 @@ router.post("/login", async (req, res) => {
     },
   });
 });
-
 
 // Get user by id Read
 router.get("/:id", (req, res) => {
@@ -168,7 +168,6 @@ router.get("/:id", (req, res) => {
 
   res.json(user);
 });
-
 
 // Update user by id Put(PUT)
 router.put("/:id", (req, res) => {
