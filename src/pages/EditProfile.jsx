@@ -20,8 +20,8 @@ const EditProfile = () => {
             <div className="editprofile-header__avatar-wrap">
               <img
                 className="editprofile-header__avatar"
-                src="https://i.pravatar.cc/160?u=john-doe"
-                alt="John Doe"
+                src=""
+                alt={user?.name}
               />
               <button type="button" className="editprofile-header__photo-btn">
                 <FaCamera />
@@ -29,7 +29,7 @@ const EditProfile = () => {
               </button>
             </div>
             <div className="editprofile-header__info">
-              <h1>John Doe</h1>
+              <h1>{user?.name}</h1>
               <p>Update your personal information</p>
             </div>
           </section>

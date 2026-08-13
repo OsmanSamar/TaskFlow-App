@@ -20,10 +20,15 @@ const Profile = () => {
             {/* Profile side panel */}
             <aside className="profile-aside">
               <div className="profile-aside__identity">
-                <img
+                {/* <img
                   className="profile-aside__avatar"
                   src="https://i.pravatar.cc/160?u=john-doe"
                   alt="John Doe"
+                /> */}
+                <img
+                  className="profile-aside__avatar"
+                  src=""
+                  alt={user?.name}
                 />
                 <h2 className="profile-aside__name">{user?.name}</h2>
 
