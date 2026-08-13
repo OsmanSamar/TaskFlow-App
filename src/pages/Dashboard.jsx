@@ -3,7 +3,12 @@ import Header from "../components/Header";
 import "./dashboard.css";
 import { PiHandWavingBold } from "react-icons/pi";
 import { FaCheck } from "react-icons/fa6";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
+
 const Dashboard = () => {
+  const {user} =useContext(AuthContext);
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) {
@@ -31,7 +36,7 @@ const Dashboard = () => {
         <Header title="Dashboard" />
         <main className="dashboard-content">
           <h1>
-            {getGreeting()}, <span>user</span> <PiHandWavingBold />
+            {getGreeting()}, <span>{user?.name}</span> <PiHandWavingBold />
           </h1>
           {/* Statistics Cards */}
           <div className="stats-grid">
