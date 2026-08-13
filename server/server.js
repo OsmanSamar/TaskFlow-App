@@ -11,7 +11,13 @@ import session from "express-session";
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+//Allow the frontend to send and receive authentication cookies
+app.use(
+cors({
+origin: "http://localhost:5173",
+credentials: true,
+})
+);
 
 //Important: Must be registered before routes that use req.session
 

@@ -64,6 +64,10 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
+
+        // Allow the browser to send and receive authentication cookies
+        credentials: "include",
+        
         body: JSON.stringify({
           email: loginData.email,
           password: loginData.password,
