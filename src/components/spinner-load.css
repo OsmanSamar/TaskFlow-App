@@ -1,0 +1,9 @@
+@reference "tailwindcss";
+@layer components {
+  .spinner-container {
+    @apply flex justify-center items-center min-h-[200px];
+  }
+  .spinner {
+    @apply w-10 h-10 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin;
+  }
+}
