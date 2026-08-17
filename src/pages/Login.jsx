@@ -18,7 +18,7 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
 
   const emailError = validateEmail(loginData.email);
   // const passwordError = validatePassword(loginData.password);

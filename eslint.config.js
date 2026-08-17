@@ -6,6 +6,16 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores(['dist']),
+
+  // Node.js backend files
+  {
+    files: ['server/**/*.js', 'routes/**/*.js', 'database/**/*.js', 'utils/**/*.js'],
+    languageOptions: {
+    globals: globals.node,
+    },
+    },
+
+    // React frontend files
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -19,3 +29,5 @@ export default defineConfig([
     },
   },
 ])
+
+

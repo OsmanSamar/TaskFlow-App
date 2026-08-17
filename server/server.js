@@ -6,6 +6,7 @@ import express from "express";
 import usersRouter from "./routes/users.routes.js";
 import cors from "cors";
 import session from "express-session";
+import "dotenv/config";
 
 // يشغل Express
 const app = express();
@@ -30,14 +31,21 @@ credentials: true,
 app.use(
   session({
     // Used to sign the session cookie
-    // TODO: Move this secret to an environment variable (.env)
-    secret: "taskflow-secret-key",
+     secret: process.env.SESSION_SECRET,
 
     // Do not save the session again if it has not changed
     resave: false,
 
     // Do not create a session until something is actually stored in it
     saveUninitialized: false,
+
+    // Session cookie security settings
+    cookie:{
+      httpOnly: true,
+      // TODO  i will change the secure once deploy on HTTPS
+      secure: false,
+      sameSite: "lax",
+    },
   }),
 );
 
