@@ -43,7 +43,8 @@
   }
 
   .profile-aside__avatar {
-    @apply h-24 w-24 rounded-full object-cover ring-4 ring-blue-100;
+    /* @apply h-24 w-24 rounded-full object-cover ring-4 ring-blue-100; */
+    @apply flex h-24 w-24 items-center justify-center rounded-full bg-blue-100 text-3xl font-semibold text-blue-700 ring-4 ring-blue-100;
   }
 
   .profile-aside__name {

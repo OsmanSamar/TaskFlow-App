@@ -57,6 +57,7 @@ router.post("/", async (req, res) => {
     id: randomUUID(),
     name: req.body.name,
     email: req.body.email,
+    created_at: new Date().toISOString(),
   };
 
   // try {
@@ -76,10 +77,15 @@ router.post("/", async (req, res) => {
   try {
     db.prepare(
       `
-    INSERT INTO users (id, name, email, password)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO users (id, name, email, password, created_at)
+    VALUES (?, ?, ?, ?, ?)
     `,
-    ).run(newUser.id, newUser.name, newUser.email, hashedPassword);
+    ).run(newUser.id, 
+      newUser.name, 
+      newUser.email, 
+      hashedPassword,
+      newUser.created_at
+    );
   } catch (error) {
     if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
       return res.status(409).json({
@@ -151,6 +157,7 @@ router.post("/login", async (req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      created_at: user.created_at
     },
   });
 });
@@ -168,7 +175,7 @@ router.get("/me", (req, res) => {
 
   // Find the user by the ID stored in the session
   const user = db
-    .prepare("SELECT id, name, email FROM users WHERE id = ?")
+    .prepare("SELECT id, name, email, created_at FROM users WHERE id = ?")
     .get(req.session.userId);
 
   // The user may have been deleted after the session was created
@@ -184,6 +191,7 @@ router.get("/me", (req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      created_at: user.created_at,
     },
   });
 });

@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 const Profile = () => {
-  const {user} =useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   return (
     <div className="profile-page">
       <Sidebar />
@@ -20,16 +20,10 @@ const Profile = () => {
             {/* Profile side panel */}
             <aside className="profile-aside">
               <div className="profile-aside__identity">
-                {/* <img
-                  className="profile-aside__avatar"
-                  src="https://i.pravatar.cc/160?u=john-doe"
-                  alt="John Doe"
-                /> */}
-                <img
-                  className="profile-aside__avatar"
-                  src=""
-                  alt={user?.name}
-                />
+                <div className="profile-aside__avatar">
+                  {user?.name?.charAt(0).toUpperCase()}
+                </div>
+
                 <h2 className="profile-aside__name">{user?.name}</h2>
 
                 <span className="profile-aside__badge">TaskFlow User</span>
@@ -66,7 +60,18 @@ const Profile = () => {
                         <FaCalendarAlt className="profile-info__icon" /> Join
                         date
                       </dt>
-                      <dd>March 12, 2024</dd>
+                      <dd>
+                        {user?.created_at
+                          ? new Date(user.created_at).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                              },
+                            )
+                          : "—"}
+                      </dd>
                     </div>
                   </dl>
                 </section>
