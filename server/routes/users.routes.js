@@ -27,6 +27,7 @@ router.get("/", (req, res) => {
   res.json(users);
 });
 
+
 // Post Create
 router.post("/", async (req, res) => {
   // Validation
@@ -98,6 +99,7 @@ router.post("/", async (req, res) => {
 
   // 201 means Succesfully created new user
 });
+
 
 // Login user(POST)
 // Cretae endpoint for login
@@ -187,13 +189,6 @@ router.get("/me", (req, res) => {
 });
 
 
-
-
-
-
-
-
-
 // Get user by id Read
 router.get("/:id", (req, res) => {
   const userId = req.params.id;
@@ -209,6 +204,7 @@ router.get("/:id", (req, res) => {
 
   res.json(user);
 });
+
 
 // Update user by id Put(PUT)
 router.put("/:id", (req, res) => {
@@ -259,6 +255,7 @@ router.put("/:id", (req, res) => {
 
   res.json(user);
 });
+
 
 // Patch user by id
 router.patch("/:id", (req, res) => {
@@ -317,6 +314,7 @@ router.patch("/:id", (req, res) => {
   res.json(user);
 });
 
+
 // Delete by id
 router.delete("/:id", (req, res) => {
   const userId = req.params.id;
@@ -334,6 +332,34 @@ router.delete("/:id", (req, res) => {
 
   res.json({
     message: "User deleted successfully",
+  });
+});
+
+
+// Logout of the current user
+// Destroys the server-side session
+
+// Create POST /api/users/logout
+router.post("/logout", (req, res) => {
+
+  console.log("LOGOUT ROUTE HIT")
+
+  // Delete the session from the server
+  req.session.destroy((error) => {
+    if (error) {
+      console.log("Failed to destroy session:", error);
+
+      return res.status(500).json({
+        message: " Logout failed",
+      });
+    }
+
+    // Clear the session cookie from the browser
+    res.clearCookie("connect.sid");
+
+    res.json({
+      message: "Logout successful",
+    });
   });
 });
 

@@ -9,7 +9,30 @@ import {
   FaTasks,
 } from "react-icons/fa";
 
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
 const Sidebar = () => {
+  const { setUser } = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/users/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
+
+      // Clear the authenticated user from React state
+      setUser(null);
+    } catch (error) {
+      console.log("Logout error", error);
+    }
+  };
+
   return (
     <aside className="dashboard-sidebar">
       <div className="dashboard-sidebar__logo-container">
@@ -38,7 +61,9 @@ const Sidebar = () => {
             <FaCog />
             <span>Settings</span>
           </NavLink>
-          <button type="button" className="sidebar-logout">
+          <button type="button" className="sidebar-logout"
+          onClick={handleLogout}
+          >
             <FaSignOutAlt />
             <span>Logout</span>
           </button>
