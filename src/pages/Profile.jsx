@@ -82,20 +82,51 @@ const Profile = () => {
                   <ul className="profile-status-list">
                     <li className="profile-status-item">
                       <span>Email verification</span>
-                      <span className="profile-chip profile-chip--success">
-                        Verified
+                      {/* <span className="profile-chip profile-chip--success">
+                        {user?.email_verified}
+                      </span> */}
+                      <span
+                        className={`profile-chip ${
+                          user?.email_verified
+                            ? "profile-chip--success"
+                            : "profile-chip--warning"
+                        }`}
+                      >
+                        {user?.email_verified ? "Verified" : "Not verified"}
                       </span>
                     </li>
                     <li className="profile-status-item">
                       <span>Account status</span>
-                      <span className="profile-chip profile-chip--success">
-                        Active
+                      {/* <span className="profile-chip profile-chip--success">
+                        {user?.account_status}
+                      </span> */}
+                      <span
+                        className={`profile-chip ${
+                          user?.account_status === "active"
+                            ? "profile-chip--success"
+                            : "profile-chip--warning"
+                        }`}
+                      >
+                        {user?.account_status}
                       </span>
                     </li>
                     <li className="profile-status-item">
                       <span>Last login</span>
                       <span className="profile-status-item__meta">
-                        Today, 09:42 AM
+                        <dd>
+                          {user?.last_login
+                            ? new Date(user.last_login).toLocaleString(
+                                "en-US",
+                                {
+                                  month: "long",
+                                  day: "numeric",
+                                  year: "numeric",
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                },
+                              )
+                            : "—"}
+                        </dd>
                       </span>
                     </li>
                   </ul>

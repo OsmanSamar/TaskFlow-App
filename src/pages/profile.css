@@ -124,6 +124,9 @@
   .profile-chip--success {
     @apply bg-emerald-50 text-emerald-700;
   }
+  .profile-chip--warning{
+    @apply bg-emerald-50 text-red-700;
+  }
 
   .profile-chip--info {
     @apply bg-blue-50 text-blue-700;

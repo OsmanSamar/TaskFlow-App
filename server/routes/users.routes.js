@@ -27,7 +27,6 @@ router.get("/", (req, res) => {
   res.json(users);
 });
 
-
 // Post Create
 router.post("/", async (req, res) => {
   // Validation
@@ -80,11 +79,12 @@ router.post("/", async (req, res) => {
     INSERT INTO users (id, name, email, password, created_at)
     VALUES (?, ?, ?, ?, ?)
     `,
-    ).run(newUser.id, 
-      newUser.name, 
-      newUser.email, 
+    ).run(
+      newUser.id,
+      newUser.name,
+      newUser.email,
       hashedPassword,
-      newUser.created_at
+      newUser.created_at,
     );
   } catch (error) {
     if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
@@ -106,11 +106,11 @@ router.post("/", async (req, res) => {
   // 201 means Succesfully created new user
 });
 
-
 // Login user(POST)
 // Cretae endpoint for login
 router.post("/login", async (req, res) => {
   console.log("LOGIN ROUTE HIT");
+
   const { email, password } = req.body;
 
   // Validation
@@ -136,7 +136,6 @@ router.post("/login", async (req, res) => {
   }
 
   // Compare entered password with sorted bcrypt hash
-
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
@@ -147,21 +146,28 @@ router.post("/login", async (req, res) => {
 
   // Store the authenticated user's ID in the session
   // This allows the server to remember the logged-in user
+
   req.session.userId = user.id;
 
-  // Login successful
+  // Update the user's last login time
+  const lastLogin = new Date().toISOString();
+  db.prepare("UPDATE users SET last_login = ? WHERE id = ?").run(
+    lastLogin,
+    user.id,
+  );
+  console.log("Last login:", lastLogin);
 
+  // Login successful
   res.json({
     message: "Login successful",
     user: {
       id: user.id,
       name: user.name,
       email: user.email,
-      created_at: user.created_at
+      created_at: user.created_at,
     },
   });
 });
-
 
 //Get the currently authenticated user
 // Uses the user ID stored in the session
@@ -175,7 +181,7 @@ router.get("/me", (req, res) => {
 
   // Find the user by the ID stored in the session
   const user = db
-    .prepare("SELECT id, name, email, created_at FROM users WHERE id = ?")
+    .prepare("SELECT id, name, email, created_at, last_login, account_status, email_verified FROM users WHERE id = ?")
     .get(req.session.userId);
 
   // The user may have been deleted after the session was created
@@ -192,10 +198,12 @@ router.get("/me", (req, res) => {
       name: user.name,
       email: user.email,
       created_at: user.created_at,
+      last_login: user.last_login,
+      account_status: user.account_status,
+      email_verified: user.email_verified,
     },
   });
 });
-
 
 // Get user by id Read
 router.get("/:id", (req, res) => {
@@ -212,7 +220,6 @@ router.get("/:id", (req, res) => {
 
   res.json(user);
 });
-
 
 // Update user by id Put(PUT)
 router.put("/:id", (req, res) => {
@@ -263,7 +270,6 @@ router.put("/:id", (req, res) => {
 
   res.json(user);
 });
-
 
 // Patch user by id
 router.patch("/:id", (req, res) => {
@@ -322,7 +328,6 @@ router.patch("/:id", (req, res) => {
   res.json(user);
 });
 
-
 // Delete by id
 router.delete("/:id", (req, res) => {
   const userId = req.params.id;
@@ -343,14 +348,12 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-
 // Logout of the current user
 // Destroys the server-side session
 
 // Create POST /api/users/logout
 router.post("/logout", (req, res) => {
-
-  console.log("LOGOUT ROUTE HIT")
+  console.log("LOGOUT ROUTE HIT");
 
   // Delete the session from the server
   req.session.destroy((error) => {
