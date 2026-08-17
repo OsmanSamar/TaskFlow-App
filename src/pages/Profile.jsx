@@ -82,9 +82,7 @@ const Profile = () => {
                   <ul className="profile-status-list">
                     <li className="profile-status-item">
                       <span>Email verification</span>
-                      {/* <span className="profile-chip profile-chip--success">
-                        {user?.email_verified}
-                      </span> */}
+
                       <span
                         className={`profile-chip ${
                           user?.email_verified
@@ -97,9 +95,7 @@ const Profile = () => {
                     </li>
                     <li className="profile-status-item">
                       <span>Account status</span>
-                      {/* <span className="profile-chip profile-chip--success">
-                        {user?.account_status}
-                      </span> */}
+
                       <span
                         className={`profile-chip ${
                           user?.account_status === "active"

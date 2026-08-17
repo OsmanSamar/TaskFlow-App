@@ -73,6 +73,10 @@
     @apply bg-emerald-50 text-emerald-700;
   }
 
+  .settings-chip--warning{
+    @apply bg-emerald-50 text-red-700;
+  }
+
   .settings-btn {
     @apply shrink-0 cursor-default rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors duration-150;
   }

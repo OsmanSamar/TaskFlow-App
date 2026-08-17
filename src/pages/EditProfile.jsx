@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 const EditProfile = () => {
-  const {user} =useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   return (
     <div className="editprofile-page">
       <Sidebar />
@@ -47,7 +47,6 @@ const EditProfile = () => {
                   type="text"
                   className="editprofile-input"
                   defaultValue={user?.name}
-                 
                 />
               </div>
 
@@ -75,7 +74,18 @@ const EditProfile = () => {
                     Join date
                   </span>
                   <span className="editprofile-readonly__value">
-                    March 12, 2024
+                    <dd>
+                      {user?.created_at
+                        ? new Date(user.created_at).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            },
+                          )
+                        : "—"}
+                    </dd>
                   </span>
                 </div>
 
@@ -83,8 +93,15 @@ const EditProfile = () => {
                   <span className="editprofile-readonly__label">
                     Account status
                   </span>
-                  <span className="editprofile-chip editprofile-chip--success">
-                    Active
+
+                  <span
+                    className={`editprofile-chip ${
+                      user?.account_status === "active"
+                        ? "editprofile-chip--success"
+                        : "editprofile-chip--warning"
+                    }`}
+                  >
+                    {user?.account_status}
                   </span>
                 </div>
               </div>

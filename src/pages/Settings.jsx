@@ -15,7 +15,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 const Settings = () => {
-  const {user} =useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   return (
     <div className="dashboard-page settings-page">
       <Sidebar />
@@ -54,8 +54,15 @@ const Settings = () => {
                     Your account is active and verified
                   </p>
                 </div>
-                <span className="settings-chip settings-chip--success">
-                  Active
+
+                <span
+                  className={`settings-chip ${
+                    user?.account_status === "active"
+                      ? "settings-chip--success"
+                      : "settings-chip--warning"
+                  }`}
+                >
+                  {user?.account_status}
                 </span>
               </div>
 
