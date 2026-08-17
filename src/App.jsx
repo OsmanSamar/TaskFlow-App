@@ -1,4 +1,4 @@
-import { Navigate,Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -22,15 +22,44 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route path="/tasks" element={<Tasks />} />
-      <Route path="/" element={<Navigate to ="/login" replace />} />
+      <Route
+        path="/tasks"
+        element={
+          <ProtectedRoute>
+            <Tasks />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/editprofile"
+        element={
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/resetpassword" element={<ResetPassword />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/editprofile" element={<EditProfile />} />
-      <Route path="/settings" element={<Settings />} />
     </Routes>
   );
 }
