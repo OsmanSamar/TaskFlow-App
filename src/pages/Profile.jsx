@@ -81,6 +81,7 @@ const Profile = () => {
                   <h3 className="profile-card__title">Account Status</h3>
                   <ul className="profile-status-list">
                     <li className="profile-status-item">
+                      {/* TODO email verified   */}
                       <span>Email verification</span>
 
                       <span
@@ -109,7 +110,7 @@ const Profile = () => {
                     <li className="profile-status-item">
                       <span>Last login</span>
                       <span className="profile-status-item__meta">
-                        <dd>
+                      
                           {user?.last_login
                             ? new Date(user.last_login).toLocaleString(
                                 "en-US",
@@ -122,7 +123,7 @@ const Profile = () => {
                                 },
                               )
                             : "—"}
-                        </dd>
+                     
                       </span>
                     </li>
                   </ul>
