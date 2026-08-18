@@ -13,7 +13,8 @@ db.exec(`
     created_at TEXT NOT NULL,
     last_login TEXT,
     account_status TEXT NOT NULL DEFAULT 'active',
-    email_verified INTEGER NOT NULL DEFAULT 0
+    email_verified INTEGER NOT NULL DEFAULT 0,
+    profile_image_url TEXT
      );
      `);
 

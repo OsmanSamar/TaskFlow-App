@@ -6,7 +6,14 @@ import express from "express";
 import usersRouter from "./routes/users.routes.js";
 import cors from "cors";
 import session from "express-session";
-import "dotenv/config";
+//import "dotenv/config"; to read it from root
+import "./config/cloudinary.js";
+
+// For test
+
+//console.log(process.env.CLOUDINARY_CLOUD_NAME);
+
+
 
 // يشغل Express
 const app = express();
@@ -21,12 +28,12 @@ credentials: true,
 );
 
 //Important: Must be registered before routes that use req.session
-
 //Session middleware
-
 // Important: Must be registered before routes that use req.session
-
 // We place it before express.json() to keep authentication middleware organized
+
+// For test 
+//console.log("SESSION_SECRET loaded:", !!process.env.SESSION_SECRET);
 
 app.use(
   session({
