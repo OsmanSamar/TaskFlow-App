@@ -209,7 +209,7 @@ router.get("/me", (req, res) => {
       last_login: user.last_login,
       account_status: user.account_status,
       email_verified: user.email_verified,
-      profile_image_url: user.profile_image_url
+      profile_image_url: user.profile_image_url,
     },
   });
 });
@@ -248,6 +248,9 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
   // Keep the current profile image URL if no new image is uploaded
   let profileImageUrl = user.profile_image_url;
 
+  //If no new images is uploaded, we keep the existing image information
+  let profileImagePublicId = user.profile_image_public_id;
+
   //Check if a profile image was uploaded
   if (req.file) {
     console.log("Profile image received:", {
@@ -261,13 +264,18 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
 
     profileImageUrl = result.secure_url;
 
+    //Store the new Cloudinary public ID so the image can be deleted from Cloudinary later
+    profileImagePublicId = result.public_id;
+
     console.log("Profile image uploaded", profileImageUrl);
   }
 
   // Update the uesr's name in the database
+  //Update the user's name, profile image URL, and Cloudinary public ID in the database
+  // The public ID will be used later to delete the old Cloudinary image
   db.prepare(
     "UPDATE users SET name = ?, profile_image_url = ?  WHERE id =?",
-  ).run(req.body.name.trim(), profileImageUrl, user.id);
+  ).run(req.body.name.trim(), profileImageUrl, profileImagePublicId, user.id);
 
   // Return the updated user data
   res.json({

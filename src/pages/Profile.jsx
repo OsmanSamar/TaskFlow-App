@@ -28,7 +28,7 @@ const Profile = () => {
                   className="profile-aside__avatar-image"
                   />
                  ):(
-                  user?.name?.chartAt(0).toUpperCase()
+                  user?.name?.charAt(0).toUpperCase()
                  
                  )}
                 </div>
