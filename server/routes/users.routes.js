@@ -188,7 +188,7 @@ router.get("/me", (req, res) => {
   // Find the user by the ID stored in the session
   const user = db
     .prepare(
-      "SELECT id, name, email, created_at, last_login, account_status, email_verified FROM users WHERE id = ?",
+      "SELECT id, name, email, created_at, last_login, account_status, email_verified, profile_image_url FROM users WHERE id = ?",
     )
     .get(req.session.userId);
 
@@ -209,6 +209,78 @@ router.get("/me", (req, res) => {
       last_login: user.last_login,
       account_status: user.account_status,
       email_verified: user.email_verified,
+      profile_image_url: user.profile_image_url
+    },
+  });
+});
+
+//Update the currently authenticated user's profile
+// Uses the user ID sorted in the current session
+router.put("/me", upload.single("avatar"), async (req, res) => {
+  // Check if the user is authenticated
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  //Validate the new name
+  if (!req.body.name || req.body.name.trim() === "") {
+    return res.status(400).json({
+      message: "Name is required",
+    });
+  }
+
+  // Find the currently authenticated user
+  const user = db
+    .prepare(
+      "SELECT id, name, email, created_at, last_login, account_status, email_verified, profile_image_url FROM users WHERE id = ?",
+    )
+    .get(req.session.userId);
+
+  // The user may have been deleted after the session was created
+  if (!user) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Keep the current profile image URL if no new image is uploaded
+  let profileImageUrl = user.profile_image_url;
+
+  //Check if a profile image was uploaded
+  if (req.file) {
+    console.log("Profile image received:", {
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+    });
+
+    // Upload the profile image to Cloudinary
+    const result = await uploadToCloudinary(req.file.buffer);
+
+    profileImageUrl = result.secure_url;
+
+    console.log("Profile image uploaded", profileImageUrl);
+  }
+
+  // Update the uesr's name in the database
+  db.prepare(
+    "UPDATE users SET name = ?, profile_image_url = ?  WHERE id =?",
+  ).run(req.body.name.trim(), profileImageUrl, user.id);
+
+  // Return the updated user data
+  res.json({
+    message: "Profile updated succcessfully",
+    user: {
+      id: user.id,
+      name: req.body.name.trim(),
+      email: user.email,
+      created_at: user.created_at,
+      last_login: user.last_login,
+      account_status: user.account_status,
+      email_verified: user.email_verified,
+      profile_image_url: profileImageUrl,
     },
   });
 });
@@ -230,6 +302,7 @@ router.get("/me", (req, res) => {
 
 // });
 
+// We use avatar name for Postman / Multer
 router.post("/test-upload", upload.single("avatar"), async (req, res) => {
   try {
     const result = await uploadToCloudinary(req.file.buffer);
