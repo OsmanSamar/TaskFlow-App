@@ -21,7 +21,16 @@ const Profile = () => {
             <aside className="profile-aside">
               <div className="profile-aside__identity">
                 <div className="profile-aside__avatar">
-                  {user?.name?.charAt(0).toUpperCase()}
+                 {user?.profile_image_url ?(
+                  <img
+                  src={user.profile_image_url}
+                  alt={user.name}
+                  className="profile-aside__avatar-image"
+                  />
+                 ):(
+                  user?.name?.chartAt(0).toUpperCase()
+                 
+                 )}
                 </div>
 
                 <h2 className="profile-aside__name">{user?.name}</h2>
