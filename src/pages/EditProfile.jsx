@@ -3,11 +3,52 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "./editprofile.css";
 import { FaCamera, FaCalendarAlt } from "react-icons/fa";
-import { useContext } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 const EditProfile = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+  const fileInputRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState();
+  const [name, setName] = useState(user?.name || "");
+
+  //Handles saving the user's profile changes
+  const handleSave = async () => {
+    // Create a FormData object so we can send both text data and a file
+    const formData = new FormData(); // Add the updated user's name to the form data
+
+    formData.append("name", name); // Add the selected profile image only if the user chose a new image
+
+    if (selectedImage) {
+      formData.append("avatar", selectedImage);
+    } // Send the profile changes to the backend
+
+    const response = await fetch("http://localhost:3000/api/users/me", {
+      // Use PUT because we are updating the authenticated user's profile
+      method: "PUT", // Include the session cookie so the backend knows which user is logged in
+
+      credentials: "include", // Send the name and image as multipart/form-data
+      // The browser automatically sets the correct Content-Type boundary
+
+      body: formData,
+    }); // Check the HTTP status returned by the backend
+
+    console.log("Response status:", response.status); // Convert the backend's JSON response into a JavaScript object
+
+    const data = await response.json(); // Replace the old user data in AuthContext with the updated user data
+    // This makes the new name and profile image available throughout the app
+
+    setUser(data.user); // Display the updated user data for debugging/testing
+
+    console.log("Updated user:", data.user); // Display the values that were prepared before sending the request
+    // Useful for checking that the correct name and image were selected
+
+    console.log("FormData prepared:", {
+      name,
+      selectedImage,
+    });
+  };
+
   return (
     <div className="editprofile-page">
       <Sidebar />
@@ -20,10 +61,33 @@ const EditProfile = () => {
             <div className="editprofile-header__avatar-wrap">
               <img
                 className="editprofile-header__avatar"
-                src=""
+                src={
+                  selectedImage
+                    ? URL.createObjectURL(selectedImage)
+                    : user?.profile_image_url || ""
+                }
                 alt={user?.name}
               />
-              <button type="button" className="editprofile-header__photo-btn">
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+
+                  if (file) {
+                    setSelectedImage(file);
+                  }
+                }}
+              />
+
+              <button
+                type="button"
+                className="editprofile-header__photo-btn"
+                onClick={() => fileInputRef.current?.click()}
+              >
                 <FaCamera />
                 Change Photo
               </button>
@@ -46,7 +110,10 @@ const EditProfile = () => {
                   id="full-name"
                   type="text"
                   className="editprofile-input"
-                  defaultValue={user?.name}
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
                 />
               </div>
 
@@ -111,6 +178,7 @@ const EditProfile = () => {
               <button
                 type="button"
                 className="editprofile-btn editprofile-btn--primary"
+                onClick={handleSave}
               >
                 Save Changes
               </button>

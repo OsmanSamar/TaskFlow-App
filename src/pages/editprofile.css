@@ -37,7 +37,7 @@
   }
 
   .editprofile-header__avatar {
-    @apply h-24 w-24 rounded-full object-cover ring-4 ring-indigo-100;
+    @apply h-24 w-24 rounded-full object-cover ring-4 ring-indigo-100 object-[center_20%];
   }
 
   .editprofile-header__photo-btn {
