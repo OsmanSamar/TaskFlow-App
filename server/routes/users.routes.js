@@ -5,6 +5,8 @@ import db from "../database/database.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import { isValidEmail, isValidPassword } from "../utils/validators.js";
+import multer from "multer";
+import uploadToCloudinary from "../utils/cloudinaryUpload.js";
 
 // To check
 // const password = "MyPassword@123";
@@ -19,6 +21,10 @@ import { isValidEmail, isValidPassword } from "../utils/validators.js";
 
 const router = express.Router();
 console.log("LOGIN ROUTE HIT");
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
 
 // Get read Router
 router.get("/", (req, res) => {
@@ -181,7 +187,9 @@ router.get("/me", (req, res) => {
 
   // Find the user by the ID stored in the session
   const user = db
-    .prepare("SELECT id, name, email, created_at, last_login, account_status, email_verified FROM users WHERE id = ?")
+    .prepare(
+      "SELECT id, name, email, created_at, last_login, account_status, email_verified FROM users WHERE id = ?",
+    )
     .get(req.session.userId);
 
   // The user may have been deleted after the session was created
@@ -203,6 +211,42 @@ router.get("/me", (req, res) => {
       email_verified: user.email_verified,
     },
   });
+});
+
+// For test
+// router.post("/test-upload", upload.single("avatar"),
+// (req , res)=>{
+
+//   console.log("File received:", req.file);
+
+//   res.json({
+//     message:"File received successfully",
+//     file:{
+//       originalname: req.file?.originalname,
+//       mimetype: req.file?.mimetype,
+//       size:req.file?.size,
+//     },
+//   });
+
+// });
+
+router.post("/test-upload", upload.single("avatar"), async (req, res) => {
+  try {
+    const result = await uploadToCloudinary(req.file.buffer);
+
+    console.log("Cloudinary upload successful:", result.secure_url);
+
+    res.json({
+      message: "Image uploaded successfully",
+      imageUrl: result.secure_url,
+    });
+  } catch (error) {
+    console.error("Cloudinary upload failed:", error);
+
+    res.status(500).json({
+      message: "Image upload failed",
+    });
+  }
 });
 
 // Get user by id Read
