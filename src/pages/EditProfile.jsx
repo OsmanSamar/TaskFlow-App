@@ -13,41 +13,60 @@ const EditProfile = () => {
   const [selectedImage, setSelectedImage] = useState();
   const [name, setName] = useState(user?.name || "");
 
-  //Handles saving the user's profile changes
+  // Tracks whether the profile is currently being saved, this prevents the user from submitting the same request multiple times.
+  const [saving, setSaving] = useState(false);
+
+  // Acts as an immediate lock to prevent duplicate save request. Unlike state, ref updates immediately without waiting for  a re-render.
+  const savingRef = useRef(false);
+
   const handleSave = async () => {
-    // Create a FormData object so we can send both text data and a file
-    const formData = new FormData(); // Add the updated user's name to the form data
+    // Prevent duplicate requests if the user clicks Save multiple times
+    if (savingRef.current) return;
 
-    formData.append("name", name); // Add the selected profile image only if the user chose a new image
+    // Lock the save operation immediately.
+    savingRef.current = true;
 
-    if (selectedImage) {
-      formData.append("avatar", selectedImage);
-    } // Send the profile changes to the backend
+    // Update the UI to show that saving is in progress.
+    setSaving(true);
 
-    const response = await fetch("http://localhost:3000/api/users/me", {
-      // Use PUT because we are updating the authenticated user's profile
-      method: "PUT", // Include the session cookie so the backend knows which user is logged in
+    try {
+      // Create a FormData object so we can send both text data and a file
+      const formData = new FormData();
 
-      credentials: "include", // Send the name and image as multipart/form-data
-      // The browser automatically sets the correct Content-Type boundary
+      formData.append("name", name);
 
-      body: formData,
-    }); // Check the HTTP status returned by the backend
+      if (selectedImage) {
+        formData.append("avatar", selectedImage);
+      }
 
-    console.log("Response status:", response.status); // Convert the backend's JSON response into a JavaScript object
+      const response = await fetch("http://localhost:3000/api/users/me", {
+        method: "PUT",
+        credentials: "include",
+        body: formData,
+      });
 
-    const data = await response.json(); // Replace the old user data in AuthContext with the updated user data
-    // This makes the new name and profile image available throughout the app
+      console.log("Response status:", response.status);
 
-    setUser(data.user); // Display the updated user data for debugging/testing
+      const data = await response.json();
 
-    console.log("Updated user:", data.user); // Display the values that were prepared before sending the request
-    // Useful for checking that the correct name and image were selected
+      if (!response.ok) {
+        console.error("Failed to update profile:", data);
+        return;
+      }
 
-    console.log("FormData prepared:", {
-      name,
-      selectedImage,
-    });
+      // Update the global authenticated user with the new profile data
+      setUser(data.user);
+
+      console.log("Updated user:", data.user);
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+    } finally {
+      // Replace the request lock so the user can save again.
+      savingRef.current = false;
+
+      // Return the button to its  normal state.
+      setSaving(false);
+    }
   };
 
   //Delete the user's current profile image.
@@ -105,9 +124,7 @@ const EditProfile = () => {
                     alt={user?.name}
                   />
                 ) : (
-                  <span >
-                    {user?.name?.charAt(0).toUpperCase()}
-                  </span>
+                  <span>{user?.name?.charAt(0).toUpperCase()}</span>
                 )}
               </div>
 
@@ -230,8 +247,9 @@ const EditProfile = () => {
                 type="button"
                 className="editprofile-btn editprofile-btn--primary"
                 onClick={handleSave}
+                disabled={saving}
               >
-                Save Changes
+                {saving ? "Saving..." : "Save Changes"}
               </button>
               <Link
                 to="/profile"
