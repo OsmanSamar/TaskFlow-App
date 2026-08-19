@@ -6,7 +6,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import { isValidEmail, isValidPassword } from "../utils/validators.js";
 import multer from "multer";
-import uploadToCloudinary from "../utils/cloudinaryUpload.js";
+import {uploadToCloudinary, deleteFromCloudinary }from "../utils/cloudinaryUpload.js";
 
 // To check
 // const password = "MyPassword@123";
@@ -188,7 +188,7 @@ router.get("/me", (req, res) => {
   // Find the user by the ID stored in the session
   const user = db
     .prepare(
-      "SELECT id, name, email, created_at, last_login, account_status, email_verified, profile_image_url FROM users WHERE id = ?",
+      "SELECT id, name, email, created_at, last_login, account_status, email_verified, profile_image_url, profile_image_public_id  FROM users WHERE id = ?",
     )
     .get(req.session.userId);
 
@@ -210,6 +210,7 @@ router.get("/me", (req, res) => {
       account_status: user.account_status,
       email_verified: user.email_verified,
       profile_image_url: user.profile_image_url,
+      profile_image_public_id: user.profile_image_public_id,
     },
   });
 });
@@ -270,7 +271,6 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
     console.log("Profile image uploaded", profileImageUrl);
   }
 
-  
   //Update the user's name, profile image URL, and Cloudinary public ID in the database
   // The public ID will be used later to delete the old Cloudinary image
   db.prepare(
@@ -309,6 +309,53 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
 //   });
 
 // });
+
+
+//Delete the authenticated user's profile image.
+// The old image is removed from Cloudinary and its image data
+// is cleared from the user's database record.
+router.delete("/me/avatar", async (req, res) => {
+  // Check if the user is authenticated
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Find the currently authenticated user and get the Cloudinary public ID
+  const user = db
+    .prepare("SELECT id, profile_image_public_id FROM users WHERE id = ?")
+    .get(req.session.userId);
+
+  // The user may have been deleted after the session was created
+  if (!user) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // If the user does not have a profile image, there is nothing to delete
+  if (!user.profile_image_public_id) {
+    return res.status(400).json({
+      message: "No profile image to delete",
+    });
+  }
+
+  // Delete the image from Cloudinary using its public ID
+  await deleteFromCloudinary(user.profile_image_public_id);
+
+  // Remove the image information from the user's database record
+  db.prepare(
+    "UPDATE users SET profile_image_url = NULL, profile_image_public_id = NULL WHERE id = ?",
+  ).run(user.id);
+
+  // Return a successful response
+  res.json({
+    message: "Profile image deleted successfully",
+  });
+});
+
+
 
 // We use avatar name for Postman / Multer
 router.post("/test-upload", upload.single("avatar"), async (req, res) => {
