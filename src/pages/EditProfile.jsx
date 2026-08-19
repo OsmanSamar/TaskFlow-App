@@ -19,6 +19,12 @@ const EditProfile = () => {
   // Acts as an immediate lock to prevent duplicate save request. Unlike state, ref updates immediately without waiting for  a re-render.
   const savingRef = useRef(false);
 
+  // Tracks whether the profile image is currently being deleted. Used to update the btn UI while the request is running
+  const [deleting, setDeleting] = useState(false);
+
+  // Acts as immediate lock to  prevent duplicate delete requests
+  const deletingRef = useRef(false);
+
   const handleSave = async () => {
     // Prevent duplicate requests if the user clicks Save multiple times
     if (savingRef.current) return;
@@ -73,33 +79,48 @@ const EditProfile = () => {
   // The backend removes the image from Cloudinary and clears
   // the image URL and public ID from the database.
   const handleDeletePhoto = async () => {
-    const response = await fetch("http://localhost:3000/api/users/me/avatar", {
-      method: "DELETE",
-      credentials: "include",
-    });
+    // Prevent multiple delete requests from being sent at the same time.
+    if (deletingRef.current) return; // Lock the delete operation immediately.
 
-    console.log("Delete photo response status:", response.status);
+    deletingRef.current = true; // Update the UI to show that deletion is in progress.
 
-    const data = await response.json();
+    setDeleting(true);
 
-    // Stop here if the backend returned an error
-    if (!response.ok) {
-      console.error("Failed to delete profile image:", data);
-      return;
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/users/me/avatar",
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      console.log("Delete photo response status:", response.status);
+
+      const data = await response.json(); // Stop if the backend returned an error.
+
+      if (!response.ok) {
+        console.error("Failed to delete profile image:", data);
+        return;
+      }
+
+      console.log("Profile image deleted:", data); // Remove the image from the global user state immediately.
+
+      setUser((currentUser) => ({
+        ...currentUser,
+        profile_image_url: null,
+        profile_image_public_id: null,
+      })); // Clear any locally selected image.
+
+      setSelectedImage(null);
+    } catch (error) {
+      console.error("Failed to delete profile image:", error);
+    } finally {
+      // Release the request lock so deletion can be performed again later.
+      deletingRef.current = false; // Return the button to its normal state.
+
+      setDeleting(false);
     }
-
-    console.log("Profile image deleted:", data);
-
-    // Remove the image from the current user state immediately
-    // so the UI updates without requiring a page refresh.
-    setUser((currentUser) => ({
-      ...currentUser,
-      profile_image_url: null,
-      profile_image_public_id: null,
-    }));
-
-    // Clear any locally selected image as well
-    setSelectedImage(null);
   };
 
   return (
@@ -155,9 +176,10 @@ const EditProfile = () => {
                 type="button"
                 className="editprofile-header__delete-btn"
                 onClick={handleDeletePhoto}
+                disabled={deleting}
               >
                 <MdDeleteSweep />
-                Delete Photo
+                {deleting ? "Deleting..." : " Delete Photo"}
               </button>
             </div>
             <div className="editprofile-header__info">
