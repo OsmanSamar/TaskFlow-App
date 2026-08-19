@@ -6,7 +6,10 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import { isValidEmail, isValidPassword } from "../utils/validators.js";
 import multer from "multer";
-import {uploadToCloudinary, deleteFromCloudinary }from "../utils/cloudinaryUpload.js";
+import {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} from "../utils/cloudinaryUpload.js";
 
 // To check
 // const password = "MyPassword@123";
@@ -235,7 +238,7 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
   // Find the currently authenticated user
   const user = db
     .prepare(
-      "SELECT id, name, email, created_at, last_login, account_status, email_verified, profile_image_url FROM users WHERE id = ?",
+      "SELECT id, name, email, created_at, last_login, account_status, email_verified, profile_image_url, profile_image_public_id  FROM users WHERE id = ?",
     )
     .get(req.session.userId);
 
@@ -251,6 +254,9 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
 
   //If no new images is uploaded, we keep the existing image information
   let profileImagePublicId = user.profile_image_public_id;
+
+  //Keep the old Cloudinary public ID so we can delete the old image only after the new image has been successfully saved in the database.
+  const oldProfileImagePublicId = user.profile_image_public_id;
 
   //Check if a profile image was uploaded
   if (req.file) {
@@ -276,6 +282,29 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
   db.prepare(
     "UPDATE users SET name = ?, profile_image_url = ?, profile_image_public_id = ?  WHERE id =?",
   ).run(req.body.name.trim(), profileImageUrl, profileImagePublicId, user.id);
+
+
+  
+  //Delete the old Cloudinary image only after the database has been
+  // successfully updated to use the new image.
+  // If deletion fails, we keep the new profile working and log the error
+  // so the old Cloudinary file can be cleaned up later.
+  if (
+    req.file &&
+    oldProfileImagePublicId &&
+    oldProfileImagePublicId !== profileImagePublicId
+  ) {
+    try {
+      await deleteFromCloudinary(oldProfileImagePublicId);
+
+      console.log("Old profile image deleted:", oldProfileImagePublicId);
+    } catch (error) {
+      console.error(
+        "Warning: Failed to delete old profile image from Cloudinary:",
+        error,
+      );
+    }
+  }
 
   // Return the updated user data
   res.json({
@@ -309,7 +338,6 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
 //   });
 
 // });
-
 
 //Delete the authenticated user's profile image.
 // The old image is removed from Cloudinary and its image data
@@ -354,8 +382,6 @@ router.delete("/me/avatar", async (req, res) => {
     message: "Profile image deleted successfully",
   });
 });
-
-
 
 // We use avatar name for Postman / Multer
 router.post("/test-upload", upload.single("avatar"), async (req, res) => {
