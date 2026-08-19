@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "./editprofile.css";
 import { FaCamera, FaCalendarAlt } from "react-icons/fa";
+import { MdDeleteSweep } from "react-icons/md";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 
@@ -49,6 +50,39 @@ const EditProfile = () => {
     });
   };
 
+  //Delete the user's current profile image.
+  // The backend removes the image from Cloudinary and clears
+  // the image URL and public ID from the database.
+  const handleDeletePhoto = async () => {
+    const response = await fetch("http://localhost:3000/api/users/me/avatar", {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    console.log("Delete photo response status:", response.status);
+
+    const data = await response.json();
+
+    // Stop here if the backend returned an error
+    if (!response.ok) {
+      console.error("Failed to delete profile image:", data);
+      return;
+    }
+
+    console.log("Profile image deleted:", data);
+
+    // Remove the image from the current user state immediately
+    // so the UI updates without requiring a page refresh.
+    setUser((currentUser) => ({
+      ...currentUser,
+      profile_image_url: null,
+      profile_image_public_id: null,
+    }));
+
+    // Clear any locally selected image as well
+    setSelectedImage(null);
+  };
+
   return (
     <div className="editprofile-page">
       <Sidebar />
@@ -59,15 +93,23 @@ const EditProfile = () => {
         <main className="editprofile-content">
           <section className="editprofile-header">
             <div className="editprofile-header__avatar-wrap">
-              <img
-                className="editprofile-header__avatar"
-                src={
-                  selectedImage
-                    ? URL.createObjectURL(selectedImage)
-                    : user?.profile_image_url || ""
-                }
-                alt={user?.name}
-              />
+              <div className="editprofile-header__avatar">
+                {selectedImage || user?.profile_image_url ? (
+                  <img
+                    className="editprofile-header__avatar-image"
+                    src={
+                      selectedImage
+                        ? URL.createObjectURL(selectedImage)
+                        : user.profile_image_url
+                    }
+                    alt={user?.name}
+                  />
+                ) : (
+                  <span >
+                    {user?.name?.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </div>
 
               <input
                 ref={fileInputRef}
@@ -90,6 +132,15 @@ const EditProfile = () => {
               >
                 <FaCamera />
                 Change Photo
+              </button>
+
+              <button
+                type="button"
+                className="editprofile-header__delete-btn"
+                onClick={handleDeletePhoto}
+              >
+                <MdDeleteSweep />
+                Delete Photo
               </button>
             </div>
             <div className="editprofile-header__info">
