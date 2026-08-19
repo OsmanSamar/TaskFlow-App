@@ -219,8 +219,9 @@ router.get("/me", (req, res) => {
 });
 
 //Update the currently authenticated user's profile
-// Uses the user ID sorted in the current session
+// Uses the user ID stored in the current session
 router.put("/me", upload.single("avatar"), async (req, res) => {
+
   // Check if the user is authenticated
   if (!req.session.userId) {
     return res.status(401).json({
@@ -228,7 +229,7 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
     });
   }
 
-  //Validate the new name
+  // Validate the new name
   if (!req.body.name || req.body.name.trim() === "") {
     return res.status(400).json({
       message: "Name is required",
@@ -283,8 +284,6 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
     "UPDATE users SET name = ?, profile_image_url = ?, profile_image_public_id = ?  WHERE id =?",
   ).run(req.body.name.trim(), profileImageUrl, profileImagePublicId, user.id);
 
-
-  
   //Delete the old Cloudinary image only after the database has been
   // successfully updated to use the new image.
   // If deletion fails, we keep the new profile working and log the error
@@ -308,7 +307,7 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
 
   // Return the updated user data
   res.json({
-    message: "Profile updated succcessfully",
+    message: "Profile updated successfully",
     user: {
       id: user.id,
       name: req.body.name.trim(),
@@ -318,6 +317,7 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
       account_status: user.account_status,
       email_verified: user.email_verified,
       profile_image_url: profileImageUrl,
+      profile_image_public_id: user.profile_image_public_id,
     },
   });
 });
@@ -369,8 +369,18 @@ router.delete("/me/avatar", async (req, res) => {
     });
   }
 
-  // Delete the image from Cloudinary using its public ID
-  await deleteFromCloudinary(user.profile_image_public_id);
+  //Delete the image from Cloudinary using its public ID.
+  // If Cloudinary fails, we do not clear the database values because
+  // the image may still exist and we need to keep the DB consistent.
+  try {
+    await deleteFromCloudinary(user.profile_image_public_id);
+  } catch (error) {
+    console.error("Failed to delete profile image from Cloudinary:", error);
+
+    return res.status(500).json({
+      message: "Failed to delete profile image",
+    });
+  }
 
   // Remove the image information from the user's database record
   db.prepare(
