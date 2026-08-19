@@ -6,7 +6,6 @@ import { validateEmail } from "../utils/validators";
 import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
-
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -67,7 +66,7 @@ const Login = () => {
 
         // Allow the browser to send and receive authentication cookies
         credentials: "include",
-        
+
         body: JSON.stringify({
           email: loginData.email,
           password: loginData.password,
@@ -80,11 +79,24 @@ const Login = () => {
         setLoginError("Login incorrect");
         return;
       }
-      setUser(data.user);
+
+      //Fetch the complete authenticated user data after login
+      // The login response contains only basic user information,
+      // while /me returns the full profile data such as the image,
+      // account status, last login, and email verification status
+      const meResponse = await fetch("http://localhost:3000/api/users/me", {
+        credentials: "include",
+      });
+
+      const meData = await meResponse.json();
+
+      //Store the complete user data in AuthContext
+      // so all pages can display the latest profile information immediately
+      setUser(meData.user);
+
       navigate("/dashboard");
 
       console.log("Login successful:", data);
- 
     } catch (error) {
       console.error("Login error:", error);
       setLoginError("Login incorrect");
