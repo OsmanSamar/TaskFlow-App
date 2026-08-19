@@ -270,11 +270,11 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
     console.log("Profile image uploaded", profileImageUrl);
   }
 
-  // Update the uesr's name in the database
+  
   //Update the user's name, profile image URL, and Cloudinary public ID in the database
   // The public ID will be used later to delete the old Cloudinary image
   db.prepare(
-    "UPDATE users SET name = ?, profile_image_url = ?  WHERE id =?",
+    "UPDATE users SET name = ?, profile_image_url = ?, profile_image_public_id = ?  WHERE id =?",
   ).run(req.body.name.trim(), profileImageUrl, profileImagePublicId, user.id);
 
   // Return the updated user data
