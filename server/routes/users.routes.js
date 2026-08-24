@@ -1,6 +1,6 @@
 // CRUD
 import express from "express";
-import { randomUUID } from "crypto";
+import { randomUUID, randomBytes } from "crypto";
 import db from "../database/database.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
@@ -68,6 +68,10 @@ router.post("/", async (req, res) => {
     created_at: new Date().toISOString(),
   };
 
+  //Generate a secure random token for email verification
+  const verificationToken = randomBytes(32).toString("hex");
+  const verificationExpires = new Date(Date.now() + 15 * 60 * 1000, ).toISOString();
+
   // try {
   //   db.prepare(`
   //   INSERT INTO users (id, name, email)
@@ -85,8 +89,8 @@ router.post("/", async (req, res) => {
   try {
     db.prepare(
       `
-    INSERT INTO users (id, name, email, password, created_at)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO users (id, name, email, password, created_at, email_verification_token, email_verification_expires)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
     `,
     ).run(
       newUser.id,
@@ -94,6 +98,8 @@ router.post("/", async (req, res) => {
       newUser.email,
       hashedPassword,
       newUser.created_at,
+      verificationToken,
+      verificationExpires,
     );
   } catch (error) {
     if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
