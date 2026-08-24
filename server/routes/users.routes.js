@@ -11,6 +11,7 @@ import {
   deleteFromCloudinary,
 } from "../utils/cloudinaryUpload.js";
 
+
 // To check
 // const password = "MyPassword@123";
 // const hashedPassword = await bcrypt.hash(password, 10);
@@ -218,10 +219,86 @@ router.get("/me", (req, res) => {
   });
 });
 
+
+// Change the Password of currently authenticated user
+router.patch("/me/password", async (req, res) => {
+  // Check if the user is authenticated.
+  // The session user ID tells us which account is allowed to change its password.
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+   // Get the current and new password sent by the frontend.
+   const { currentPassword, newPassword, confirmPassword } = req.body; // Validate that all password fields were provided.
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return res.status(400).json({
+      message: "All password fields are required",
+    });
+  }
+  //Validate the new password against the application's rules,
+  if(!isValidPassword(newPassword)){
+    return res.status(400).json({
+      message:"Password must be at least 8 charachters and include uppercase, number and special charachter",
+    });
+  }
+
+  // Make sure the confirmation matches the new password.
+  if(newPassword  !== confirmPassword){
+    return res.status(400).json({
+      message:"Passwords do not match",
+    });
+  }
+
+  //Find the currently authenticated user by the ID  stored in the session.
+  // We only select the password hash because that is all we need for verification.
+  const user = db.prepare("SELECT id, password FROM users WHERE id = ?").get(req.session.userId);
+
+  //The user may have been deleted after  the session was created.
+  if(!user){
+    return res.status(401).json({
+      message:"Not authenticated",
+    });
+  }
+
+  //Compare the current password entered by the uuser 
+  // With the bcrypt hash stored in the db.
+   const isCurrentPasswordValid= await bcrypt.compare(
+    currentPassword, user.password,
+   );
+
+ //  Stop the password change if the current password is incorrect
+  if(!isCurrentPasswordValid){
+    return res.status(401).json({
+      message:"Current password is incorrect",
+    });
+  }
+
+   //Temporary debugs response.
+  //THis confirms that the current password was verified successfully.
+  // console.log("Current password verification passed");
+  // return res.json({
+  //   message:"Current password is correct",
+  // });
+
+  //Hash the new password before storing it in the db
+  //We never store  the user's plain-text password.
+   const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+  //  Update the user's password  with new bcrypt hash
+
+  db.prepare("UPDATE users SET password = ? WHERE ID =? ").run(hashedNewPassword, req.session.userId);
+
+  // Return a success response after the password has been updated.
+   res.json({
+    message:"Password change successfully",
+   });
+});
+
 //Update the currently authenticated user's profile
 // Uses the user ID stored in the current session
 router.put("/me", upload.single("avatar"), async (req, res) => {
-
   // Check if the user is authenticated
   if (!req.session.userId) {
     return res.status(401).json({

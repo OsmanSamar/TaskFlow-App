@@ -151,7 +151,7 @@ const Profile = () => {
 
                     <Link
                       className="profile-btn profile-btn--ghost"
-                      to="/resetpassword"
+                      to="/changepassword"
                     >
                       Change
                     </Link>
