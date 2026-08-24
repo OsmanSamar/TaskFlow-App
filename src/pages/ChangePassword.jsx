@@ -90,7 +90,7 @@ export const ChangePassword = () => {
       } // Password was changed successfully.
 
       //Keep the user on this page so they can clearly see the sucess message.
-      setSuccessMessage("Password changed successfully");
+      setSuccessMessage("Password changed successfully.");
     } catch (error) {
       console.error("Change password request failed:", error);
 
@@ -256,14 +256,14 @@ export const ChangePassword = () => {
         <div
           className="change-password-modal-overlay"
           role="presentation"
-          onClick={() => navigate("/login")}
+          
         >
           <div
             className="change-password-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="change-password-success-title"
-            onClick={(e) => e.stopPropagation()}
+          
           >
             <h2
               id="change-password-success-title"
