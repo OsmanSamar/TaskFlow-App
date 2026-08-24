@@ -10,6 +10,7 @@ import {
   uploadToCloudinary,
   deleteFromCloudinary,
 } from "../utils/cloudinaryUpload.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 // To check
 // const password = "MyPassword@123";
@@ -70,7 +71,33 @@ router.post("/", async (req, res) => {
 
   //Generate a secure random token for email verification
   const verificationToken = randomBytes(32).toString("hex");
-  const verificationExpires = new Date(Date.now() + 15 * 60 * 1000, ).toISOString();
+  const verificationExpires = new Date(
+    Date.now() + 15 * 60 * 1000,
+  ).toISOString();
+
+  // Create the email verification link using the verification token
+  const verificationUrl = `http://localhost:5173/verify-email?token=${verificationToken}`;
+
+  console.log("Sending verification emai to:",  newUser.email);
+  console.log("verification URL",  verificationUrl);
+
+  //Send the email verification link to the new user
+  await sendEmail({
+    to: newUser.email,
+    subject: "Verify your TaskFlow email",
+    html: `
+<h2>Welcome to TaskFlow!</h2>
+<p>Please verify your email address by clicking the link below:</p>
+
+<a href="${verificationUrl}">
+Verify Email
+</a>
+
+<p>This link will expire in 15 minutes.</p>
+`,
+  });
+
+  console.log("Verification email sent successfully");
 
   // try {
   //   db.prepare(`
@@ -669,7 +696,6 @@ router.post("/logout", (req, res) => {
     });
   });
 });
-
 
 //Test email
 router.post("/test-email", async (req, res) => {
