@@ -107,7 +107,7 @@ export const ChangePassword = () => {
   return (
     <div className="reset-password-page">
       <div className="reset-password-card">
-        <h1 className="reset-password-panel__title">Reset password </h1>
+        <h1 className="reset-password-panel__title">Change password </h1>
         <form onSubmit={handleChangeData}>
           <div className="form-field">
             <label className="form-label" htmlFor="currentPassword">

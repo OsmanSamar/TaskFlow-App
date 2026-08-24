@@ -79,7 +79,7 @@ const Settings = () => {
 
                 <Link
                   className="settings-btn settings-btn--ghost"
-                  to="/resetpassword"
+                    to="/changepassword"
                 >
                   Change password
                 </Link>
