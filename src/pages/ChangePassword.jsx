@@ -250,21 +250,40 @@ export const ChangePassword = () => {
             {loading ? "Change Password..." : "Change Password"}
           </button>
         </form>
-        {successMessage && (
-          <div className="change-password-success">
-            <p>{successMessage}</p>
-          
-            <button
-              type="button"
-              className="btn btn--primary"
-              onClick={() => navigate("/login")}
-            >
-              Go to Login
-            </button>
-          
-          </div>
-        )}
       </div>
+
+      {successMessage && (
+        <div
+          className="change-password-modal-overlay"
+          role="presentation"
+          onClick={() => navigate("/login")}
+        >
+          <div
+            className="change-password-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="change-password-success-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2
+              id="change-password-success-title"
+              className="change-password-modal__title"
+            >
+              Password updated
+            </h2>
+            <p className="change-password-modal__text">{successMessage}</p>
+            <div className="change-password-modal__actions">
+              <button
+                type="button"
+                className="change-password-modal__btn change-password-modal__btn--primary"
+                onClick={() => navigate("/login")}
+              >
+                Go to Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
