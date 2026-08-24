@@ -14,6 +14,8 @@ db.exec(`
     last_login TEXT,
     account_status TEXT NOT NULL DEFAULT 'active',
     email_verified INTEGER NOT NULL DEFAULT 0,
+    email_verification_token TEXT,
+    email_verification_expires TEXT,
     profile_image_url TEXT,
     profile_image_public_id TEXT
      );

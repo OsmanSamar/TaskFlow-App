@@ -25,6 +25,7 @@
     "react-dom": "^19.2.7",
     "react-icons": "^5.7.0",
     "react-router-dom": "^7.18.1",
+    "resend": "^6.22.0",
     "tailwindcss": "^4.3.2",
     "validator": "^13.15.35"
   },

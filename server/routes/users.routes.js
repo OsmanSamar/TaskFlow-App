@@ -11,7 +11,6 @@ import {
   deleteFromCloudinary,
 } from "../utils/cloudinaryUpload.js";
 
-
 // To check
 // const password = "MyPassword@123";
 // const hashedPassword = await bcrypt.hash(password, 10);
@@ -219,7 +218,6 @@ router.get("/me", (req, res) => {
   });
 });
 
-
 // Change the Password of currently authenticated user
 router.patch("/me/password", async (req, res) => {
   // Check if the user is authenticated.
@@ -229,8 +227,8 @@ router.patch("/me/password", async (req, res) => {
       message: "Not authenticated",
     });
   }
-   // Get the current and new password sent by the frontend.
-   const { currentPassword, newPassword, confirmPassword } = req.body; // Validate that all password fields were provided.
+  // Get the current and new password sent by the frontend.
+  const { currentPassword, newPassword, confirmPassword } = req.body; // Validate that all password fields were provided.
 
   if (!currentPassword || !newPassword || !confirmPassword) {
     return res.status(400).json({
@@ -238,44 +236,48 @@ router.patch("/me/password", async (req, res) => {
     });
   }
   //Validate the new password against the application's rules,
-  if(!isValidPassword(newPassword)){
+  if (!isValidPassword(newPassword)) {
     return res.status(400).json({
-      message:"Password must be at least 8 charachters and include uppercase, number and special charachter",
+      message:
+        "Password must be at least 8 charachters and include uppercase, number and special charachter",
     });
   }
 
   // Make sure the confirmation matches the new password.
-  if(newPassword  !== confirmPassword){
+  if (newPassword !== confirmPassword) {
     return res.status(400).json({
-      message:"Passwords do not match",
+      message: "Passwords do not match",
     });
   }
 
   //Find the currently authenticated user by the ID  stored in the session.
   // We only select the password hash because that is all we need for verification.
-  const user = db.prepare("SELECT id, password FROM users WHERE id = ?").get(req.session.userId);
+  const user = db
+    .prepare("SELECT id, password FROM users WHERE id = ?")
+    .get(req.session.userId);
 
   //The user may have been deleted after  the session was created.
-  if(!user){
+  if (!user) {
     return res.status(401).json({
-      message:"Not authenticated",
+      message: "Not authenticated",
     });
   }
 
-  //Compare the current password entered by the uuser 
+  //Compare the current password entered by the uuser
   // With the bcrypt hash stored in the db.
-   const isCurrentPasswordValid= await bcrypt.compare(
-    currentPassword, user.password,
-   );
+  const isCurrentPasswordValid = await bcrypt.compare(
+    currentPassword,
+    user.password,
+  );
 
- //  Stop the password change if the current password is incorrect
-  if(!isCurrentPasswordValid){
+  //  Stop the password change if the current password is incorrect
+  if (!isCurrentPasswordValid) {
     return res.status(401).json({
-      message:"Current password is incorrect",
+      message: "Current password is incorrect",
     });
   }
 
-   //Temporary debugs response.
+  //Temporary debugs response.
   //THis confirms that the current password was verified successfully.
   // console.log("Current password verification passed");
   // return res.json({
@@ -284,16 +286,19 @@ router.patch("/me/password", async (req, res) => {
 
   //Hash the new password before storing it in the db
   //We never store  the user's plain-text password.
-   const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+  const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
   //  Update the user's password  with new bcrypt hash
 
-  db.prepare("UPDATE users SET password = ? WHERE ID =? ").run(hashedNewPassword, req.session.userId);
+  db.prepare("UPDATE users SET password = ? WHERE ID =? ").run(
+    hashedNewPassword,
+    req.session.userId,
+  );
 
   // Return a success response after the password has been updated.
-   res.json({
-    message:"Password change successfully",
-   });
+  res.json({
+    message: "Password change successfully",
+  });
 });
 
 //Update the currently authenticated user's profile
@@ -657,6 +662,36 @@ router.post("/logout", (req, res) => {
       message: "Logout successful",
     });
   });
+});
+
+
+//Test email
+router.post("/test-email", async (req, res) => {
+  try {
+    const { sendEmail } = await import("../utils/sendEmail.js");
+
+    const result = await sendEmail({
+      to: req.body.email,
+      subject: "TaskFlow Email Test",
+      html: `
+  <h2>Hello from TaskFlow :wave:</h2>
+  <p>This is a test email from your backend.</p>
+  <p>Resend is working correctly.</p>
+  `,
+    });
+
+    res.json({
+      message: "Email sent successfully",
+      result,
+    });
+  } catch (error) {
+    console.error("Email sending failed:", error);
+
+    res.status(500).json({
+      message: "Failed to send email",
+      error: error.message,
+    });
+  }
 });
 
 export default router;
