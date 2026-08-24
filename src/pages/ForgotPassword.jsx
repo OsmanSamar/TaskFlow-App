@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     // to ask if the object has errors
     if (Object.keys(newErrors).length === 0) {
       setMessage(
-        "Please check your email. We have sent  you  a password reset link.",
+        "Please check your email. We have sent you a password reset link.",
       );
     }
   };

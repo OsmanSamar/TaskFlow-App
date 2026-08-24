@@ -8,6 +8,7 @@ import {
   validatePassword,
   validateConfirmPassword,
 } from "../utils/validators";
+import { PasswordCriteria } from "../components/PasswordCriteria";
 
 const Register = () => {
   const [registerData, setRegisterData] = useState({
@@ -18,12 +19,14 @@ const Register = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+
     const newErrors = {};
 
     const nameError = validateName(registerData.name);
@@ -45,16 +48,57 @@ const Register = () => {
       registerData.password,
       registerData.confirmPassword,
     );
+
     if (ConfirmpasswordError) {
       newErrors.confirmPassword = ConfirmpasswordError;
     }
 
+    setErrors(newErrors);
+
     // to ask if the object has errors
     if (Object.keys(newErrors).length === 0) {
-      navigate("/login");
-    }
+      setLoading(true);
 
-    setErrors(newErrors);
+      try {
+        const response = await fetch("http://localhost:3000/api/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: registerData.name,
+            email: registerData.email,
+            password: registerData.password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          if (response.status === 409) {
+            setErrors({
+              email: data.message,
+            });
+            return;
+          }
+
+          setErrors({
+            form: data.message || "Registration failed",
+          });
+          return;
+        }
+
+        navigate("/login");
+      } catch (error) {
+        console.error("Registration request failed:", error);
+
+        setErrors({
+          form: "Unable to connect to the server. Please try again.",
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   return (
@@ -71,7 +115,7 @@ const Register = () => {
               type="text"
               name="name"
               autoComplete="name"
-              placeholder="jone"
+              placeholder="John"
               className={`form-input${errors.name ? " form-input--error" : ""}`}
               value={registerData.name}
               onChange={(e) => {
@@ -84,7 +128,7 @@ const Register = () => {
                 }
               }}
             />
-              {errors.name ? (
+            {errors.name ? (
               <span className="form-error ">{errors.name}</span>
             ) : (
               ""
@@ -153,11 +197,13 @@ const Register = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
+            <PasswordCriteria password={registerData.password} />
             {errors.password ? (
               <span className="form-error ">{errors.password}</span>
             ) : (
               ""
             )}
+       
           </div>
 
           <div className="form-field">
@@ -207,8 +253,11 @@ const Register = () => {
             )}
           </div>
 
-          <button type="submit" className="btn btn--primary">
-            Sign Up
+          {errors.form && <span className="form-error">{errors.form}</span>}
+
+          <button type="submit" className="btn btn--primary"
+          disabled={loading}>
+           {loading ? "Sign up..." : "Sign up"}
           </button>
         </form>
         <p className="login-footer">
