@@ -78,8 +78,8 @@ router.post("/", async (req, res) => {
   // Create the email verification link using the verification token
   const verificationUrl = `http://localhost:5173/verify-email?token=${verificationToken}`;
 
-  console.log("Sending verification emai to:",  newUser.email);
-  console.log("verification URL",  verificationUrl);
+  console.log("Sending verification emai to:", newUser.email);
+  console.log("verification URL", verificationUrl);
 
   //Send the email verification link to the new user
   await sendEmail({
@@ -146,6 +146,64 @@ Verify Email
   res.status(201).json(newUser);
 
   // 201 means Succesfully created new user
+});
+
+//Verify user's email address using token sent by email
+
+router.get("/verify-email", (req, res) => {
+  const { token } = req.query;
+
+  // Check if a verification token was provided
+  if (!token) {
+    return res.status(400).json({
+      message: "Verification token is required",
+    });
+  }
+
+  // Find the user using the verification token
+  const user = db
+    .prepare(
+      `
+      SELECT id, email, email_verified, email_verification_expires
+      FROM users
+      WHERE email_verification_token = ?
+    `,
+    )
+    .get(token);
+
+  // Token does not exist or was already used
+  if (!user) {
+    return res.status(400).json({
+      message: "Invalid verification token",
+    });
+  }
+
+  // Check if the token has expired
+  if (
+    !user.email_verification_expires ||
+    new Date(user.email_verification_expires) < new Date()
+  ) {
+    return res.status(400).json({
+      message: "Verification token has expired",
+    });
+  }
+
+  // Mark the user's email as verified
+  // Clear the token so the verification link caant be reused
+  db.prepare(
+    `
+    UPDATE users
+    SET email_verified = 1,
+        email_verification_token = NULL,
+        email_verification_expires = NULL
+    WHERE id = ?
+  `,
+  ).run(user.id);
+
+  // Email verification successful
+  res.json({
+    message: "Email verified successfully",
+  });
 });
 
 // Login user(POST)
