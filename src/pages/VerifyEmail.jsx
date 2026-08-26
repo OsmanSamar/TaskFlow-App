@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import "./verify-email.css";
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
@@ -47,26 +48,55 @@ const VerifyEmail = () => {
   }, [searchParams]);
 
   return (
-    <div>
-      {status === "verifying" && <p>Verifying your email...</p>}
+    <div className="verify-email-page">
+      <div className="verify-email-card">
+        {status === "verifying" && (
+          <>
+            <div className="verify-email-spinner" aria-hidden="true" />
+            <h1 className="verify-email-panel__title">Verifying email</h1>
+            <p className="verify-email-panel__subtitle">
+              Please wait while we confirm your email address.
+            </p>
+          </>
+        )}
 
-      {status === "success" && (
-        <>
-          <h1>Email Verified!</h1>
-          <p>{message}</p>
+        {status === "success" && (
+          <>
+            <h1 className="verify-email-panel__title">Email verified</h1>
+            <p className="verify-email-panel__message">
+              {message || "Your email has been verified successfully."}
+            </p>
+            <button
+              type="button"
+              className="btn btn--primary"
+              onClick={() => navigate("/login")}
+            >
+              Go to Login
+            </button>
+          </>
+        )}
 
-          <button type="button" onClick={() => navigate("/login")}>
-            Go to Login
-          </button>
-        </>
-      )}
-
-      {status === "error" && (
-        <>
-          <h1>Verification Failed</h1>
-          <p>{message}</p>
-        </>
-      )}
+        {status === "error" && (
+          <>
+            <h1 className="verify-email-panel__title">Verification failed</h1>
+            <p className="verify-email-panel__message verify-email-panel__message--error">
+              {message}
+            </p>
+            <button
+              type="button"
+              className="btn btn--primary"
+              onClick={() => navigate("/login")}
+            >
+              Go to Login
+            </button>
+            <p className="login-footer">
+              <Link className="login-footer-link" to="/register">
+                Back to Sign up
+              </Link>
+            </p>
+          </>
+        )}
+      </div>
     </div>
   );
 };
