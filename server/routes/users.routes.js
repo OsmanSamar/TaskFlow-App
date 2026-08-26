@@ -173,7 +173,7 @@ router.get("/verify-email", (req, res) => {
     )
     .get(token);
 
-    console.log("User found token : ", user);
+  console.log("User found token : ", user);
 
   // Token does not exist or was already used
   if (!user) {
@@ -241,6 +241,7 @@ router.post("/login", async (req, res) => {
 
   // Compare entered password with sorted bcrypt hash
   const isMatch = await bcrypt.compare(password, user.password);
+  // console.log("Password match:", isMatch);
 
   if (!isMatch) {
     return res.status(401).json({
@@ -248,9 +249,19 @@ router.post("/login", async (req, res) => {
     });
   }
 
+
+  // Check if the user's email has been verified.
+
+  // console.log("Email verified value:", user.email_verified);
+  
+  if (!user.email_verified) {
+    return res.status(403).json({
+      message: "Please verify your email before logging in.",
+    });
+  }
+
   // Store the authenticated user's ID in the session
   // This allows the server to remember the logged-in user
-
   req.session.userId = user.id;
 
   // Update the user's last login time

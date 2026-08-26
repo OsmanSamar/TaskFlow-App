@@ -76,7 +76,7 @@ const Login = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setLoginError("Login incorrect");
+        setLoginError(data.message || "Login incorrect");
         return;
       }
 
