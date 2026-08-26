@@ -153,6 +153,8 @@ Verify Email
 router.get("/verify-email", (req, res) => {
   const { token } = req.query;
 
+  console.log("Token received by backend: ", token);
+
   // Check if a verification token was provided
   if (!token) {
     return res.status(400).json({
@@ -170,6 +172,8 @@ router.get("/verify-email", (req, res) => {
     `,
     )
     .get(token);
+
+    console.log("User found token : ", user);
 
   // Token does not exist or was already used
   if (!user) {
