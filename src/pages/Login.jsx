@@ -224,17 +224,48 @@ const Login = () => {
             ) : null}
 
             {loginError === "Please verify your email before logging in." ? (
-              <>
+              <div className="resend-verification">
                 <button
                   type="button"
-                  className="btn btn--primary"
+                  className="btn btn--secondary"
                   onClick={handleResendVerification}
                   disabled={isResending}
                 >
-                  {isResending ? "Sending..." : "Resend verification email"}
+                  {isResending ? (
+                    <>
+                      <span
+                        className="resend-verification__spinner"
+                        aria-hidden="true"
+                      />
+                      Sending...
+                    </>
+                  ) : (
+                    "Resend verification email"
+                  )}
                 </button>
-                {resendMessage ? <p>{resendMessage}</p> : null}
-              </>
+                {resendMessage ? (
+                  <div
+                    className="resend-verification__success"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <span
+                      className="resend-verification__check"
+                      aria-hidden="true"
+                    >
+                      ✓
+                    </span>
+                    <div className="resend-verification__success-text">
+                      <p className="resend-verification__success-title">
+                        {resendMessage}
+                      </p>
+                      <p className="resend-verification__success-hint">
+                        Check your inbox for the verification link.
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             ) : null}
 
             <button
