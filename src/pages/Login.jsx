@@ -16,13 +16,46 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
+
   const [loginError, setLoginError] = useState("");
+  const [resendMessage, setResendMessage] = useState("");
+  const [isResending, setIsResending] = useState(false);
   const { setUser } = useContext(AuthContext);
 
   const emailError = validateEmail(loginData.email);
   // const passwordError = validatePassword(loginData.password);
   const passwordError = "";
   const isFormValid = !emailError && !passwordError;
+
+  const handleResendVerification = async () => {
+    setIsResending(true);
+
+    try {
+      const email = loginData.email;
+
+      const response = await fetch(
+        "http://localhost:3000/api/users/resend-verification",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return;
+      }
+      setResendMessage(data.message);
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   const handleEmailChange = (e) => {
     const email = e.target.value;
@@ -37,11 +70,6 @@ const Login = () => {
   const handlePasswordChange = (e) => {
     const password = e.target.value;
     setLoginData({ ...loginData, password });
-    // setLoginError("");
-    // setErrors((prev) => ({
-    //   ...prev,
-    //   password: validatePassword(password),
-    // }));
   };
 
   const handleLogin = async (e) => {
@@ -190,8 +218,23 @@ const Login = () => {
               </Link>
             </div>
 
+            {/* Please Verify your email before logging in */}
             {loginError ? (
               <span className="form-error form-error--login">{loginError}</span>
+            ) : null}
+
+            {loginError === "Please verify your email before logging in." ? (
+              <>
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  onClick={handleResendVerification}
+                  disabled={isResending}
+                >
+                  {isResending ? "Sending..." : "Resend verification email"}
+                </button>
+                {resendMessage ? <p>{resendMessage}</p> : null}
+              </>
             ) : null}
 
             <button

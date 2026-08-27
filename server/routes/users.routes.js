@@ -249,11 +249,10 @@ router.post("/login", async (req, res) => {
     });
   }
 
-
   // Check if the user's email has been verified.
 
   // console.log("Email verified value:", user.email_verified);
-  
+
   if (!user.email_verified) {
     return res.status(403).json({
       message: "Please verify your email before logging in.",
@@ -797,6 +796,69 @@ router.post("/test-email", async (req, res) => {
       error: error.message,
     });
   }
+});
+
+//Resend email verification link
+router.post("/resend-verification", async (req, res) => {
+  // const email =req.body.email;
+  const { email } = req.body;
+
+  //Check if an email was provided
+  if (!email) {
+    return res.status(400).json({
+      message: "Email is required",
+    });
+  }
+
+  //Get the user
+  const user = db.prepare("SELECT * FROM users WHERE  email = ? ").get(email);
+
+  //Check if the user exists
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  // Check if the email is already verified
+
+  if (user.email_verified) {
+    return res.status(400).json({
+      message: "Email is already verified",
+    });
+  }
+
+  const verificationToken = randomBytes(32).toString("hex");
+  const verificationExpires = new Date(
+    Date.now() + 15 * 60 * 1000,
+  ).toISOString();
+
+  db.prepare(
+    `UPDATE users SET email_verification_token = ?, email_verification_expires = ? WHERE id = ? `,
+  ).run(verificationToken, verificationExpires, user.id);
+
+  //
+  const verificationUrl = `http://localhost:5173/verify-email?token=${verificationToken}`;
+
+  //
+  await sendEmail({
+    to: user.email,
+    subject: "Verify your TaskFlow email",
+    html: `
+    <h2>Welcome back to FlowTask!</h2>
+    <p>Please verify your email address by clicking the link below:</p>
+
+    <a href="${verificationUrl}">
+      Verify Email
+   </a>
+    <p>This link will be expire in 15 minutes.</p>
+    
+    `,
+  });
+
+  return res.json({
+    message: "Verification email sent successfully",
+  });
 });
 
 export default router;
