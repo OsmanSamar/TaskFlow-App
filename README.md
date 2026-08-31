@@ -10,24 +10,65 @@ TaskFlow lets users manage their account and daily tasks in one place.
 
 ### Features
 
-- User authentication pages:
-  - Login
-  - Register
-  - Forgot Password
-  - Reset Password
-- Dashboard with task overview
-- Task management:
+#### Completed
+
+- User authentication:
+  - Login page
+  - Register page
+  - User registration
+  - Password hashing with bcrypt
+  - User login
+  - Session-based authentication
+  - Authentication cookies
+  - Authenticated `/me` endpoint
+  - Logout
+  - Email verification
+  - Secure email verification tokens
+  - Verification token expiration
+  - Prevention of reused/invalid verification tokens after successful verification
+  - Login protection for users whose email has not been verified
+  - Resend verification email functionality
+  - Generation of a new verification token when resending
+  - Change password functionality
+  - `last_login` tracking
+- Email verification UX:
+  - Verification status feedback
+  - Verification success page
+  - Verification failure state
+  - Resend verification email action from the Login page
+  - Loading state while resending (`Sending...`)
+  - Success feedback after the verification email is sent
+- User profile
+- Edit profile (including profile image upload via Cloudinary)
+- Task management (frontend):
   - Add tasks
   - Edit tasks
   - Delete tasks
   - Mark tasks as completed
   - Filter tasks
   - Clear completed tasks
-- User profile
-- Edit profile
-- Settings
-- Express backend (in progress)
-- SQLite database (planned)
+- Express backend with SQLite database integration for user data
+
+#### Frontend-only (UI exists, backend integration pending)
+
+- Dashboard with task overview (currently uses sample data)
+- Settings:
+  - Dark Mode
+  - Language selection
+  - Email notification setting for Tasks
+- Task management persistence (`localStorage` only; backend/database persistence not yet completed)
+
+#### Planned / In progress
+
+- User authentication pages:
+  - Forgot Password (page exists; backend flow not yet completed)
+  - Reset Password (page exists; backend flow not yet completed)
+- Remember Me
+- Delete Account
+- Backend/database integration for Settings
+- Dashboard implementation (full backend-connected version)
+- Backend/database persistence for Todo data
+- Deployment
 
 ---
 
@@ -45,10 +86,16 @@ TaskFlow lets users manage their account and daily tasks in one place.
 
 - Node.js
 - Express
+- bcrypt (password hashing)
+- express-session (session-based authentication)
+- CORS (frontend/backend cookie communication)
+- Multer (profile image uploads)
+- Cloudinary (cloud image storage)
+- Resend (transactional email delivery)
 
 ### Database
 
-- SQLite (planned)
+- SQLite (`better-sqlite3`) — persistent user data storage
 
 ---
 
@@ -204,13 +251,20 @@ User-management-app/
 
 ## Next Steps
 
-- Connect Express routes to the frontend
-- Add SQLite database
-- Implement user authentication API
-- Persist tasks on the backend
+- [x] Connect Express routes to the frontend
+- [x] Add SQLite database
+- [x] Implement user authentication API
+- [ ] Implement Forgot Password backend flow
+- [ ] Implement Reset Password backend flow
+- [ ] Persist tasks on the backend
+- [ ] Connect Dashboard to real task data
+- [ ] Integrate Settings preferences with backend/database
+- [ ] Deployment
 
 
 ## Database SQLite 
+
+SQLite is now integrated for persistent user data. The notes below document the database setup and integration process.
 
 - We will use SQLite as our database  to persist application data instead of storing users temporarily inmemory.
 - We will use `better-sqlite3` as the bridge between Node.js and the SQLite database.
