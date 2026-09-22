@@ -17,7 +17,9 @@ db.exec(`
     email_verification_token TEXT,
     email_verification_expires TEXT,
     profile_image_url TEXT,
-    profile_image_public_id TEXT
+    profile_image_public_id TEXT,
+    password_reset_token TEXT,
+    password_reset_expires TEXT
      );
      `);
 

@@ -11,6 +11,7 @@ import {
   deleteFromCloudinary,
 } from "../utils/cloudinaryUpload.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 // To check
 // const password = "MyPassword@123";
@@ -280,6 +281,46 @@ router.post("/login", async (req, res) => {
       email: user.email,
       created_at: user.created_at,
     },
+  });
+});
+
+
+// Forgot password (POST)
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  // Validation
+  if (!email || !isValidEmail(email)) {
+    return res.status(400).json({
+      message: "A valid email is required",
+    });
+  }
+
+  // Find user by email
+  const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  // Create a secure password reset token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // Token expires after 15 minutes
+  const resetExpires = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
+  // Save reset token and expiration
+  db.prepare(`
+    UPDATE users
+    SET password_reset_token = ?,
+        password_reset_expires = ?
+    WHERE id = ?
+  `).run(resetToken, resetExpires, user.id);
+
+  res.json({
+    message: "Password reset token created",
   });
 });
 
