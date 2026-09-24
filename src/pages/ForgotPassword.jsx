@@ -10,24 +10,50 @@ const ForgotPassword = () => {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
 
-  const handleForgot = (e) => {
-    e.preventDefault();
-    const newErrors = {};
 
-    const emailError = validateEmail(forgotData.email);
-    if (emailError) {
-      newErrors.email = emailError;
-    }
+const handleForgot = async (e) => {
+  e.preventDefault();
+  const newErrors = {};
 
-    setErrors(newErrors);
+  const emailError = validateEmail(forgotData.email);
+  if (emailError) {
+    newErrors.email = emailError;
+  }
 
-    // to ask if the object has errors
-    if (Object.keys(newErrors).length === 0) {
-      setMessage(
-        "Please check your email. We have sent you a password reset link.",
+  setErrors(newErrors);
+
+  // to ask if the object has errors
+  if (Object.keys(newErrors).length === 0) {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/users/forgot-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: forgotData.email,
+          }),
+        },
       );
+
+      // Parse the response
+      const data = await response.json();
+
+      // Check if the response is not ok
+      if (!response.ok) {
+        setMessage(data.message);
+        return;
+      }
+
+      setMessage(data.message);
+    } catch {
+      setMessage("Something went wrong. Please try again.");
     }
-  };
+  }
+};
+
 
   return (
     <div className="forgot-password-page">
