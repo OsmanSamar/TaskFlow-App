@@ -337,6 +337,46 @@ await sendEmail({
   });
 });
 
+// Reset password (POST)
+router.post("/reset-password", async (req, res) => {
+  const { token, password } = req.body;
+  console.log("Reset password request:", { token, password });
+
+  // Validation
+  if (!token || !password) {
+    return res.status(400).json({
+      message: "Token and password are required",
+    });
+  }
+
+  const user = db.prepare(`SELECT * FROM users WHERE password_reset_token= ? AND password_reset_expires > ?`).get(token, new Date().toISOString());
+
+  // Check if user exists and token is valid
+  if(!user){
+    return res.status(400).json({
+      message: "Invalid or expired reset token",
+    });
+  }
+
+
+  // Hash the new password
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Update the user's password
+
+  db.prepare(`
+    UPDATE users
+    SET password = ?, 
+        password_reset_token = NULL,
+        password_reset_expires = NULL
+    WHERE id = ?
+  `).run(hashedPassword, user.id);
+
+  res.json({
+    message: "Password has been reset successfully",
+  });
+});
+
 //Get the currently authenticated user
 // Uses the user ID stored in the session
 router.get("/me", (req, res) => {

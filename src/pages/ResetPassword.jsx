@@ -6,6 +6,7 @@ import { PasswordCriteria } from "../components/PasswordCriteria";
 import "./reset-password.css";
 
 export const ResetPassword = () => {
+  console.log("ResetPassword component rendered");
   const [resetData, setResetData] = useState({
     password: "",
     confirmPassword: "",
@@ -14,8 +15,10 @@ export const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  // Get token from URL query parameters
+  const token = new URLSearchParams(window.location.search).get("token");
 
-  const handleResetData = (e) => {
+  const handleResetData = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -36,6 +39,31 @@ export const ResetPassword = () => {
 
     // to ask if the object has errors
     if (Object.keys(newErrors).length === 0) {
+      const response = await fetch(
+        "http://localhost:3000/api/users/reset-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token,
+            password: resetData.password,
+            confirmPassword: resetData.confirmPassword,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setErrors({
+          form: data.message || "Password reset failed",
+        });
+        return;
+      }
+
+      console.log("Password reset successful:", data);
       navigate("/login");
     }
   };
@@ -136,6 +164,9 @@ export const ResetPassword = () => {
             )}
           </div>
 
+          {errors.form ? (
+            <span className="form-error">{errors.form}</span>
+          ) : null}
           <button type="submit" className="btn btn--primary">
             Reset Password
           </button>
