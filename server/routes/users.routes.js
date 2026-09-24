@@ -319,6 +319,19 @@ router.post("/forgot-password", async (req, res) => {
     WHERE id = ?
   `).run(resetToken, resetExpires, user.id);
 
+  const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
+// Send email with reset link
+await sendEmail({
+  to: user.email,
+  subject: "Reset your TaskFlow password",
+  html: `
+    <h2>Reset your TaskFlow password</h2>
+    <p>You requested to reset your password.</p>
+    <p>This link will expire in 15 minutes.</p>
+    <a href="${resetLink}">Reset Password</a>
+  `,
+});
+
   res.json({
     message: "Password reset token created",
   });
