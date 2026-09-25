@@ -35,6 +35,7 @@ credentials: true,
 // For test 
 //console.log("SESSION_SECRET loaded:", !!process.env.SESSION_SECRET);
 
+// Configure session middleware
 app.use(
   session({
     // Used to sign the session cookie
@@ -49,9 +50,11 @@ app.use(
     // Session cookie security settings
     cookie:{
       httpOnly: true,
-      // TODO  i will change the secure once deploy on HTTPS
+      // TODO: Change secure to true after deploying on HTTPS
       secure: false,
       sameSite: "lax",
+      // TODO: adjust maxAge based on Remember Me choice during login
+      maxAge: 30 * 60 * 1000, // Defult session duration: 30 minutes
     },
   }),
 );

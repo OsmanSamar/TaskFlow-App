@@ -216,7 +216,8 @@ router.get("/verify-email", (req, res) => {
 router.post("/login", async (req, res) => {
   console.log("LOGIN ROUTE HIT");
 
-  const { email, password } = req.body;
+  const { email, password, rememberMe } = req.body;
+  // RememberMe controls how long the session cookie should  remain active
 
   // Validation
   if (!email || !isValidEmail(email)) {
@@ -263,6 +264,15 @@ router.post("/login", async (req, res) => {
   // Store the authenticated user's ID in the session
   // This allows the server to remember the logged-in user
   req.session.userId = user.id;
+
+  // 
+  req.session.cookie.maxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 //Remember Me: 30 days
+   : 30 * 60 * 1000; //Default: 30 minutes
+
+
+  //  Debug: verify the session duration selected by Remember Me checkbox
+ //  console.log("RememberMe:", rememberMe,"Cookie maxAge:", req.session.cookie.maxAge)
+  
 
   // Update the user's last login time
   const lastLogin = new Date().toISOString();

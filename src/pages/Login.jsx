@@ -12,7 +12,8 @@ const Login = () => {
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
-    remember: false,
+    //Indicaties whether the user wants  alonger login session
+    rememberMe: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -98,6 +99,8 @@ const Login = () => {
         body: JSON.stringify({
           email: loginData.email,
           password: loginData.password,
+          // Send Remember Me choice to backend
+          rememberMe: loginData.rememberMe,
         }),
       });
 
@@ -206,9 +209,10 @@ const Login = () => {
               <label className="form-checkbox">
                 <input
                   type="checkbox"
-                  checked={loginData.remember}
+                  id="rememberMe"
+                  checked={loginData.rememberMe}
                   onChange={(e) => {
-                    setLoginData({ ...loginData, remember: e.target.checked });
+                    setLoginData({ ...loginData, rememberMe: e.target.checked });
                   }}
                 />
                 <span>Remember me</span>
