@@ -10,6 +10,12 @@ export const AuthProvider = ({ children }) => {
   // Stores an authentication error when the initial session check fails
   const [authError, setAuthError] = useState(null);
 
+  // Clears the authenticated user from frontend state. 
+  // Used after logout or destructive actions such as account deletion
+  const clearUser = () => {
+    setUser(null);
+  };
+
   useEffect(() => {
     // Check if there is an authenticated user when the app starts
     fetch("http://localhost:3000/api/users/me", {
@@ -49,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, authError }}>
+    <AuthContext.Provider value={{ user, setUser, clearUser, loading, authError }}>
       {children}
     </AuthContext.Provider>
   );

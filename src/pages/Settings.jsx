@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "./settings.css";
@@ -13,9 +14,81 @@ import {
 } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Settings = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  // Controls the Delete Account confirmation UI.
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+
+  // Stores the password entered to confirm account deletion.
+  const [deletePassword, setDeletePassword] = useState("");
+
+  // Stores any error returned during account deletion.
+  const [deleteError, setDeleteError] = useState("");
+
+  // Prevents multiple delete requests while the account is being deleted.
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+
+  const { clearUser } = useContext(AuthContext);
+
+  // Delete the currently authenticated user's account.
+  // The backend requires the user's password before performing the deletion.
+  const handleDeleteAccount = async () => {
+    // Prevent sending the request without a password.
+    if (!deletePassword) {
+      setDeleteError("Password is required");
+      return;
+    }
+
+    // Show loading state and clear any previous error.
+    setIsDeletingAccount(true);
+    setDeleteError("");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users/me", {
+        method: "DELETE",
+        credentials: "include",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          // Send only the password needed to confirm account deletion.
+          password: deletePassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      // Display the backend error if the deletion was rejected.
+      if (!response.ok) {
+        setDeleteError(data.message || "Account deletion failed");
+        return;
+      }
+
+      // The account was deleted successfully.
+      // Close the confirmation modal and clear the password from component state.
+      setShowDeleteAccount(false);
+      setDeletePassword("");
+      
+      // Remove the deleted account from frontend authentication state.
+      clearUser();
+
+      // Redirect the user to Login because the session was destroyed by the backend.
+      navigate("/login");
+    } catch {
+      // Handle network/server connection errors.
+      setDeleteError("Something went wrong. Please try again.");
+    } finally {
+      // Re-enable the Delete button after the request finishes.
+      setIsDeletingAccount(false);
+    }
+  };
+
   return (
     <div className="dashboard-page settings-page">
       <Sidebar />
@@ -79,7 +152,7 @@ const Settings = () => {
 
                 <Link
                   className="settings-btn settings-btn--ghost"
-                    to="/changepassword"
+                  to="/changepassword"
                 >
                   Change password
                 </Link>
@@ -175,14 +248,100 @@ const Settings = () => {
                     Permanently remove your account and all task data
                   </p>
                 </div>
+                {/* Open the Delete Account confirmation UI. The actual
+                deletion will happen only after password confirmation. */}
                 <button
                   type="button"
                   className="settings-btn settings-btn--danger"
+                  onClick={() => {
+                    setShowDeleteAccount(true);
+                    setDeleteError("");
+                  }}
                 >
                   Delete account
                 </button>
               </div>
             </section>
+
+            {/* Delete Account confirmation modal */}
+            {showDeleteAccount && (
+              <div className="delete-account-modal">
+                <div className="delete-account-modal__content">
+                  <h2 className="delete-account__title">
+                    Delete your account?
+                  </h2>
+
+                  <p className="delete-account__message">
+                    This action is permanent. Your TaskFlow account will be
+                    deleted.
+                  </p>
+
+                  <label
+                    htmlFor="delete-password"
+                    className="delete-account__label"
+                  >
+                    Enter your password to continue
+                  </label>
+
+                  <div className="form-input-wrap">
+                    <input
+                      id="delete-password"
+                      type={!showPassword ? "password" : "text"}
+                      name="delete-password"
+                      className="form-input"
+                      value={deletePassword}
+                      onChange={(e) => {
+                        //  Keep the password used to confirm account deletion in component state.
+                        setDeletePassword(e.target.value);
+
+                        // Clear the previous error once the user starts correcting the input.
+                        setDeleteError("");
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="form-input__eye"
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
+
+                  {/* Display an API or validation error when deletion fails. */}
+                  {deleteError && <p className="form-error">{deleteError}</p>}
+
+                  <div className="delete-account-modal__actions">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // Close the confirmation UI without deleting anything.
+                        setShowDeleteAccount(false);
+
+                        // Clear sensitive password data from memory.
+                        setDeletePassword("");
+
+                        // Clear any previous error.
+                        setDeleteError("");
+                      }}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="button"
+                      className="settings-btn settings-btn--danger"
+                      onClick={handleDeleteAccount}
+                      disabled={isDeletingAccount}
+                    >
+                      {isDeletingAccount ? "Deleting..." : "Delete account"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </main>
       </div>

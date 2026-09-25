@@ -12,6 +12,7 @@ import {
 } from "../utils/cloudinaryUpload.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
+import cloudinary from "../config/cloudinary.js";
 
 // To check
 // const password = "MyPassword@123";
@@ -265,14 +266,13 @@ router.post("/login", async (req, res) => {
   // This allows the server to remember the logged-in user
   req.session.userId = user.id;
 
-  // 
-  req.session.cookie.maxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 //Remember Me: 30 days
-   : 30 * 60 * 1000; //Default: 30 minutes
-
+  //
+  req.session.cookie.maxAge = rememberMe
+    ? 30 * 24 * 60 * 60 * 1000 //Remember Me: 30 days
+    : 30 * 60 * 1000; //Default: 30 minutes
 
   //  Debug: verify the session duration selected by Remember Me checkbox
- //  console.log("RememberMe:", rememberMe,"Cookie maxAge:", req.session.cookie.maxAge)
-  
+  //  console.log("RememberMe:", rememberMe,"Cookie maxAge:", req.session.cookie.maxAge)
 
   // Update the user's last login time
   const lastLogin = new Date().toISOString();
@@ -293,7 +293,6 @@ router.post("/login", async (req, res) => {
     },
   });
 });
-
 
 // Forgot password (POST)
 router.post("/forgot-password", async (req, res) => {
@@ -322,25 +321,27 @@ router.post("/forgot-password", async (req, res) => {
   const resetExpires = new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
   // Save reset token and expiration
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE users
     SET password_reset_token = ?,
         password_reset_expires = ?
     WHERE id = ?
-  `).run(resetToken, resetExpires, user.id);
+  `,
+  ).run(resetToken, resetExpires, user.id);
 
   const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
-// Send email with reset link
-await sendEmail({
-  to: user.email,
-  subject: "Reset your TaskFlow password",
-  html: `
+  // Send email with reset link
+  await sendEmail({
+    to: user.email,
+    subject: "Reset your TaskFlow password",
+    html: `
     <h2>Reset your TaskFlow password</h2>
     <p>You requested to reset your password.</p>
     <p>This link will expire in 15 minutes.</p>
     <a href="${resetLink}">Reset Password</a>
   `,
-});
+  });
 
   res.json({
     message: "Password reset token created",
@@ -359,28 +360,33 @@ router.post("/reset-password", async (req, res) => {
     });
   }
 
-  const user = db.prepare(`SELECT * FROM users WHERE password_reset_token= ? AND password_reset_expires > ?`).get(token, new Date().toISOString());
+  const user = db
+    .prepare(
+      `SELECT * FROM users WHERE password_reset_token= ? AND password_reset_expires > ?`,
+    )
+    .get(token, new Date().toISOString());
 
   // Check if user exists and token is valid
-  if(!user){
+  if (!user) {
     return res.status(400).json({
       message: "Invalid or expired reset token",
     });
   }
-
 
   // Hash the new password
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Update the user's password
 
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE users
     SET password = ?, 
         password_reset_token = NULL,
         password_reset_expires = NULL
     WHERE id = ?
-  `).run(hashedPassword, user.id);
+  `,
+  ).run(hashedPassword, user.id);
 
   res.json({
     message: "Password has been reset successfully",
@@ -507,6 +513,87 @@ router.patch("/me/password", async (req, res) => {
   // Return a success response after the password has been updated.
   res.json({
     message: "Password change successfully",
+  });
+});
+
+// Delete the currently authenticated user's account
+router.delete("/me", async (req, res) => {
+  // Make sure the user is authenticated before allowing account deletion.
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Get the password entered by the user to confirm account deletion.
+  const { password } = req.body;
+
+  // A password is required because deleting an account is a destructive action.
+  if (!password) {
+    return res.status(400).json({
+      message: "Password is required",
+    });
+  }
+
+  // Get the user's password hash and Cloudinary image ID.
+  // We need the password to confirm deletion and the image ID to clean up
+  // the user's uploaded profile image after the account is deleted.
+  const user = db
+    .prepare(
+      `
+    SELECT id, password, profile_image_public_id
+    FROM users
+    WHERE id = ?
+  `,
+    )
+    .get(req.session.userId);
+
+  // The account may have already been deleted while the session still exists.
+  if (!user) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Verify that the password entered by the user matches the stored bcrypt hash.
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  // Stop the deletion if the password is incorrect.
+  if (!isPasswordValid) {
+    return res.status(401).json({
+      message: "Password is incorrect",
+    });
+  }
+
+  // Delete the user's profile image from Cloudinary if one exists.
+  // Image cleanup is separate from account deletion so a Cloudinary problem
+  // does not prevent the user account from being removed from the database.
+  if (user.profile_image_public_id) {
+    try {
+      await cloudinary.uploader.destroy(user.profile_image_public_id);
+    } catch (error) {
+      // Keep the account deletion process running even if Cloudinary cleanup fails.
+      console.error("Failed to delete profile image from Cloudinary:", error);
+    }
+  }
+
+  // Delete the user's account from the database.
+  db.prepare("DELETE FROM users WHERE id = ?").run(user.id);
+
+  // Destroy the current session so the deleted account cannot remain authenticated.
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({
+        message: "Account was deleted, but the session could not be cleared",
+      });
+    }
+
+    // Clear the session cookie from the browser.
+    res.clearCookie("connect.sid");
+
+    return res.json({
+      message: "Account deleted successfully",
+    });
   });
 });
 
