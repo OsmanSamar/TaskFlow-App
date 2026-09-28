@@ -433,6 +433,144 @@ router.get("/me", (req, res) => {
   });
 });
 
+// Get settings for the currently authenticated user.
+// The session user ID determines which user's settings can be read.
+router.get("/me/settings", (req, res) => {
+  // Check if the user is authenticated.
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Read only the settings fields needed by the frontend.
+  const settings = db
+    .prepare(`
+      SELECT dark_mode, language, email_notifications, task_reminders
+      FROM users
+      WHERE id = ?
+    `)
+    .get(req.session.userId);
+
+  // The user may have been deleted while the session still exists.
+  if (!settings) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Return the authenticated user's current settings.
+  res.json({
+    settings: {
+      dark_mode: settings.dark_mode,
+      language: settings.language,
+      email_notifications: settings.email_notifications,
+      task_reminders: settings.task_reminders,
+    },
+  });
+});
+
+
+// Update settings for the currently authenticated user.
+// The session user ID ensures users can only modify their own settings.
+router.patch("/me/settings", (req, res) => {
+  // Check if the user is authenticated.
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  // Get the settings sent by the frontend.
+  const {
+    dark_mode,
+    language,
+    email_notifications,
+    task_reminders,
+  } = req.body;
+
+  // Validate boolean-style settings when they are provided.
+  // SQLite stores these values as 0 or 1.
+  if (
+    dark_mode !== undefined &&
+    dark_mode !== 0 &&
+    dark_mode !== 1
+  ) {
+    return res.status(400).json({
+      message: "dark_mode must be 0 or 1",
+    });
+  }
+
+  if (
+    email_notifications !== undefined &&
+    email_notifications !== 0 &&
+    email_notifications !== 1
+  ) {
+    return res.status(400).json({
+      message: "email_notifications must be 0 or 1",
+    });
+  }
+
+  if (
+    task_reminders !== undefined &&
+    task_reminders !== 0 &&
+    task_reminders !== 1
+  ) {
+    return res.status(400).json({
+      message: "task_reminders must be 0 or 1",
+    });
+  }
+
+ // Only allow the languages supported by the application.
+if (
+  language !== undefined &&
+  !["en", "nl", "ar"].includes(language)
+) {
+  return res.status(400).json({
+    message: "Unsupported language",
+  });
+}
+  // Update only the settings that were actually provided.
+  // COALESCE keeps the existing database value for fields not included
+  // in the request.
+  db.prepare(`
+    UPDATE users
+    SET
+      dark_mode = COALESCE(?, dark_mode),
+      language = COALESCE(?, language),
+      email_notifications = COALESCE(?, email_notifications),
+      task_reminders = COALESCE(?, task_reminders)
+    WHERE id = ?
+  `).run(
+    dark_mode,
+    language,
+    email_notifications,
+    task_reminders,
+    req.session.userId,
+  );
+
+  // Return the updated settings so the frontend can use the new values.
+  const updatedSettings = db
+    .prepare(`
+      SELECT dark_mode, language, email_notifications, task_reminders
+      FROM users
+      WHERE id = ?
+    `)
+    .get(req.session.userId);
+
+  // The user may have been deleted while the session was active.
+  if (!updatedSettings) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  res.json({
+    message: "Settings updated successfully",
+    settings: updatedSettings,
+  });
+});
+
 // Change the Password of currently authenticated user
 router.patch("/me/password", async (req, res) => {
   // Check if the user is authenticated.
@@ -770,6 +908,8 @@ router.delete("/me/avatar", async (req, res) => {
     message: "Profile image deleted successfully",
   });
 });
+
+
 
 // We use avatar name for Postman / Multer
 router.post("/test-upload", upload.single("avatar"), async (req, res) => {

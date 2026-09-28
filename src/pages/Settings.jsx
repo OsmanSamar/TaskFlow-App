@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
@@ -32,7 +32,86 @@ const Settings = () => {
   // Prevents multiple delete requests while the account is being deleted.
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
+  // Stores the user's settings loaded from the backend.
+  // These values will control the switches and language dropdown.
+  const [settings, setSettings] = useState({
+    dark_mode: 0,
+    language: "en",
+    email_notifications: 1,
+    task_reminders: 1,
+  });
+
   const { clearUser } = useContext(AuthContext);
+
+  // Load the authenticated user's saved settings from the backend.
+  // The session cookie identifies which user's settings should be returned.
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/users/me/settings",
+          {
+            // Send the session cookie with the request.
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+
+        // Stop if the backend rejected the request.
+        if (!response.ok) {
+          console.error("Failed to load settings:", data.message);
+          return;
+        }
+
+        // Replace the default settings with the values saved in SQLite.
+        setSettings(data.settings);
+      } catch (error) {
+        // Handle network/server connection errors.
+        console.error("Failed to load settings:", error);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  // Update one user setting in the backend.
+  // This keeps the frontend state and SQLite database synchronized.
+  const handleSettingChange = async (setting, value) => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/users/me/settings",
+        {
+          method: "PATCH",
+          credentials: "include",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          // Send only the setting that changed.
+          body: JSON.stringify({
+            [setting]: value,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      // Stop if the backend rejected the update.
+      if (!response.ok) {
+        console.error("Failed to update setting:", data.message);
+        return;
+      }
+
+      // Use the updated values returned by the backend.
+      // This keeps React state synchronized with SQLite.
+      setSettings(data.settings);
+    } catch (error) {
+      // Handle network/server connection errors.
+      console.error("Failed to update setting:", error);
+    }
+  };
 
   // Delete the currently authenticated user's account.
   // The backend requires the user's password before performing the deletion.
@@ -74,7 +153,7 @@ const Settings = () => {
       // Close the confirmation modal and clear the password from component state.
       setShowDeleteAccount(false);
       setDeletePassword("");
-      
+
       // Remove the deleted account from frontend authentication state.
       clearUser();
 
@@ -174,7 +253,24 @@ const Settings = () => {
                   </p>
                 </div>
                 <label className="settings-switch">
-                  <input type="checkbox" readOnly />
+                  {/* Keep the Dark Mode switch connected to the settings state. */}
+                  <input
+                    type="checkbox"
+                    checked={settings.dark_mode === 1}
+                    // Update Dark Mode locally and save the new value in SQLite.
+                    onChange={(e) => {
+                      const value = e.target.checked ? 1 : 0;
+
+                      // Update the UI immediately.
+                      setSettings({
+                        ...settings,
+                        dark_mode: value,
+                      });
+
+                      // Save the changed setting in the backend.
+                      handleSettingChange("dark_mode", value);
+                    }}
+                  />
                   <span className="settings-switch__slider" />
                 </label>
               </div>
@@ -189,7 +285,23 @@ const Settings = () => {
                     Choose your preferred language
                   </p>
                 </div>
-                <select className="settings-select" defaultValue="en">
+                {/* Keep the language dropdown synchronized with the backend settings. */}
+                <select
+                  className="settings-select"
+                  value={settings.language}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    // Update the selected language immediately in the UI.
+                    setSettings({
+                      ...settings,
+                      language: value,
+                    });
+
+                    // Save the new language in SQLite.
+                    handleSettingChange("language", value);
+                  }}
+                >
                   <option value="en">English</option>
                   <option value="nl">Dutch</option>
                   <option value="ar">Arabic</option>
@@ -212,7 +324,23 @@ const Settings = () => {
                   </p>
                 </div>
                 <label className="settings-switch">
-                  <input type="checkbox" defaultChecked readOnly />
+                  {/* Keep Email Notifications synchronized with the saved backend setting. */}
+                  <input
+                    type="checkbox"
+                    checked={settings.email_notifications === 1}
+                    onChange={(e) => {
+                      const value = e.target.checked ? 1 : 0;
+
+                      // Update the UI immediately.
+                      setSettings({
+                        ...settings,
+                        email_notifications: value,
+                      });
+
+                      // Save the new value in SQLite.
+                      handleSettingChange("email_notifications", value);
+                    }}
+                  />
                   <span className="settings-switch__slider" />
                 </label>
               </div>
@@ -228,7 +356,23 @@ const Settings = () => {
                   </p>
                 </div>
                 <label className="settings-switch">
-                  <input type="checkbox" defaultChecked readOnly />
+                  {/* Keep Task Reminders synchronized with the saved backend setting. */}
+                  <input
+                    type="checkbox"
+                    checked={settings.task_reminders === 1}
+                    onChange={(e) => {
+                      const value = e.target.checked ? 1 : 0;
+
+                      // Update the UI immediately.
+                      setSettings({
+                        ...settings,
+                        task_reminders: value,
+                      });
+
+                      // Save the new value in SQLite.
+                      handleSettingChange("task_reminders", value);
+                    }}
+                  />
                   <span className="settings-switch__slider" />
                 </label>
               </div>

@@ -12,17 +12,22 @@ db.exec(`
     password TEXT NOT NULL,
     created_at TEXT NOT NULL,
     last_login TEXT,
-    account_status TEXT NOT NULL DEFAULT 'active',
+    account_status TEXT NOT NULL DEFAULT 'active', 
     email_verified INTEGER NOT NULL DEFAULT 0,
     email_verification_token TEXT,
     email_verification_expires TEXT,
     profile_image_url TEXT,
     profile_image_public_id TEXT,
     password_reset_token TEXT,
-    password_reset_expires TEXT
+    password_reset_expires TEXT,
+    dark_mode INTEGER NOT NULL DEFAULT 0,
+    language TEXT NOT NULL DEFAULT 'en',
+    email_notifications INTEGER NOT NULL DEFAULT 1,
+    task_reminders INTEGER NOT NULL DEFAULT 1
      );
      `);
 
 //  console.log(db.prepare("PRAGMA table_info(users)").all());
+
 
 export default db;
