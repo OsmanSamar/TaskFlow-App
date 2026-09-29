@@ -20,17 +20,20 @@ const Profile = () => {
             {/* Profile side panel */}
             <aside className="profile-aside">
               <div className="profile-aside__identity">
-                <div className="profile-aside__avatar">
-                 {user?.profile_image_url ?(
-                  <img
-                  src={user.profile_image_url}
-                  alt={user.name}
-                  className="profile-aside__avatar-image"
-                  />
-                 ):(
-                  user?.name?.charAt(0).toUpperCase()
-                 
-                 )}
+                <div
+                  className={`profile-avatar ${
+                    user?.profile_image_url ? "profile-avatar--has-image" : ""
+                  }`}
+                >
+                  {user?.profile_image_url ? (
+                    <img
+                      src={user.profile_image_url}
+                      alt={user.name}
+                      className="profile-avatar__image"
+                    />
+                  ) : (
+                    user?.name?.charAt(0).toUpperCase()
+                  )}
                 </div>
 
                 <h2 className="profile-aside__name">{user?.name}</h2>
@@ -119,20 +122,15 @@ const Profile = () => {
                     <li className="profile-status-item">
                       <span>Last login</span>
                       <span className="profile-status-item__meta">
-                      
-                          {user?.last_login
-                            ? new Date(user.last_login).toLocaleString(
-                                "en-US",
-                                {
-                                  month: "long",
-                                  day: "numeric",
-                                  year: "numeric",
-                                  hour: "numeric",
-                                  minute: "2-digit",
-                                },
-                              )
-                            : "—"}
-                     
+                        {user?.last_login
+                          ? new Date(user.last_login).toLocaleString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })
+                          : "—"}
                       </span>
                     </li>
                   </ul>

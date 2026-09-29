@@ -493,6 +493,7 @@ const Settings = () => {
                   <div className="delete-account-modal__actions">
                     <button
                       type="button"
+                      className="settings-btn settings-btn--secondary"
                       onClick={() => {
                         // Close the confirmation UI without deleting anything.
                         setShowDeleteAccount(false);

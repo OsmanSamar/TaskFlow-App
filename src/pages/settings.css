@@ -31,7 +31,13 @@
   }
 
   .settings-header h1 {
-    @apply font-sans text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white;
+    @apply font-sans 
+    text-2xl 
+    font-semibold 
+    cursor-pointer
+    tracking-tight
+   text-zinc-900
+   dark:text-white;
   }
 
   .settings-header p {
@@ -43,14 +49,16 @@
   }
 
   .settings-card {
-    /* @apply rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-sm md:p-6; */
     /* Light theme is the default; dark: utilities apply when <html> has "dark". */
     @apply rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-sm md:p-6
     dark:border-zinc-800 dark:bg-zinc-900;
   }
 
   .settings-card--danger {
-    @apply border-red-200/80 bg-red-50/40   dark:border-red-900 dark:bg-red-950/40;
+    @apply border-red-200/80
+     bg-red-50/40  
+     dark:border-red-900
+     dark:bg-red-950/40;
   }
 
   .settings-card__title,
@@ -67,7 +75,19 @@
   }
 
   .settings-row {
-    @apply flex flex-col gap-3 border-b border-zinc-100 py-4 first:pt-0 last:border-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between;
+    @apply flex 
+    flex-col 
+    gap-3 
+    border-b 
+    border-zinc-100 
+    py-4 
+    first:pt-0 
+    last:border-0 
+    last:pb-0 
+    sm:flex-row 
+    sm:items-center
+     sm:justify-between  
+    dark:border-zinc-800;
   }
 
   .settings-row--danger {
@@ -99,11 +119,17 @@
   }
 
   .settings-chip--success {
-    @apply bg-emerald-50 text-emerald-700;
+    @apply bg-emerald-50 
+    text-emerald-700 
+    dark:bg-emerald-950 
+    dark:text-emerald-300;
   }
 
   .settings-chip--warning {
-    @apply bg-emerald-50 text-red-700;
+    @apply bg-emerald-50 
+    text-red-700
+    dark:bg-red-950 
+    dark:text-red-300;
   }
 
   .settings-btn {
@@ -111,7 +137,18 @@
   }
 
   .settings-btn--ghost {
-    @apply border border-zinc-200 bg-white text-zinc-700;
+    @apply border
+     border-zinc-200
+     bg-white
+     text-zinc-700
+     hover:bg-slate-50
+     dark:border-zinc-700
+     dark:bg-zinc-800
+     dark:text-zinc-100
+     dark:hover:bg-zinc-700;
+  }
+  .settings-btn--secondary {
+    @apply border border-zinc-200 bg-white text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200;
   }
 
   .settings-btn--danger {
@@ -119,7 +156,19 @@
   }
 
   .settings-select {
-    @apply shrink-0 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-sm text-zinc-700 outline-none;
+    @apply shrink-0 
+    rounded-lg 
+    border 
+    border-zinc-200
+     bg-zinc-50 
+     px-3 
+     py-1.5 
+     text-sm
+      text-zinc-700 
+      outline-none
+      dark:border-zinc-700
+    dark:bg-zinc-800
+    dark:text-zinc-100;
   }
 
   .settings-switch {
@@ -156,11 +205,11 @@
   /* Modal content container.
    Keeps the warning, password field, and actions together. */
   .delete-account-modal__content {
-    @apply w-full max-w-md rounded-2xl border border-zinc-200/80 bg-white p-5 md:p-6 shadow-2xl;
+    @apply flex flex-col  w-full max-w-md rounded-2xl border border-zinc-200/80 bg-white p-5 md:p-6 shadow-2xl  dark:border-zinc-800 dark:bg-zinc-900;
   }
 
   .delete-account__message {
-    @apply my-3 text-lg text-zinc-600;
+    @apply my-3 text-lg text-zinc-600 dark:text-zinc-300;
   }
 
   /* Space between the confirmation buttons. */
@@ -168,7 +217,7 @@
     @apply mt-5 flex justify-end gap-3;
   }
   .delete-account__label {
-    @apply text-lg font-semibold  text-zinc-600;
+    @apply mb-3 text-lg font-semibold text-zinc-600 dark:text-zinc-300;
   }
 
   /* Password field inside the confirmation modal. */
