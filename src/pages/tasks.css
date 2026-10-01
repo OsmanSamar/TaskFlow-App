@@ -1,160 +1,231 @@
-@reference "tailwindcss";
+@reference "../index.css";
 
 @layer components {
-  .tasks-page {
-    @apply flex min-h-screen;
-  }
+.tasks-page {
+@apply flex min-h-screen;
+}
 
-  .tasks-main {
-    @apply flex min-w-0 flex-1 flex-col;
-  }
+.tasks-main {
+@apply flex min-w-0 flex-1 flex-col;
+}
 
-  .tasks-content {
-    @apply flex flex-1 flex-col gap-6 p-6;
-    background-image:
-      radial-gradient(
-        ellipse 80% 60% at 15% 85%,
-        rgba(99, 102, 241, 0.35),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 70% 55% at 85% 15%,
-        rgba(139, 92, 246, 0.3),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 50% 40% at 50% 50%,
-        rgba(59, 130, 246, 0.15),
-        transparent
-      );
-  }
+.tasks-content {
+@apply flex flex-1 flex-col gap-6 p-6;
+background-image:
+radial-gradient(
+ellipse 80% 60% at 15% 85%,
+rgba(99, 102, 241, 0.35),
+transparent
+),
+radial-gradient(
+ellipse 70% 55% at 85% 15%,
+rgba(139, 92, 246, 0.3),
+transparent
+),
+radial-gradient(
+ellipse 50% 40% at 50% 50%,
+rgba(59, 130, 246, 0.15),
+transparent
+);
+}
 
-  .tasks-header h1 {
-    @apply font-serif text-2xl font-semibold tracking-tight text-zinc-900;
-  }
+/* Keep the task workspace clean and deep in Dark Mode. */
+.dark .tasks-content {
+background-color: #000;
+background-image: none;
+}
 
-  .tasks-header p {
-    @apply mt-1 text-sm text-zinc-500;
-  }
-  .tasks-subtitle {
-    @apply mt-2 text-lg font-medium text-slate-600 font-serif ;
-  }
+.tasks-header h1 {
+@apply font-sans text-2xl font-semibold tracking-tight
+text-zinc-900 dark:text-white;
+}
 
-  .tasks-card {
-    @apply overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm;
-  }
+.tasks-header p {
+@apply mt-1 text-sm text-zinc-500 dark:text-zinc-400;
+}
 
-  .tasks-input-row {
-    @apply relative flex flex-col gap-3 border-b border-zinc-100 p-5 sm:flex-row sm:items-start;
-  }
+.tasks-subtitle {
+@apply mt-2 font-sans text-lg font-medium text-slate-600
+dark:text-zinc-300;
+}
 
-  .task-input {
-    @apply flex-1 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-900 outline-none transition-all duration-150 placeholder:text-zinc-400 hover:border-zinc-300 hover:bg-zinc-100 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20;
-  }
+.tasks-card {
+@apply overflow-hidden rounded-2xl border border-zinc-200/80
+bg-white shadow-sm
+dark:border-zinc-800 dark:bg-zinc-950
+dark:shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)];
+}
 
-  .tasks-add-btn {
-    @apply inline-flex shrink-0 items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-indigo-700;
-  }
+.tasks-input-row {
+@apply relative flex flex-col gap-3 border-b border-zinc-100 p-5
+sm:flex-row sm:items-start
+dark:border-zinc-800;
+}
 
-  .task-list {
-    @apply m-0 flex list-none flex-col gap-2 p-3;
-  }
+.task-input {
+@apply flex-1 rounded-xl border border-zinc-200 bg-zinc-50
+px-4 py-2.5 text-sm text-zinc-900 outline-none
+transition-all duration-150 placeholder:text-zinc-400
+hover:border-zinc-300 hover:bg-zinc-100
+focus:border-indigo-500 focus:bg-white
+focus:ring-2 focus:ring-indigo-500/20
+dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100
+dark:placeholder:text-zinc-500
+dark:hover:border-zinc-600 dark:hover:bg-zinc-800
+dark:focus:border-indigo-400 dark:focus:bg-zinc-900
+dark:focus:ring-indigo-400/20;
+}
 
-  .task-item {
-    @apply flex flex-wrap items-center gap-3 rounded-xl border border-zinc-100 bg-white px-4 py-3 transition-colors duration-150 hover:bg-zinc-50;
-  }
+.tasks-add-btn {
+@apply inline-flex shrink-0 items-center justify-center rounded-xl
+bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white
+transition-colors duration-150
+hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400;
+}
 
-  .tasks-checkbox {
-    @apply flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-zinc-300 transition-colors duration-150 hover:border-indigo-400;
-  }
+.task-list {
+@apply m-0 flex list-none flex-col gap-2 p-3;
+}
 
-  .tasks-checkbox--done {
-    @apply border-indigo-600 bg-indigo-600;
-  }
+.task-item {
+@apply flex flex-wrap items-center gap-3 rounded-xl
+border border-zinc-100 bg-white px-4 py-3
+transition-all duration-150
+hover:bg-zinc-50
+dark:border-zinc-800 dark:bg-zinc-900
+dark:hover:border-zinc-700 dark:hover:bg-zinc-800;
+}
 
-  .tasks-check-icon {
-    @apply h-3 w-3 text-white;
-  }
+.tasks-checkbox {
+@apply flex h-5 w-5 shrink-0 items-center justify-center rounded-full
+border-2 border-zinc-300 transition-colors duration-150
+hover:border-indigo-400
+dark:border-zinc-600 dark:hover:border-indigo-400;
+}
 
-  .task-text {
-    @apply min-w-0 flex-1 text-sm font-medium text-zinc-800;
-  }
+.tasks-checkbox--done {
+@apply border-indigo-600 bg-indigo-600
+dark:border-indigo-500 dark:bg-indigo-500;
+}
 
-  .task-text--done {
-    @apply text-zinc-400 line-through;
-  }
+.tasks-check-icon {
+@apply h-3 w-3 text-white;
+}
 
-  .tasks-edit-btn {
-    @apply rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-500 transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-600;
-  }
+.task-text {
+@apply min-w-0 flex-1 text-sm font-medium
+text-zinc-800 dark:text-zinc-200;
+}
 
-  .delete-btn {
-    @apply rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-500 transition-colors duration-150 hover:bg-red-50 hover:text-red-600;
-  }
+.task-text--done {
+@apply text-zinc-400 line-through dark:text-zinc-600;
+}
 
-  .tasks-empty-state {
-    @apply px-5 py-10 text-center text-sm text-zinc-500;
-  }
+.tasks-edit-btn {
+@apply rounded-lg px-3 py-1.5 text-xs font-medium
+text-zinc-500 transition-colors duration-150
+hover:bg-indigo-50 hover:text-indigo-600
+dark:text-zinc-400
+dark:hover:bg-indigo-950/50 dark:hover:text-indigo-400;
+}
 
-  .filter-bar {
-    @apply flex w-full gap-2 border-t border-zinc-100 bg-zinc-50 p-3;
-  }
+.delete-btn {
+@apply rounded-lg px-3 py-1.5 text-xs font-medium
+text-zinc-500 transition-colors duration-150
+hover:bg-red-50 hover:text-red-600
+dark:text-zinc-400
+dark:hover:bg-red-950/50 dark:hover:text-red-400;
+}
 
-  .filter-btn {
-    @apply flex flex-1 items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-zinc-500 transition-colors duration-150 hover:bg-white hover:text-zinc-700;
-  }
+.tasks-empty-state {
+@apply px-5 py-10 text-center text-sm text-zinc-500
+dark:text-zinc-500;
+}
 
-  .filter-btn--active {
-    @apply bg-white text-indigo-600 shadow-sm;
-  }
+.filter-bar {
+@apply flex w-full gap-2 border-t border-zinc-100 bg-zinc-50 p-3
+dark:border-zinc-800 dark:bg-zinc-900;
+}
 
-  .tasks-clear-bar {
-    @apply flex w-full gap-2 border-t border-zinc-100 bg-zinc-50 p-3;
-  }
+.filter-btn {
+@apply flex flex-1 items-center justify-center rounded-lg px-4 py-2
+text-sm font-medium text-zinc-500 transition-colors duration-150
+hover:bg-white hover:text-zinc-700
+dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200;
+}
 
-  .tasks-clear-btn {
-    @apply flex flex-1 items-center justify-center rounded-lg  border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-500 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-800;
-  }
+.filter-btn--active {
+@apply bg-white text-indigo-600 shadow-sm
+dark:bg-zinc-800 dark:text-indigo-400;
+}
 
-  .tasks-error-message {
-    @apply absolute left-5 top-[4.35rem] text-sm font-medium text-red-500;
-  }
+.tasks-clear-bar {
+@apply flex w-full gap-2 border-t border-zinc-100 bg-zinc-50 p-3
+dark:border-zinc-800 dark:bg-zinc-900;
+}
 
-  .tasks-modal-overlay {
-    @apply fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/50 p-4;
-  }
+.tasks-clear-btn {
+@apply flex flex-1 items-center justify-center rounded-lg
+border border-zinc-200 bg-white px-4 py-2 text-sm font-medium
+text-zinc-500 transition-colors duration-150
+hover:bg-zinc-100 hover:text-zinc-800
+dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400
+dark:hover:bg-zinc-700 dark:hover:text-zinc-100;
+}
 
-  .tasks-modal {
-    @apply w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-lg;
-  }
+.tasks-error-message {
+@apply absolute left-5 top-[4.35rem] text-sm font-medium
+text-red-500 dark:text-red-400;
+}
 
-  .tasks-modal__title {
-    @apply font-serif text-xl font-semibold tracking-tight text-zinc-900;
-  }
+.tasks-modal-overlay {
+@apply fixed inset-0 z-50 flex items-center justify-center
+bg-zinc-950/50 p-4 dark:bg-black/70;
+}
 
-  .tasks-modal__text {
-    @apply mt-2 text-sm leading-relaxed text-zinc-600;
-  }
+.tasks-modal {
+@apply w-full max-w-md rounded-2xl border border-zinc-200
+bg-white p-6 shadow-lg
+dark:border-zinc-800 dark:bg-zinc-900
+dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)];
+}
 
-  .tasks-modal__actions {
-    @apply mt-6 flex justify-end gap-3;
-  }
+.tasks-modal__title {
+@apply font-sans text-xl font-semibold tracking-tight
+text-zinc-900 dark:text-white;
+}
 
-  .tasks-modal__btn {
-    @apply rounded-lg px-4 py-2 text-sm font-semibold transition-colors duration-150;
-  }
+.tasks-modal__text {
+@apply mt-2 text-sm leading-relaxed
+text-zinc-600 dark:text-zinc-400;
+}
 
-  .tasks-modal__btn--cancel {
-    @apply border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50;
-  }
+.tasks-modal__actions {
+@apply mt-6 flex justify-end gap-3;
+}
 
-  .tasks-modal__btn--danger {
-    @apply border border-red-600 bg-red-600 text-white hover:bg-red-700;
-  }
+.tasks-modal__btn {
+@apply rounded-lg px-4 py-2 text-sm font-semibold
+transition-colors duration-150;
+}
 
-  @media (max-width: 640px) {
-    .task-item {
-      @apply items-start;
-    }
-  }
+.tasks-modal__btn--cancel {
+@apply border border-zinc-200 bg-white text-zinc-700
+hover:bg-zinc-50
+dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100
+dark:hover:bg-zinc-700;
+}
+
+.tasks-modal__btn--danger {
+@apply border border-red-600 bg-red-600 text-white
+hover:bg-red-700
+dark:border-red-500 dark:bg-red-600
+dark:hover:bg-red-500;
+}
+
+@media (max-width: 640px) {
+.task-item {
+@apply items-start;
+}
+}
 }

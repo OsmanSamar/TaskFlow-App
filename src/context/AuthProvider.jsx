@@ -1,22 +1,32 @@
+
 import { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Tracks whether the initial authentication check is  still running
+  // Tracks whether the initial authentication check is still running
   const [loading, setLoading] = useState(true);
 
   // Stores an authentication error when the initial session check fails
   const [authError, setAuthError] = useState(null);
 
-  // Clears the authenticated user from frontend state. 
+  // Clears the authenticated user from frontend state.
   // Used after logout or destructive actions such as account deletion
   const clearUser = () => {
     setUser(null);
   };
 
   useEffect(() => {
+    // Restore Dark Mode immediately when the app starts.
+    // This prevents Dark Mode from disappearing after a refresh.
+    const savedDarkMode = localStorage.getItem("darkMode");
+
+    document.documentElement.classList.toggle(
+      "dark",
+      savedDarkMode === "true",
+    );
+
     // Check if there is an authenticated user when the app starts
     fetch("http://localhost:3000/api/users/me", {
       credentials: "include",
@@ -55,8 +65,17 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, clearUser, loading, authError }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        clearUser,
+        loading,
+        authError,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+

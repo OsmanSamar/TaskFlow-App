@@ -1,63 +1,111 @@
-@reference "tailwindcss";
+@reference "../index.css";
+
 @layer components {
-  .register-page {
-    @apply flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-4 md:p-6;
-    background-image:
-      radial-gradient(
-        ellipse 80% 60% at 15% 85%,
-        rgba(99, 102, 241, 0.35),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 70% 55% at 85% 15%,
-        rgba(139, 92, 246, 0.3),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 50% 40% at 50% 50%,
-        rgba(59, 130, 246, 0.15),
-        transparent
-      );
-  }
+.register-page {
+@apply flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-4 md:p-6;
+background-image:
+radial-gradient(
+ellipse 80% 60% at 15% 85%,
+rgba(99, 102, 241, 0.35),
+transparent
+),
+radial-gradient(
+ellipse 70% 55% at 85% 15%,
+rgba(139, 92, 246, 0.3),
+transparent
+),
+radial-gradient(
+ellipse 50% 40% at 50% 50%,
+rgba(59, 130, 246, 0.15),
+transparent
+);
+}
 
-  .register-card {
-    @apply relative flex w-full max-w-md flex-col gap-2 overflow-hidden rounded-2xl bg-white p-8 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.55)] md:p-10;
-  }
-  .register-panel__title {
-    @apply mb-2 font-serif text-3xl tracking-tight text-gray-900 text-center;
-  }
-  .form-field {
-    @apply mb-4 flex flex-col gap-2;
-  }
+/* Keep the page fully black when Dark Mode is active. */
+.dark .register-page {
+background-color: #000;
+background-image: none;
+}
 
-  .form-label {
-    @apply text-sm font-medium text-gray-700;
-  }
+.register-card {
+@apply relative flex w-full max-w-md flex-col gap-2 overflow-hidden
+rounded-2xl bg-white p-8
+shadow-[0_25px_50px_-12px_rgba(0,0,0,0.55)]
+md:p-10
+dark:border dark:border-zinc-800
+dark:bg-zinc-950
+dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)]
+dark:ring-1 dark:ring-white/5;
+}
 
-  .form-input-wrap {
-    @apply relative;
-  }
+.dark .register-card {
+background-color: #09090b;
+background-image:
+linear-gradient(
+145deg,
+rgba(255, 255, 255, 0.025),
+transparent 40%
+),
+radial-gradient(
+ellipse 70% 45% at 50% 0%,
+rgba(99, 102, 241, 0.08),
+transparent 70%
+);
+}
 
-  .form-input-wrap .form-input {
-    @apply pr-10;
-  }
 
-  .form-input {
-    @apply w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 outline-none transition-all duration-150 placeholder:text-gray-400 hover:border-gray-300 hover:bg-gray-100 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20;
-  }
+.register-panel__title {
+@apply mb-2 text-center font-sans text-3xl tracking-tight
+text-gray-900 dark:text-white;
+}
 
-  .form-input--error {
-    @apply border-red-400 bg-red-50 focus:border-red-400 focus:ring-red-500/20;
-  }
-  .form-error {
-    @apply text-sm font-medium text-red-500;
-  }
+.form-field {
+@apply mb-4 flex flex-col gap-2;
+}
 
-  .login-footer {
-    @apply mt-6 text-center text-sm text-gray-500;
-  }
+.form-label {
+@apply text-sm font-medium text-gray-700 dark:text-zinc-200;
+}
 
-  .login-footer-link {
-    @apply font-semibold text-gray-900 no-underline transition-colors hover:text-indigo-600 hover:underline focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
-  }
+.form-input-wrap {
+@apply relative;
+}
+
+.form-input-wrap .form-input {
+@apply pr-10;
+}
+
+.form-input {
+@apply w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5
+text-sm text-gray-900 outline-none transition-all duration-150
+placeholder:text-gray-400 hover:border-gray-300 hover:bg-gray-100
+focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20
+dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100
+dark:placeholder:text-zinc-500
+dark:hover:border-zinc-600 dark:hover:bg-zinc-700
+dark:focus:border-indigo-400 dark:focus:bg-zinc-800
+dark:focus:ring-indigo-400/20;
+}
+
+.form-input--error {
+@apply border-red-400 bg-red-50 focus:border-red-400 focus:ring-red-500/20
+dark:border-red-500 dark:bg-red-950/40
+dark:focus:border-red-400 dark:focus:ring-red-500/20;
+}
+
+.form-error {
+@apply text-sm font-medium text-red-500 dark:text-red-400;
+}
+
+.login-footer {
+@apply mt-6 text-center text-sm text-gray-500 dark:text-zinc-400;
+}
+
+.login-footer-link {
+@apply font-semibold text-gray-900 no-underline transition-colors
+hover:text-indigo-600 hover:underline
+focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2
+focus-visible:outline-indigo-500
+dark:text-zinc-100 dark:hover:text-indigo-400;
+}
 }

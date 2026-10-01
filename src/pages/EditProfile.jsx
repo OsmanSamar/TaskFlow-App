@@ -133,7 +133,13 @@ const EditProfile = () => {
         <main className="editprofile-content">
           <section className="editprofile-header">
             <div className="editprofile-header__avatar-wrap">
-              <div className="editprofile-header__avatar">
+              <div
+                className={`editprofile-header__avatar ${
+                  selectedImage || user?.profile_image_url
+                    ? "editprofile-header__avatar--has-image"
+                    : ""
+                }`}
+              >
                 {selectedImage || user?.profile_image_url ? (
                   <img
                     className="editprofile-header__avatar-image"

@@ -1,75 +1,110 @@
-@reference "tailwindcss";
+@reference "../index.css";
 
 @layer components {
-  .dashboard-page {
-    @apply flex min-h-screen;
-  }
+.dashboard-page {
+@apply flex min-h-screen;
+}
 
-  .dashboard-main {
-    @apply flex min-w-0 flex-1 flex-col;
-  }
+.dashboard-main {
+@apply flex min-w-0 flex-1 flex-col;
+}
 
-  .dashboard-content {
-    @apply flex flex-1 flex-col gap-6 p-6;
-    background-image:
-    radial-gradient(ellipse 80% 60% at 15% 85%, rgba(99, 102, 241, 0.35), transparent),
-    radial-gradient(ellipse 70% 55% at 85% 15%, rgba(139, 92, 246, 0.3), transparent),
-    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(59, 130, 246, 0.15), transparent);
-  }
+.dashboard-content {
+@apply flex flex-1 flex-col gap-6 p-6;
+background-image:
+radial-gradient(
+ellipse 80% 60% at 15% 85%,
+rgba(99, 102, 241, 0.35),
+transparent
+),
+radial-gradient(
+ellipse 70% 55% at 85% 15%,
+rgba(139, 92, 246, 0.3),
+transparent
+),
+radial-gradient(
+ellipse 50% 40% at 50% 50%,
+rgba(59, 130, 246, 0.15),
+transparent
+);
+}
 
-  .dashboard-content h1 {
-    @apply flex items-center gap-2 font-serif text-2xl font-semibold tracking-tight text-zinc-900;
-  }
+/* Keep the dashboard background clean and deep in Dark Mode. */
+.dark .dashboard-content {
+background-color: #000;
+background-image: none;
+}
 
-  .dashboard-content h1 span {
-    @apply text-indigo-600;
-  }
+.dashboard-content h1 {
+@apply flex items-center gap-2 font-sans text-2xl font-semibold
+tracking-tight text-zinc-900 dark:text-white;
+}
 
-  .stats-grid {
-    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3;
-  }
+.dashboard-content h1 span {
+@apply text-indigo-600 dark:text-indigo-400;
+}
 
-  .stat-card {
-    @apply rounded-xl border border-zinc-200/80 bg-white p-5 shadow-sm transition-shadow duration-150 hover:shadow-md;
-  }
+.stats-grid {
+@apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3;
+}
 
-  .stat-card__label {
-    @apply text-sm font-medium text-zinc-500;
-  }
+.stat-card {
+@apply rounded-xl border border-zinc-200/80 bg-white p-5 shadow-sm
+transition-all duration-150 hover:shadow-md
+dark:border-zinc-800 dark:bg-zinc-900
+dark:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]
+dark:hover:border-zinc-700 dark:hover:bg-zinc-800;
+}
 
-  .stat-card__value {
-    @apply mt-2 font-serif text-3xl font-semibold tracking-tight text-zinc-900;
-  }
+.stat-card__label {
+@apply text-sm font-medium text-zinc-500 dark:text-zinc-400;
+}
 
-  .recent-tasks {
-    @apply flex flex-col gap-3;
-  }
+.stat-card__value {
+@apply mt-2 font-sans text-3xl font-semibold tracking-tight
+text-zinc-900 dark:text-white;
+}
 
-  .recent-tasks__title {
-    @apply font-serif text-lg font-semibold tracking-tight text-zinc-900;
-  }
+.recent-tasks {
+@apply flex flex-col gap-3;
+}
 
-  .recent-tasks__list {
-    @apply flex flex-col gap-2 rounded-xl border border-zinc-200/80 bg-white p-2 shadow-sm;
-  }
+.recent-tasks__title {
+@apply font-sans text-lg font-semibold tracking-tight
+text-zinc-900 dark:text-white;
+}
 
-  .recent-task {
-    @apply flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors duration-150 hover:bg-zinc-50;
-  }
+.recent-tasks__list {
+@apply flex flex-col gap-2 rounded-xl border border-zinc-200/80
+bg-white p-2 shadow-sm
+dark:border-zinc-800 dark:bg-zinc-900
+dark:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)];
+}
 
-  .recent-task__status {
-    @apply flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-zinc-50 text-xs text-transparent;
-  }
+.recent-task {
+@apply flex items-center gap-3 rounded-lg px-3 py-2.5
+transition-colors duration-150
+hover:bg-zinc-50
+dark:hover:bg-zinc-800;
+}
 
-  .recent-task__status--done {
-    @apply border-emerald-500/40 bg-emerald-50 text-emerald-600;
-  }
+.recent-task__status {
+@apply flex h-6 w-6 shrink-0 items-center justify-center
+rounded-full border border-zinc-300 bg-zinc-50 text-xs text-transparent
+dark:border-zinc-600 dark:bg-zinc-800;
+}
 
-  .recent-task__title {
-    @apply text-sm font-medium text-zinc-800;
-  }
+.recent-task__status--done {
+@apply border-emerald-500/40 bg-emerald-50 text-emerald-600
+dark:border-emerald-500/40 dark:bg-emerald-950/50
+dark:text-emerald-400;
+}
 
-  .recent-task__title--done {
-    @apply text-zinc-400 line-through;
-  }
+.recent-task__title {
+@apply text-sm font-medium text-zinc-800 dark:text-zinc-200;
+}
+
+.recent-task__title--done {
+@apply text-zinc-400 line-through dark:text-zinc-600;
+}
 }

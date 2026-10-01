@@ -75,39 +75,6 @@ const Settings = () => {
     loadSettings();
   }, []);
 
-  // Sync the saved Dark Mode setting with the global <html> element.
-  // Tailwind will use the "dark" class to apply dark-mode styles across the app.
-  useEffect(() => {
-    // Debug: verify the saved Dark Mode value reaching this effect.
-    console.log("Dark Mode value:", settings.dark_mode);
-    // console.log(
-    //   "document.documentElement.classList.contains('dark')",
-    //   document.documentElement.classList.contains("dark"),
-    // );
-
-    // console.log(
-    //   "Dark Mode value:",
-    //   settings.dark_mode,
-    //   "Type:",
-    //   typeof settings.dark_mode,
-    // );
-  // Add "dark" when Dark Mode is enabled, otherwise remove it.
-  document.documentElement.classList.toggle(
-    "dark",
-    settings.dark_mode === 1,
-  );
- // Confirm the actual class currently applied to <html>.
-  console.log(
-    "HTML has dark:",
-    document.documentElement.classList.contains("dark"),
-  );
-// Debug
-
-
-    
-   document.documentElement.classList.toggle("dark", settings.dark_mode === 1);
-  }, [settings.dark_mode]);
-
   // Update one user setting in the backend.
   // This keeps the frontend state and SQLite database synchronized.
   const handleSettingChange = async (setting, value) => {
@@ -299,6 +266,15 @@ const Settings = () => {
                         ...settings,
                         dark_mode: value,
                       });
+
+                      // Apply Dark Mode globally.
+                      document.documentElement.classList.toggle(
+                        "dark",
+                        value === 1,
+                      );
+
+                      // Remember the selected theme after refresh.
+                      localStorage.setItem("darkMode", String(value === 1));
 
                       // Save the changed setting in the backend.
                       handleSettingChange("dark_mode", value);

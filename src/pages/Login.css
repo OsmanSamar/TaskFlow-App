@@ -1,205 +1,291 @@
-@reference "tailwindcss";
+@reference "../index.css";
 
 @layer components {
-  .login-page {
-    @apply flex min-h-screen items-center justify-center  p-4 md:p-6;
-    background-image:
-      radial-gradient(
-        ellipse 80% 60% at 15% 85%,
-        rgba(99, 102, 241, 0.35),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 70% 55% at 85% 15%,
-        rgba(139, 92, 246, 0.3),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 50% 40% at 50% 50%,
-        rgba(59, 130, 246, 0.15),
-        transparent
-      );
-  }
+.login-page {
+@apply flex min-h-screen items-center justify-center bg-zinc-950 p-4 md:p-6;
+background-image:
+radial-gradient(
+ellipse 80% 60% at 15% 85%,
+rgba(99, 102, 241, 0.35),
+transparent
+),
+radial-gradient(
+ellipse 70% 55% at 85% 15%,
+rgba(139, 92, 246, 0.3),
+transparent
+),
+radial-gradient(
+ellipse 50% 40% at 50% 50%,
+rgba(59, 130, 246, 0.15),
+transparent
+);
+}
 
-  .login-card {
-    @apply relative grid w-full max-w-5xl grid-cols-1 overflow-hidden rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.55)] md:min-h-[40rem] md:grid-cols-2;
-  }
+/* Keep the page fully black when Dark Mode is active. */
+.dark .login-page {
+background-color: #000;
+background-image: none;
+}
 
-  .login-hero {
-    @apply col-start-1 row-start-1 flex min-h-48 flex-col bg-[#0a0a0f] p-8 pb-16 md:min-h-0 md:p-10 md:pb-[5.5rem];
-    background-image:
-      linear-gradient(160deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%),
-      radial-gradient(
-        ellipse 90% 70% at 20% 90%,
-        rgba(99, 102, 241, 0.7),
-        transparent 55%
-      ),
-      radial-gradient(
-        ellipse 80% 60% at 80% 20%,
-        rgba(139, 92, 246, 0.55),
-        transparent 50%
-      ),
-      radial-gradient(
-        ellipse 60% 50% at 55% 45%,
-        rgba(59, 130, 246, 0.25),
-        transparent 60%
-      );
-    background-repeat: no-repeat;
-    background-position: center, center, center, center;
-    background-size: cover, cover, cover, cover;
-  }
+.login-card {
+@apply relative grid w-full max-w-5xl grid-cols-1 overflow-hidden
+rounded-2xl
+shadow-[0_25px_50px_-12px_rgba(0,0,0,0.55)]
+md:min-h-[40rem] md:grid-cols-2
+dark:border dark:border-zinc-800
+dark:shadow-[0_25px_70px_-20px_rgba(0,0,0,0.9)]
+dark:ring-1 dark:ring-white/5;
+}
 
-  .login-hero__logo {
-    @apply mb-8 h-8 w-8 shrink-0 md:h-9 md:w-9;
-  }
 
-  .login-hero__desc {
-    @apply mt-4 text-xs leading-relaxed text-white/70 md:mt-6 md:text-[0.9375rem];
-  }
 
-  .login-hero__desc--desktop {
-    @apply hidden md:block;
-  }
 
-  .login-hero__desc--mobile {
-    @apply block md:hidden;
-  }
+.login-hero {
+@apply col-start-1 row-start-1 flex min-h-48 flex-col bg-[#0a0a0f] p-8 pb-16
+md:min-h-0 md:p-10 md:pb-[5.5rem];
+background-image:
+linear-gradient(
+160deg,
+rgba(0, 0, 0, 0.2) 0%,
+rgba(0, 0, 0, 0.5) 100%
+),
+radial-gradient(
+ellipse 90% 70% at 20% 90%,
+rgba(99, 102, 241, 0.7),
+transparent 55%
+),
+radial-gradient(
+ellipse 80% 60% at 80% 20%,
+rgba(139, 92, 246, 0.55),
+transparent 50%
+),
+radial-gradient(
+ellipse 60% 50% at 55% 45%,
+rgba(59, 130, 246, 0.25),
+transparent 60%
+);
+background-repeat: no-repeat;
+background-position: center, center, center, center;
+background-size: cover, cover, cover, cover;
+}
 
-  .login-hero__title {
-    @apply mt-auto font-serif text-3xl leading-tight tracking-tight text-white md:text-[2.75rem];
-  }
+.login-hero__logo {
+@apply mb-8 h-8 w-8 shrink-0 md:h-9 md:w-9;
+}
 
-  .login-panel {
-    @apply col-start-1 row-start-2 flex w-full max-w-lg flex-col justify-center bg-white p-8 md:col-start-2 md:row-start-1 md:mx-auto md:p-10;
-  }
+.login-hero__desc {
+@apply mt-4 text-xs leading-relaxed text-white/70 md:mt-6 md:text-[0.9375rem];
+}
 
-  .login-panel__title {
-    @apply mb-1 font-serif text-3xl tracking-tight text-gray-900;
-  }
+.login-hero__desc--desktop {
+@apply hidden md:block;
+}
 
-  .login-panel__subtitle {
-    @apply mb-8 text-[0.9375rem] text-gray-500;
-  }
+.login-hero__desc--mobile {
+@apply block md:hidden;
+}
 
-  .form-field {
-    @apply mb-4 flex flex-col gap-2;
-  }
+.login-hero__title {
+@apply mt-auto font-serif text-3xl leading-tight tracking-tight text-white md:text-[2.75rem];
+}
 
-  .form-label {
-    @apply text-sm font-medium text-gray-700;
-  }
+.login-panel {
+@apply col-start-1 row-start-2 flex w-full max-w-lg flex-col justify-center
+bg-white p-8
+dark:border dark:border-zinc-800 dark:bg-zinc-900
+md:col-start-2 md:row-start-1 md:mx-auto md:border-0 md:p-10;
+}
 
-  .form-input-wrap {
-    @apply relative;
-  }
+.dark .login-panel {
+background-color: #09090b;
+background-image:
+linear-gradient(
+145deg,
+rgba(255, 255, 255, 0.025),
+transparent 40%
+),
+radial-gradient(
+ellipse 70% 45% at 50% 0%,
+rgba(99, 102, 241, 0.08),
+transparent 70%
+);
+}
 
-  .form-input-wrap .form-input {
-    @apply pr-10;
-  }
+.login-panel__title {
+@apply mb-1 font-sans text-3xl tracking-tight text-gray-900 dark:text-white;
+}
 
-  .form-input__eye {
-    @apply absolute right-3 top-1/2 -translate-y-1/2 z-10 flex h-5 w-5  cursor-pointer items-center justify-center border-none bg-transparent p-0 text-gray-500 transition-colors hover:text-gray-700;
-  }
+.login-panel__subtitle {
+@apply mb-8 text-[0.9375rem] text-gray-500 dark:text-zinc-400;
+}
 
-  .form-input {
-    @apply w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 outline-none transition-all duration-150 placeholder:text-gray-400 hover:border-gray-300 hover:bg-gray-100 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20;
-  }
+.form-field {
+@apply mb-4 flex flex-col gap-2;
+}
 
-  .form-input--error {
-    @apply border-red-400 bg-red-50 focus:border-red-400 focus:ring-red-500/20;
-  }
+.form-label {
+@apply text-sm font-medium text-gray-700 dark:text-zinc-200;
+}
 
-  .form-error {
-    @apply text-sm font-medium text-red-500;
-  }
+.form-input-wrap {
+@apply relative;
+}
 
-  .form-error--login {
-    @apply mb-2 block w-full text-center;
-  }
+.form-input-wrap .form-input {
+@apply pr-10;
+}
 
-  .form-row {
-    @apply mb-1 mt-1 flex items-center justify-between gap-4;
-  }
+.form-input__eye {
+@apply absolute right-3 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2
+cursor-pointer items-center justify-center border-none bg-transparent p-0
+text-gray-500 transition-colors hover:text-gray-700
+dark:text-zinc-500 dark:hover:text-zinc-200;
+}
 
-  .form-checkbox {
-    @apply inline-flex cursor-pointer items-center gap-2 text-sm text-gray-600;
-  }
+.form-input {
+@apply w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5
+text-sm text-gray-900 outline-none transition-all duration-150
+placeholder:text-gray-400 hover:border-gray-300 hover:bg-gray-100
+focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/20
+dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100
+dark:placeholder:text-zinc-500
+dark:hover:border-zinc-600 dark:hover:bg-zinc-700
+dark:focus:border-indigo-400 dark:focus:bg-zinc-800
+dark:focus:ring-indigo-400/20;
+}
 
-  .form-checkbox input {
-    @apply h-4 w-4 cursor-pointer accent-indigo-600;
-  }
+.form-input--error {
+@apply border-red-400 bg-red-50 focus:border-red-400 focus:ring-red-500/20
+dark:border-red-500 dark:bg-red-950/40
+dark:focus:border-red-400 dark:focus:ring-red-500/20;
+}
 
-  .form-link {
-    @apply text-sm font-medium text-indigo-600 no-underline transition-colors hover:text-indigo-800 focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
-  }
+.form-error {
+@apply text-sm font-medium text-red-500 dark:text-red-400;
+}
 
-  .btn {
-    @apply inline-flex w-full cursor-pointer items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100;
-  }
+.form-error--login {
+@apply mb-2 block w-full text-center;
+}
 
-  .btn--primary {
-    @apply mt-2 border-none bg-gray-900 text-white shadow-sm hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:shadow-none disabled:hover:bg-gray-400;
-  }
+.form-row {
+@apply mb-1 mt-1 flex items-center justify-between gap-4;
+}
 
-  .btn--secondary {
-    @apply mt-2 gap-2 border border-gray-200 bg-white text-gray-800 shadow-sm hover:border-gray-300 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:shadow-none disabled:hover:bg-gray-100;
-  }
+.form-checkbox {
+@apply inline-flex cursor-pointer items-center gap-2 text-sm text-gray-600
+dark:text-zinc-400;
+}
 
-  .resend-verification {
-    @apply mb-1 flex min-h-[4.75rem] flex-col gap-3;
-  }
+.form-checkbox input {
+@apply h-4 w-4 cursor-pointer accent-indigo-600;
+}
 
-  .resend-verification__spinner {
-    @apply h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-gray-300 border-t-gray-700;
-  }
+.form-link {
+@apply text-sm font-medium text-indigo-600 no-underline transition-colors
+hover:text-indigo-800
+focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2
+focus-visible:outline-indigo-500
+dark:text-indigo-400 dark:hover:text-indigo-300;
+}
 
-  .resend-verification__success {
-    @apply flex items-start gap-2.5 rounded-lg border border-green-200 bg-green-50 px-3.5 py-3 text-left;
-  }
+.btn {
+@apply inline-flex w-full cursor-pointer items-center justify-center rounded-lg
+px-4 py-2.5 text-sm font-semibold transition-all duration-150
+focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500
+active:scale-[0.99]
+motion-reduce:transition-none motion-reduce:active:scale-100;
+}
 
-  .resend-verification__check {
-    @apply mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white;
-  }
+.btn--primary {
+@apply mt-2 border-none bg-gray-900 text-white shadow-sm
+hover:bg-gray-800
+disabled:cursor-not-allowed disabled:bg-gray-400 disabled:shadow-none
+disabled:hover:bg-gray-400
+dark:bg-indigo-600 dark:hover:bg-indigo-500
+dark:disabled:bg-zinc-700;
+}
 
-  .resend-verification__success-text {
-    @apply flex min-w-0 flex-col gap-0.5;
-  }
+.btn--secondary {
+@apply mt-2 gap-2 border border-gray-200 bg-white text-gray-800 shadow-sm
+hover:border-gray-300 hover:bg-gray-50
+focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500
+active:scale-[0.99]
+disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100
+disabled:text-gray-400 disabled:shadow-none disabled:hover:bg-gray-100
+dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100
+dark:hover:border-zinc-600 dark:hover:bg-zinc-700
+dark:disabled:border-zinc-800 dark:disabled:bg-zinc-800
+dark:disabled:text-zinc-500;
+}
 
-  .resend-verification__success-title {
-    @apply m-0 text-sm font-medium text-green-800;
-  }
+.resend-verification {
+@apply mb-1 flex min-h-[4.75rem] flex-col gap-3;
+}
 
-  .resend-verification__success-hint {
-    @apply m-0 text-xs leading-relaxed text-green-700/80;
-  }
+.resend-verification__spinner {
+@apply h-4 w-4 shrink-0 animate-spin rounded-full border-2
+border-gray-300 border-t-gray-700
+dark:border-zinc-600 dark:border-t-zinc-200;
+}
 
-  .login-footer {
-    @apply mt-6 text-center text-sm text-gray-500;
-  }
+.resend-verification__success {
+@apply flex items-start gap-2.5 rounded-lg border border-green-200
+bg-green-50 px-3.5 py-3 text-left
+dark:border-emerald-800 dark:bg-emerald-950/40;
+}
 
-  .login-footer-link {
-    @apply font-semibold text-gray-900 no-underline transition-colors hover:text-indigo-600 hover:underline focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500;
-  }
+.resend-verification__check {
+@apply mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center
+rounded-full bg-green-600 text-xs font-bold text-white
+dark:bg-emerald-600;
+}
 
-  @media (max-width: 768px) {
-    .login-page {
-      @apply items-start pt-10;
-    }
+.resend-verification__success-text {
+@apply flex min-w-0 flex-col gap-0.5;
+}
 
-    .login-card {
-      @apply max-w-md min-h-0;
-    }
+.resend-verification__success-title {
+@apply m-0 text-sm font-medium text-green-800 dark:text-emerald-300;
+}
 
-    .login-hero {
-      @apply p-6 pb-16;
-    }
+.resend-verification__success-hint {
+@apply m-0 text-xs leading-relaxed text-green-700/80 dark:text-emerald-400/80;
+}
 
-    .login-hero__logo {
-      @apply mb-6 h-8 w-8;
-    }
+.login-footer {
+@apply mt-6 text-center text-sm text-gray-500 dark:text-zinc-400;
+}
 
-    .login-panel {
-      @apply max-w-none p-6;
-    }
-  }
+.login-footer-link {
+@apply font-semibold text-gray-900 no-underline transition-colors
+hover:text-indigo-600 hover:underline
+focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2
+focus-visible:outline-indigo-500
+dark:text-zinc-100 dark:hover:text-indigo-400;
+}
+
+@media (max-width: 768px) {
+.login-page {
+@apply items-start pt-10;
+}
+
+```
+.login-card {
+  @apply max-w-md min-h-0;
+}
+
+.login-hero {
+  @apply p-6 pb-16;
+}
+
+.login-hero__logo {
+  @apply mb-6 h-8 w-8;
+}
+
+.login-panel {
+  @apply max-w-none p-6;
+}
+
+}
 }
