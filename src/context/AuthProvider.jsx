@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
+import i18n from "../i18n";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -44,9 +45,27 @@ export const AuthProvider = ({ children }) => {
         return data.user;
       })
 
-      .then((currentUser) => {
+      .then(async (currentUser) => {
         if (currentUser) {
           setUser(currentUser);
+
+          // Load the user's saved settings from the backend.
+          const settingsResponse = await fetch(
+            "http://localhost:3000/api/users/me/settings",
+            {
+              credentials: "include",
+            },
+          );
+
+          if (settingsResponse.ok) {
+            const settingsData = await settingsResponse.json();
+            const userSettings = settingsData.settings;
+
+            // Apply the saved language globally.
+            if (userSettings.language) {
+              i18n.changeLanguage(userSettings.language);
+            }
+          }
         }
 
         // Authentication check is complete
@@ -78,4 +97,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-

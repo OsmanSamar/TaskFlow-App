@@ -15,8 +15,10 @@ import {
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const Settings = () => {
+  const { t, i18n } = useTranslation();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -177,23 +179,23 @@ const Settings = () => {
 
         <main className="settings-content">
           <header className="settings-header">
-            <h1>Settings</h1>
-            <p>Manage your TaskFlow account and preferences.</p>
+           <h1>{t("settings.title")}</h1>
+           <p>{t("settings.description")}</p>
           </header>
 
           <div className="settings-sections">
             {/* Account Settings */}
             <section className="settings-card">
-              <h2 className="settings-card__title">Account Settings</h2>
+              <h2 className="settings-card__title"> {t("settings.account.title")}</h2>
 
               <div className="settings-row">
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaEnvelope className="settings-row__icon" />
-                    Email address
+                    {t("settings.account.email")}
                   </p>
                   <p className="settings-row__hint">
-                    Your login email for TaskFlow
+                    {t("settings.account.emailHint")}
                   </p>
                 </div>
                 <p className="settings-row__value">{user?.email}</p>
@@ -201,9 +203,11 @@ const Settings = () => {
 
               <div className="settings-row">
                 <div className="settings-row__info">
-                  <p className="settings-row__label">Account status</p>
+                  <p className="settings-row__label">
+                    {t("settings.account.status")}
+                  </p>
                   <p className="settings-row__hint">
-                    Your account is active and verified
+                    {t("settings.account.statusHint")}
                   </p>
                 </div>
 
@@ -222,10 +226,10 @@ const Settings = () => {
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaLock className="settings-row__icon" />
-                    Password
+                   { t("settings.account.password")}
                   </p>
                   <p className="settings-row__hint">
-                    Update your account password
+                   {t("settings.account.passwordHint")}
                   </p>
                 </div>
 
@@ -233,23 +237,24 @@ const Settings = () => {
                   className="settings-btn settings-btn--ghost"
                   to="/changepassword"
                 >
-                  Change password
+                { t("settings.account.changePassword")}
+
                 </Link>
               </div>
             </section>
 
             {/* Appearance */}
             <section className="settings-card">
-              <h2 className="settings-card__title">Appearance</h2>
+              <h2 className="settings-card__title">{t("settings.appearance.title")}</h2>
 
               <div className="settings-row">
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaMoon className="settings-row__icon" />
-                    Dark mode
+                   { t("settings.appearance.darkMode")}
                   </p>
                   <p className="settings-row__hint">
-                    Use dark theme across the app
+                  { t("settings.appearance.darkModeHint")}
                   </p>
                 </div>
                 <label className="settings-switch">
@@ -288,10 +293,10 @@ const Settings = () => {
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaGlobe className="settings-row__icon" />
-                    Language
+                    {t("settings.language")}
                   </p>
                   <p className="settings-row__hint">
-                    Choose your preferred language
+                    {t("settings.languageHint")}
                   </p>
                 </div>
                 {/* Keep the language dropdown synchronized with the backend settings. */}
@@ -301,11 +306,14 @@ const Settings = () => {
                   onChange={(e) => {
                     const value = e.target.value;
 
-                    // Update the selected language immediately in the UI.
-                    setSettings({
-                      ...settings,
-                      language: value,
-                    });
+                     // Update the language in the i18n system immediately.
+                       i18n.changeLanguage(value);
+
+                   // Update the UI state immediately.
+                       setSettings({
+                     ...settings,
+                     language: value,
+                      });
 
                     // Save the new language in SQLite.
                     handleSettingChange("language", value);
@@ -320,16 +328,16 @@ const Settings = () => {
 
             {/* Notifications */}
             <section className="settings-card">
-              <h2 className="settings-card__title">Notifications</h2>
+              <h2 className="settings-card__title">{t("settings.notifications.title")}</h2>
 
               <div className="settings-row">
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaBell className="settings-row__icon" />
-                    Email notifications
+                {t("settings.notifications.email")}
                   </p>
                   <p className="settings-row__hint">
-                    Receive updates about your account
+                  { t("settings.notifications.emailHint")}
                   </p>
                 </div>
                 <label className="settings-switch">
@@ -358,10 +366,10 @@ const Settings = () => {
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaClock className="settings-row__icon" />
-                    Task reminders
+                   { t("settings.notifications.reminders")}
                   </p>
                   <p className="settings-row__hint">
-                    Get reminded about upcoming tasks
+                  { t("settings.notifications.remindersHint")}
                   </p>
                 </div>
                 <label className="settings-switch">
@@ -391,14 +399,15 @@ const Settings = () => {
             <section className="settings-card settings-card--danger">
               <h2 className="settings-card__title settings-card__title--danger">
                 <FaExclamationTriangle className="settings-card__title-icon" />
-                Danger Zone
+               { t("settings.danger.title")}
               </h2>
 
               <div className="settings-row settings-row--danger">
                 <div className="settings-row__info">
-                  <p className="settings-row__label">Delete account</p>
+                  <p className="settings-row__label"> { t("settings.danger.delete")}</p>
                   <p className="settings-row__hint">
-                    Permanently remove your account and all task data
+                     { t("settings.danger.deleteHint")}
+                  
                   </p>
                 </div>
                 {/* Open the Delete Account confirmation UI. The actual
@@ -411,7 +420,7 @@ const Settings = () => {
                     setDeleteError("");
                   }}
                 >
-                  Delete account
+                { t("settings.danger.delete")}
                 </button>
               </div>
             </section>
@@ -421,19 +430,18 @@ const Settings = () => {
               <div className="delete-account-modal">
                 <div className="delete-account-modal__content">
                   <h2 className="delete-account__title">
-                    Delete your account?
+                   {t("settings.danger.confirmTitle")}
                   </h2>
 
                   <p className="delete-account__message">
-                    This action is permanent. Your TaskFlow account will be
-                    deleted.
+                    {t("settings.danger.confirmMessage")}
                   </p>
 
                   <label
                     htmlFor="delete-password"
                     className="delete-account__label"
                   >
-                    Enter your password to continue
+                    {t("settings.danger.enterPassword")}
                   </label>
 
                   <div className="form-input-wrap">
@@ -456,7 +464,7 @@ const Settings = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       className="form-input__eye"
                       aria-label={
-                        showPassword ? "Hide password" : "Show password"
+                        showPassword ? t("settings.danger.hidePassword") : t("settings.danger.showPassword")
                       }
                     >
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -481,7 +489,7 @@ const Settings = () => {
                         setDeleteError("");
                       }}
                     >
-                      Cancel
+                      {t("settings.danger.cancel")}
                     </button>
 
                     <button
@@ -490,7 +498,7 @@ const Settings = () => {
                       onClick={handleDeleteAccount}
                       disabled={isDeletingAccount}
                     >
-                      {isDeletingAccount ? "Deleting..." : "Delete account"}
+                      {isDeletingAccount ? t("settings.danger.deleting") : t("settings.danger.delete")}
                     </button>
                   </div>
                 </div>
