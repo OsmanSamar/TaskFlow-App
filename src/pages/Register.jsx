@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./register.css";
@@ -9,8 +10,11 @@ import {
   validateConfirmPassword,
 } from "../utils/validators";
 import { PasswordCriteria } from "../components/PasswordCriteria";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
+  const { t } = useTranslation();
+
   const [registerData, setRegisterData] = useState({
     name: "",
     email: "",
@@ -44,18 +48,17 @@ const Register = () => {
       newErrors.password = passwordError;
     }
 
-    const ConfirmpasswordError = validateConfirmPassword(
+    const confirmPasswordError = validateConfirmPassword(
       registerData.password,
       registerData.confirmPassword,
     );
 
-    if (ConfirmpasswordError) {
-      newErrors.confirmPassword = ConfirmpasswordError;
+    if (confirmPasswordError) {
+      newErrors.confirmPassword = confirmPasswordError;
     }
 
     setErrors(newErrors);
 
-    // to ask if the object has errors
     if (Object.keys(newErrors).length === 0) {
       setLoading(true);
 
@@ -83,7 +86,7 @@ const Register = () => {
           }
 
           setErrors({
-            form: data.message || "Registration failed",
+            form: data.message || t("register.registrationFailed"),
           });
           return;
         }
@@ -93,7 +96,7 @@ const Register = () => {
         console.error("Registration request failed:", error);
 
         setErrors({
-          form: "Unable to connect to the server. Please try again.",
+          form: t("register.serverError"),
         });
       } finally {
         setLoading(false);
@@ -104,22 +107,32 @@ const Register = () => {
   return (
     <div className="register-page">
       <div className="register-card">
-        <h1 className="register-panel__title">Create an account </h1>
+        <h1 className="register-panel__title">
+          {t("register.title")}
+        </h1>
+
         <form onSubmit={handleRegister}>
           <div className="form-field">
             <label className="form-label" htmlFor="name">
-              Name
+              {t("register.name")}
             </label>
+
             <input
               id="name"
               type="text"
               name="name"
               autoComplete="name"
-              placeholder="John"
-              className={`form-input${errors.name ? " form-input--error" : ""}`}
+              placeholder={t("register.namePlaceholder")}
+              className={`form-input${
+                errors.name ? " form-input--error" : ""
+              }`}
               value={registerData.name}
               onChange={(e) => {
-                setRegisterData({ ...registerData, name: e.target.value });
+                setRegisterData({
+                  ...registerData,
+                  name: e.target.value,
+                });
+
                 if (e.target.value.trim() !== "") {
                   setErrors((prev) => ({
                     ...prev,
@@ -128,24 +141,33 @@ const Register = () => {
                 }
               }}
             />
+
             {errors.name ? (
-              <span className="form-error ">{errors.name}</span>
+              <span className="form-error">{errors.name}</span>
             ) : (
               ""
             )}
+
             <label className="form-label" htmlFor="email">
-              Email
+              {t("register.email")}
             </label>
+
             <input
               id="email"
               type="email"
               name="email"
               autoComplete="email"
               placeholder="name@company.com"
-              className={`form-input${errors.email ? " form-input--error" : ""}`}
+              className={`form-input${
+                errors.email ? " form-input--error" : ""
+              }`}
               value={registerData.email}
               onChange={(e) => {
-                setRegisterData({ ...registerData, email: e.target.value });
+                setRegisterData({
+                  ...registerData,
+                  email: e.target.value,
+                });
+
                 if (e.target.value.trim() !== "") {
                   setErrors((prev) => ({
                     ...prev,
@@ -154,8 +176,9 @@ const Register = () => {
                 }
               }}
             />
+
             {errors.email ? (
-              <span className="form-error ">{errors.email}</span>
+              <span className="form-error">{errors.email}</span>
             ) : (
               ""
             )}
@@ -163,22 +186,26 @@ const Register = () => {
 
           <div className="form-field">
             <label className="form-label" htmlFor="password">
-              Password
+              {t("register.password")}
             </label>
+
             <div className="form-input-wrap">
               <input
                 id="password"
                 type={!showPassword ? "password" : "text"}
                 name="password"
                 autoComplete="new-password"
-                placeholder="Enter your password"
-                className={`form-input${errors.password ? " form-input--error" : ""}`}
+                placeholder={t("register.passwordPlaceholder")}
+                className={`form-input${
+                  errors.password ? " form-input--error" : ""
+                }`}
                 value={registerData.password}
                 onChange={(e) => {
                   setRegisterData({
                     ...registerData,
                     password: e.target.value,
                   });
+
                   if (e.target.value.trim() !== "") {
                     setErrors((prev) => ({
                       ...prev,
@@ -192,38 +219,49 @@ const Register = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="form-input__eye"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showPassword
+                    ? t("register.hidePassword")
+                    : t("register.showPassword")
+                }
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
+
             <PasswordCriteria password={registerData.password} />
+
             {errors.password ? (
-              <span className="form-error ">{errors.password}</span>
+              <span className="form-error">{errors.password}</span>
             ) : (
               ""
             )}
-       
           </div>
 
           <div className="form-field">
             <label className="form-label" htmlFor="confirmPassword">
-              Confirm password
+              {t("register.confirmPassword")}
             </label>
+
             <div className="form-input-wrap">
               <input
                 id="confirmPassword"
                 type={!showConfirmPassword ? "password" : "text"}
                 name="confirmPassword"
                 autoComplete="new-password"
-                placeholder="Confirm your password"
-                className={`form-input${errors.confirmPassword ? " form-input--error" : ""}`}
+                placeholder={t("register.confirmPasswordPlaceholder")}
+                className={`form-input${
+                  errors.confirmPassword
+                    ? " form-input--error"
+                    : ""
+                }`}
                 value={registerData.confirmPassword}
                 onChange={(e) => {
                   setRegisterData({
                     ...registerData,
                     confirmPassword: e.target.value,
                   });
+
                   if (e.target.value.trim() !== "") {
                     setErrors((prev) => ({
                       ...prev,
@@ -235,35 +273,52 @@ const Register = () => {
 
               <button
                 type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
                 className="form-input__eye"
                 aria-label={
                   showConfirmPassword
-                    ? "Hide confirm password"
-                    : "Show confirm password"
+                    ? t("register.hideConfirmPassword")
+                    : t("register.showConfirmPassword")
                 }
               >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                {showConfirmPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
               </button>
             </div>
+
             {errors.confirmPassword ? (
-              <span className="form-error ">{errors.confirmPassword}</span>
+              <span className="form-error">
+                {errors.confirmPassword}
+              </span>
             ) : (
               ""
             )}
           </div>
 
-          {errors.form && <span className="form-error">{errors.form}</span>}
+          {errors.form && (
+            <span className="form-error">{errors.form}</span>
+          )}
 
-          <button type="submit" className="btn btn--primary"
-          disabled={loading}>
-           {loading ? "Sign up..." : "Sign up"}
+          <button
+            type="submit"
+            className="btn btn--primary"
+            disabled={loading}
+          >
+            {loading
+              ? t("register.signingUp")
+              : t("register.signUp")}
           </button>
         </form>
+
         <p className="login-footer">
-          Already have an account?
+          {t("register.haveAccount")}{" "}
           <Link className="login-footer-link" to="/login">
-            Login
+            {t("register.login")}
           </Link>
         </p>
       </div>

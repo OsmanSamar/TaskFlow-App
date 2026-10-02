@@ -2,175 +2,732 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 const resources = {
-en: {
-  translation: {
-    settings: {
-      title: "Settings",
-      description: "Manage your TaskFlow account and preferences.",
+  en: {
+    translation: {
+      settings: {
+        title: "Settings",
+        description: "Manage your TaskFlow account and preferences.",
 
-      account: {
-        title: "Account Settings",
-        email: "Email address",
-        emailHint: "Your login email for TaskFlow",
-        status: "Account status",
-        statusHint: "Your account is active and verified",
-        password: "Password",
-        passwordHint: "Update your account password",
-        changePassword: "Change password",
+        account: {
+          title: "Account Settings",
+          email: "Email address",
+          emailHint: "Your login email for TaskFlow",
+          status: "Account status",
+          statusHint: "Your account is active and verified",
+          password: "Password",
+          passwordHint: "Update your account password",
+          changePassword: "Change password",
+        },
+
+        appearance: {
+          title: "Appearance",
+          darkMode: "Dark mode",
+          darkModeHint: "Use dark theme across the app",
+        },
+
+        language: "Language",
+        languageHint: "Choose your preferred language",
+
+        notifications: {
+          title: "Notifications",
+          email: "Email notifications",
+          emailHint: "Receive updates about your account",
+          reminders: "Task reminders",
+          remindersHint: "Get reminded about upcoming tasks",
+        },
+
+        danger: {
+          title: "Danger Zone",
+          delete: "Delete account",
+          deleteHint: "Permanently remove your account and all task data",
+          confirmTitle: "Delete your account?",
+          confirmMessage:
+            "This action is permanent. Your TaskFlow account will be deleted.",
+          enterPassword: "Enter your password to continue",
+          cancel: "Cancel",
+          deleting: "Deleting...",
+          hidePassword: "Hide password",
+          showPassword: "Show password",
+        },
       },
 
-      appearance: {
-        title: "Appearance",
-        darkMode: "Dark mode",
-        darkModeHint: "Use dark theme across the app",
+      profile: {
+        title: "Profile",
+        overview: "Profile Overview",
+        description:
+          "Manage your personal information and account preferences.",
+        userBadge: "TaskFlow User",
+        edit: "Edit Profile",
+
+        personal: {
+          title: "Personal Information",
+          fullName: "Full name",
+          email: "Email",
+          joinDate: "Join date",
+        },
+
+        accountStatus: {
+          title: "Account Status",
+          emailVerification: "Email verification",
+          verified: "Verified",
+          notVerified: "Not verified",
+          status: "Account status",
+          active: "Active",
+          inactive: "Inactive",
+          lastLogin: "Last login",
+        },
+
+        security: {
+          title: "Security",
+          changePassword: "Change Password",
+          passwordHint: "Update your password regularly",
+          change: "Change",
+        },
       },
-
-      language: "Language",
-      languageHint: "Choose your preferred language",
-
-      notifications: {
-        title: "Notifications",
-        email: "Email notifications",
-        emailHint: "Receive updates about your account",
-        reminders: "Task reminders",
-        remindersHint: "Get reminded about upcoming tasks",
-      },
-
-      danger: {
-        title: "Danger Zone",
-        delete: "Delete account",
-        deleteHint: "Permanently remove your account and all task data",
-        confirmTitle: "Delete your account?",
-        confirmMessage:
-          "This action is permanent. Your TaskFlow account will be deleted.",
-        enterPassword: "Enter your password to continue",
-        cancel: "Cancel",
+      editProfile: {
+        title: "Edit Profile",
+        changePhoto: "Change Photo",
         deleting: "Deleting...",
-        hidePassword: "Hide password",
+        deletePhoto: "Delete Photo",
+        description: "Update your personal information",
+
+        personal: {
+          title: "Personal Information",
+          fullName: "Full name",
+          email: "Email",
+        },
+
+        profile: {
+          title: "Profile Information",
+          joinDate: "Join date",
+          accountStatus: "Account status",
+          active: "Active",
+          inactive: "Inactive",
+        },
+
+        saving: "Saving...",
+        saveChanges: "Save Changes",
+        cancel: "Cancel",
+      },
+      tasks: {
+        title: "Tasks",
+        manager: "Task Manager",
+        description:
+          "Create, update, and organize your daily tasks in one place.",
+        taskRemaining: "task remaining",
+        tasksRemaining: "tasks remaining",
+        noTasks: "No tasks yet — add one above!",
+        noFilteredTasks: "No {{filter}} tasks",
+        clearCompleted: "Clear Completed",
+        deleteTitle: "Delete task?",
+        deleteMessage:
+          'Are you sure you want to delete <strong>"{{task}}"</strong>? This cannot be undone.',
+        cancel: "Cancel",
+        delete: "Delete",
+        inputPlaceholder: "What needs to be done?",
+        inputError: "Please enter your task.",
+        add: "Add",
+        save: "Save",
+        edit: "Edit",
+        markComplete: "Mark as complete",
+        markIncomplete: "Mark as incomplete",
+        filters: {
+          all: "All",
+          active: "Active",
+          completed: "Completed",
+        },
+      },
+      header: {
+        welcome: "Welcome",
+      },
+      sidebar: {
+        dashboard: "Dashboard",
+        tasks: "Tasks",
+        profile: "Profile",
+        settings: "Settings",
+        logout: "Logout",
+      },
+      dashboard: {
+        title: "Dashboard",
+        goodMorning: "Good morning",
+        goodAfternoon: "Good afternoon",
+        goodEvening: "Good evening",
+        totalTasks: "Total Tasks",
+        completed: "Completed",
+        pending: "Pending",
+        recentTasks: "Recent Tasks",
+      },
+      changePassword: {
+        title: "Change Password",
+        currentPassword: "Current password",
+        newPassword: "New password",
+        confirmPassword: "Confirm password",
+        passwordPlaceholder: "Enter your password",
         showPassword: "Show password",
+        hidePassword: "Hide password",
+        showConfirmPassword: "Show confirm password",
+        hideConfirmPassword: "Hide confirm password",
+        currentPasswordRequired: "Current password is required",
+        failed: "Failed to change password",
+        somethingWentWrong: "Something went wrong. Please try again.",
+        changing: "Changing Password...",
+        change: "Change Password",
+        successMessage: "Password changed successfully.",
+        updated: "Password updated",
+        goToLogin: "Go to Login",
+      },
+      forgotPassword: {
+        title: "Forgot your password?",
+        subtitle: "Enter your Email to access your account.",
+        email: "Email",
+        sendEmail: "Send Email",
+        backToLogin: "Back to Login",
+        somethingWentWrong: "Something went wrong. Please try again.",
+      },
+      login: {
+        userManagement: "User Management",
+        heroDescriptionMobile:
+          "Streamline user access for modern development teams.",
+        heroDescriptionDesktop:
+          "Streamline user access, roles, and permissions — built for modern development teams.",
+        title: "Sign in",
+        subtitle: "Enter your credentials to access your account.",
+        email: "Email",
+        password: "Password",
+        passwordPlaceholder: "Enter your password",
+        showPassword: "Show password",
+        hidePassword: "Hide password",
+        rememberMe: "Remember me",
+        forgotPassword: "Forgot password?",
+        loginIncorrect: "Login incorrect",
+        sending: "Sending...",
+        resendVerification: "Resend verification email",
+        checkInbox: "Check your inbox for the verification link.",
+        signIn: "Sign in",
+        signUp: "Sign up",
+      },
+      register: {
+        title: "Create an account",
+        name: "Name",
+        namePlaceholder: "John",
+        email: "Email",
+        password: "Password",
+        passwordPlaceholder: "Enter your password",
+        confirmPassword: "Confirm password",
+        confirmPasswordPlaceholder: "Confirm your password",
+        showPassword: "Show password",
+        hidePassword: "Hide password",
+        showConfirmPassword: "Show confirm password",
+        hideConfirmPassword: "Hide confirm password",
+        registrationFailed: "Registration failed",
+        serverError: "Unable to connect to the server. Please try again.",
+        signingUp: "Signing up...",
+        signUp: "Sign up",
+        haveAccount: "Already have an account?",
+        login: "Login",
+      },
+      resetPassword: {
+        title: "Reset password",
+        newPassword: "New password",
+        confirmPassword: "Re-enter password",
+        passwordPlaceholder: "Enter your password",
+        showPassword: "Show password",
+        hidePassword: "Hide password",
+        showConfirmPassword: "Show confirm password",
+        hideConfirmPassword: "Hide confirm password",
+        resetPassword: "Reset Password",
+        resetFailed: "Password reset failed",
       },
     },
   },
-},
 
-nl: {
-  translation: {
-    settings: {
-      title: "Instellingen",
-      description: "Beheer je TaskFlow-account en voorkeuren.",
+  nl: {
+    translation: {
+      settings: {
+        title: "Instellingen",
+        description: "Beheer je TaskFlow-account en voorkeuren.",
 
-      account: {
-        title: "Accountinstellingen",
-        email: "E-mailadres",
-        emailHint: "Je inlog-e-mailadres voor TaskFlow",
-        status: "Accountstatus",
-        statusHint: "Je account is actief en geverifieerd",
-        password: "Wachtwoord",
-        passwordHint: "Werk je accountwachtwoord bij",
-        changePassword: "Wachtwoord wijzigen",
+        account: {
+          title: "Accountinstellingen",
+          email: "E-mailadres",
+          emailHint: "Je inlog-e-mailadres voor TaskFlow",
+          status: "Accountstatus",
+          statusHint: "Je account is actief en geverifieerd",
+          password: "Wachtwoord",
+          passwordHint: "Werk je accountwachtwoord bij",
+          changePassword: "Wachtwoord wijzigen",
+        },
+
+        appearance: {
+          title: "Uiterlijk",
+          darkMode: "Donkere modus",
+          darkModeHint: "Gebruik een donker thema in de hele app",
+        },
+
+        language: "Taal",
+        languageHint: "Kies je voorkeurstaal",
+
+        notifications: {
+          title: "Meldingen",
+          email: "E-mailmeldingen",
+          emailHint: "Ontvang updates over je account",
+          reminders: "Taakherinneringen",
+          remindersHint: "Ontvang herinneringen voor aankomende taken",
+        },
+
+        danger: {
+          title: "Gevarenzone",
+          delete: "Account verwijderen",
+          deleteHint: "Verwijder je account en alle taakgegevens permanent",
+          confirmTitle: "Je account verwijderen?",
+          confirmMessage:
+            "Deze actie is permanent. Je TaskFlow-account wordt verwijderd.",
+          enterPassword: "Voer je wachtwoord in om door te gaan",
+          cancel: "Annuleren",
+          deleting: "Verwijderen...",
+          hidePassword: "Wachtwoord verbergen",
+          showPassword: "Wachtwoord tonen",
+        },
       },
+      profile: {
+        title: "Profiel",
+        overview: "Profieloverzicht",
+        description: "Beheer je persoonlijke gegevens en accountvoorkeuren.",
+        userBadge: "TaskFlow-gebruiker",
+        edit: "Profiel bewerken",
 
-      appearance: {
-        title: "Uiterlijk",
-        darkMode: "Donkere modus",
-        darkModeHint: "Gebruik een donker thema in de hele app",
+        personal: {
+          title: "Persoonlijke gegevens",
+          fullName: "Volledige naam",
+          email: "E-mail",
+          joinDate: "Lid sinds",
+        },
+
+        accountStatus: {
+          title: "Accountstatus",
+          emailVerification: "E-mailverificatie",
+          verified: "Geverifieerd",
+          notVerified: "Niet geverifieerd",
+          status: "Accountstatus",
+          active: "Actief",
+          inactive: "Inactief",
+          lastLogin: "Laatste login",
+        },
+
+        security: {
+          title: "Beveiliging",
+          changePassword: "Wachtwoord wijzigen",
+          passwordHint: "Werk je wachtwoord regelmatig bij",
+          change: "Wijzigen",
+        },
       },
-
-      language: "Taal",
-      languageHint: "Kies je voorkeurstaal",
-
-      notifications: {
-        title: "Meldingen",
-        email: "E-mailmeldingen",
-        emailHint: "Ontvang updates over je account",
-        reminders: "Taakherinneringen",
-        remindersHint: "Ontvang herinneringen voor aankomende taken",
-      },
-
-      danger: {
-        title: "Gevarenzone",
-        delete: "Account verwijderen",
-        deleteHint:
-          "Verwijder je account en alle taakgegevens permanent",
-        confirmTitle: "Je account verwijderen?",
-        confirmMessage:
-          "Deze actie is permanent. Je TaskFlow-account wordt verwijderd.",
-        enterPassword: "Voer je wachtwoord in om door te gaan",
-        cancel: "Annuleren",
+      editProfile: {
+        title: "Profiel bewerken",
+        changePhoto: "Foto wijzigen",
         deleting: "Verwijderen...",
-        hidePassword: "Wachtwoord verbergen",
+        deletePhoto: "Foto verwijderen",
+        description: "Je persoonlijke gegevens bijwerken",
+
+        personal: {
+          title: "Persoonlijke gegevens",
+          fullName: "Volledige naam",
+          email: "E-mail",
+        },
+
+        profile: {
+          title: "Profielgegevens",
+          joinDate: "Lid sinds",
+          accountStatus: "Accountstatus",
+          active: "Actief",
+          inactive: "Inactief",
+        },
+
+        saving: "Opslaan...",
+        saveChanges: "Wijzigingen opslaan",
+        cancel: "Annuleren",
+      },
+      tasks: {
+        title: "Taken",
+        manager: "Takenbeheer",
+        description:
+          "Maak, bewerk en organiseer je dagelijkse taken op één plek.",
+        taskRemaining: "taak resterend",
+        tasksRemaining: "taken resterend",
+        noTasks: "Nog geen taken — voeg er hierboven een toe!",
+        noFilteredTasks: "Geen {{filter}}-taken",
+        clearCompleted: "Voltooide taken wissen",
+        deleteTitle: "Taak verwijderen?",
+        deleteMessage:
+          'Weet je zeker dat je <strong>"{{task}}"</strong> wilt verwijderen? Dit kan niet ongedaan worden gemaakt.',
+        cancel: "Annuleren",
+        delete: "Verwijderen",
+        inputPlaceholder: "Wat moet er worden gedaan?",
+        inputError: "Voer je taak in.",
+        add: "Toevoegen",
+        save: "Opslaan",
+        edit: "Bewerken",
+        markComplete: "Als voltooid markeren",
+        markIncomplete: "Als niet voltooid markeren",
+        filters: {
+          all: "Alle",
+          active: "Actief",
+          completed: "Voltooid",
+        },
+      },
+      header: {
+        welcome: "Welkom",
+      },
+      sidebar: {
+        dashboard: "Dashboard",
+        tasks: "Taken",
+        profile: "Profiel",
+        settings: "Instellingen",
+        logout: "Uitloggen",
+      },
+      dashboard: {
+        title: "Dashboard",
+        goodMorning: "Goedemorgen",
+        goodAfternoon: "Goedemiddag",
+        goodEvening: "Goedenavond",
+        totalTasks: "Alle taken",
+        completed: "Voltooid",
+        pending: "In behandeling",
+        recentTasks: "Recente taken",
+      },
+      changePassword: {
+        title: "Wachtwoord wijzigen",
+        currentPassword: "Huidig wachtwoord",
+        newPassword: "Nieuw wachtwoord",
+        confirmPassword: "Wachtwoord bevestigen",
+        passwordPlaceholder: "Voer je wachtwoord in",
         showPassword: "Wachtwoord tonen",
+        hidePassword: "Wachtwoord verbergen",
+        showConfirmPassword: "Bevestiging tonen",
+        hideConfirmPassword: "Bevestiging verbergen",
+        currentPasswordRequired: "Huidig wachtwoord is verplicht",
+        failed: "Wachtwoord wijzigen mislukt",
+        somethingWentWrong: "Er is iets misgegaan. Probeer het opnieuw.",
+        changing: "Wachtwoord wijzigen...",
+        change: "Wachtwoord wijzigen",
+        successMessage: "Wachtwoord succesvol gewijzigd.",
+        updated: "Wachtwoord bijgewerkt",
+        goToLogin: "Naar inloggen",
+      },
+      forgotPassword: {
+        title: "Wachtwoord vergeten?",
+        subtitle:
+          "Voer je e-mailadres in om toegang te krijgen tot je account.",
+        email: "E-mail",
+        sendEmail: "E-mail verzenden",
+        backToLogin: "Terug naar inloggen",
+        somethingWentWrong: "Er is iets misgegaan. Probeer het opnieuw.",
+      },
+      login: {
+        userManagement: "Gebruikersbeheer",
+        heroDescriptionMobile:
+          "Stroomlijn gebruikerstoegang voor moderne ontwikkelingsteams.",
+        heroDescriptionDesktop:
+          "Stroomlijn gebruikerstoegang, rollen en rechten — gebouwd voor moderne ontwikkelingsteams.",
+        title: "Inloggen",
+        subtitle: "Voer je gegevens in om toegang te krijgen tot je account.",
+        email: "E-mail",
+        password: "Wachtwoord",
+        passwordPlaceholder: "Voer je wachtwoord in",
+        showPassword: "Wachtwoord tonen",
+        hidePassword: "Wachtwoord verbergen",
+        rememberMe: "Onthoud mij",
+        forgotPassword: "Wachtwoord vergeten?",
+        loginIncorrect: "Inloggen mislukt",
+        sending: "Verzenden...",
+        resendVerification: "Verificatie-e-mail opnieuw verzenden",
+        checkInbox: "Controleer je inbox voor de verificatielink.",
+        signIn: "Inloggen",
+        signUp: "Registreren",
+      },
+      register: {
+        title: "Account aanmaken",
+        name: "Naam",
+        namePlaceholder: "Jan",
+        email: "E-mail",
+        password: "Wachtwoord",
+        passwordPlaceholder: "Voer je wachtwoord in",
+        confirmPassword: "Wachtwoord bevestigen",
+        confirmPasswordPlaceholder: "Bevestig je wachtwoord",
+        showPassword: "Wachtwoord tonen",
+        hidePassword: "Wachtwoord verbergen",
+        showConfirmPassword: "Bevestiging tonen",
+        hideConfirmPassword: "Bevestiging verbergen",
+        registrationFailed: "Registratie mislukt",
+        serverError:
+          "Kan geen verbinding maken met de server. Probeer het opnieuw.",
+        signingUp: "Registreren...",
+        signUp: "Registreren",
+        haveAccount: "Heb je al een account?",
+        login: "Inloggen",
+      },
+      resetPassword: {
+        title: "Wachtwoord opnieuw instellen",
+        newPassword: "Nieuw wachtwoord",
+        confirmPassword: "Wachtwoord opnieuw invoeren",
+        passwordPlaceholder: "Voer je wachtwoord in",
+        showPassword: "Wachtwoord tonen",
+        hidePassword: "Wachtwoord verbergen",
+        showConfirmPassword: "Bevestiging tonen",
+        hideConfirmPassword: "Bevestiging verbergen",
+        resetPassword: "Wachtwoord opnieuw instellen",
+        resetFailed: "Wachtwoord opnieuw instellen mislukt",
       },
     },
   },
-},
 
-ar: {
-  translation: {
-    settings: {
-      title: "الإعدادات",
-      description: "إدارة حسابك وتفضيلاتك في TaskFlow.",
+  ar: {
+    translation: {
+      settings: {
+        title: "الإعدادات",
+        description: "إدارة حسابك وتفضيلاتك في TaskFlow.",
 
-      account: {
-        title: "إعدادات الحساب",
-        email: "عنوان البريد الإلكتروني",
-        emailHint: "البريد الإلكتروني المستخدم لتسجيل الدخول إلى TaskFlow",
-        status: "حالة الحساب",
-        statusHint: "حسابك نشط وتم التحقق منه",
-        password: "كلمة المرور",
-        passwordHint: "تحديث كلمة مرور حسابك",
-        changePassword: "تغيير كلمة المرور",
+        account: {
+          title: "إعدادات الحساب",
+          email: "عنوان البريد الإلكتروني",
+          emailHint: "البريد الإلكتروني المستخدم لتسجيل الدخول إلى TaskFlow",
+          status: "حالة الحساب",
+          statusHint: "حسابك نشط وتم التحقق منه",
+          password: "كلمة المرور",
+          passwordHint: "تحديث كلمة مرور حسابك",
+          changePassword: "تغيير كلمة المرور",
+        },
+
+        appearance: {
+          title: "المظهر",
+          darkMode: "الوضع الداكن",
+          darkModeHint: "استخدام المظهر الداكن في جميع أنحاء التطبيق",
+        },
+
+        language: "اللغة",
+        languageHint: "اختر لغتك المفضلة",
+
+        notifications: {
+          title: "الإشعارات",
+          email: "إشعارات البريد الإلكتروني",
+          emailHint: "تلقي تحديثات حول حسابك",
+          reminders: "تذكيرات المهام",
+          remindersHint: "الحصول على تذكيرات بالمهام القادمة",
+        },
+
+        danger: {
+          title: "منطقة الخطر",
+          delete: "حذف الحساب",
+          deleteHint: "حذف حسابك وجميع بيانات المهام نهائيًا",
+          confirmTitle: "هل تريد حذف حسابك؟",
+          confirmMessage: "هذا الإجراء نهائي. سيتم حذف حسابك في TaskFlow.",
+          enterPassword: "أدخل كلمة المرور للمتابعة",
+          cancel: "إلغاء",
+          deleting: "جارٍ الحذف...",
+          hidePassword: "إخفاء كلمة المرور",
+          showPassword: "إظهار كلمة المرور",
+        },
       },
+      profile: {
+        title: "الملف الشخصي",
+        overview: "نظرة عامة على الملف الشخصي",
+        description: "إدارة معلوماتك الشخصية وتفضيلات حسابك.",
+        userBadge: "مستخدم TaskFlow",
+        edit: "تعديل الملف الشخصي",
 
-      appearance: {
-        title: "المظهر",
-        darkMode: "الوضع الداكن",
-        darkModeHint: "استخدام المظهر الداكن في جميع أنحاء التطبيق",
+        personal: {
+          title: "المعلومات الشخصية",
+          fullName: "الاسم الكامل",
+          email: "البريد الإلكتروني",
+          joinDate: "تاريخ الانضمام",
+        },
+
+        accountStatus: {
+          title: "حالة الحساب",
+          emailVerification: "التحقق من البريد الإلكتروني",
+          verified: "تم التحقق",
+          notVerified: "لم يتم التحقق",
+          status: "حالة الحساب",
+          active: "نشط",
+          inactive: "غير نشط",
+          lastLogin: "آخر تسجيل دخول",
+        },
+
+        security: {
+          title: "الأمان",
+          changePassword: "تغيير كلمة المرور",
+          passwordHint: "قم بتحديث كلمة المرور بانتظام",
+          change: "تغيير",
+        },
       },
-
-      language: "اللغة",
-      languageHint: "اختر لغتك المفضلة",
-
-      notifications: {
-        title: "الإشعارات",
-        email: "إشعارات البريد الإلكتروني",
-        emailHint: "تلقي تحديثات حول حسابك",
-        reminders: "تذكيرات المهام",
-        remindersHint: "الحصول على تذكيرات بالمهام القادمة",
-      },
-
-      danger: {
-        title: "منطقة الخطر",
-        delete: "حذف الحساب",
-        deleteHint: "حذف حسابك وجميع بيانات المهام نهائيًا",
-        confirmTitle: "هل تريد حذف حسابك؟",
-        confirmMessage:
-          "هذا الإجراء نهائي. سيتم حذف حسابك في TaskFlow.",
-        enterPassword: "أدخل كلمة المرور للمتابعة",
-        cancel: "إلغاء",
+      editProfile: {
+        title: "تعديل الملف الشخصي",
+        changePhoto: "تغيير الصورة",
         deleting: "جارٍ الحذف...",
-        hidePassword: "إخفاء كلمة المرور",
+        deletePhoto: "حذف الصورة",
+        description: "تحديث معلوماتك الشخصية",
+
+        personal: {
+          title: "المعلومات الشخصية",
+          fullName: "الاسم الكامل",
+          email: "البريد الإلكتروني",
+        },
+
+        profile: {
+          title: "معلومات الملف الشخصي",
+          joinDate: "تاريخ الانضمام",
+          accountStatus: "حالة الحساب",
+          active: "نشط",
+          inactive: "غير نشط",
+        },
+
+        saving: "جارٍ الحفظ...",
+        saveChanges: "حفظ التغييرات",
+        cancel: "إلغاء",
+      },
+      tasks: {
+        title: "المهام",
+        manager: "مدير المهام",
+        description: "أنشئ مهامك اليومية وحدّثها ونظّمها في مكان واحد.",
+        taskRemaining: "مهمة متبقية",
+        tasksRemaining: "مهام متبقية",
+        noTasks: "لا توجد مهام بعد — أضف مهمة أعلاه!",
+        noFilteredTasks: "لا توجد مهام {{filter}}",
+        clearCompleted: "مسح المهام المكتملة",
+        deleteTitle: "حذف المهمة؟",
+        deleteMessage:
+          'هل أنت متأكد أنك تريد حذف <strong>"{{task}}"</strong>؟ لا يمكن التراجع عن هذا الإجراء.',
+        cancel: "إلغاء",
+        delete: "حذف",
+        inputPlaceholder: "ما الذي يجب إنجازه؟",
+        inputError: "يرجى إدخال المهمة.",
+        add: "إضافة",
+        save: "حفظ",
+        edit: "تعديل",
+        markComplete: "وضع علامة كمكتملة",
+        markIncomplete: "وضع علامة كغير مكتملة",
+        filters: {
+          all: "الكل",
+          active: "النشطة",
+          completed: "المكتملة",
+        },
+      },
+      header: {
+        welcome: "مرحبًا",
+      },
+      sidebar: {
+        dashboard: "لوحة التحكم",
+        tasks: "المهام",
+        profile: "الملف الشخصي",
+        settings: "الإعدادات",
+        logout: "تسجيل الخروج",
+      },
+      dashboard: {
+        title: "لوحة التحكم",
+        goodMorning: "صباح الخير",
+        goodAfternoon: "مساء الخير",
+        goodEvening: "مساء الخير",
+        totalTasks: "إجمالي المهام",
+        completed: "المكتملة",
+        pending: "قيد الانتظار",
+        recentTasks: "المهام الأخيرة",
+      },
+      changePassword: {
+        title: "تغيير كلمة المرور",
+        currentPassword: "كلمة المرور الحالية",
+        newPassword: "كلمة المرور الجديدة",
+        confirmPassword: "تأكيد كلمة المرور",
+        passwordPlaceholder: "أدخل كلمة المرور",
         showPassword: "إظهار كلمة المرور",
+        hidePassword: "إخفاء كلمة المرور",
+        showConfirmPassword: "إظهار تأكيد كلمة المرور",
+        hideConfirmPassword: "إخفاء تأكيد كلمة المرور",
+        currentPasswordRequired: "كلمة المرور الحالية مطلوبة",
+        failed: "فشل تغيير كلمة المرور",
+        somethingWentWrong: "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+        changing: "جارٍ تغيير كلمة المرور...",
+        change: "تغيير كلمة المرور",
+        successMessage: "تم تغيير كلمة المرور بنجاح.",
+        updated: "تم تحديث كلمة المرور",
+        goToLogin: "الانتقال إلى تسجيل الدخول",
+      },
+      forgotPassword: {
+        title: "هل نسيت كلمة المرور؟",
+        subtitle: "أدخل بريدك الإلكتروني للوصول إلى حسابك.",
+        email: "البريد الإلكتروني",
+        sendEmail: "إرسال البريد الإلكتروني",
+        backToLogin: "العودة إلى تسجيل الدخول",
+        somethingWentWrong: "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+      },
+      login: {
+        userManagement: "إدارة المستخدمين",
+        heroDescriptionMobile:
+          "سهّل إدارة وصول المستخدمين لفرق التطوير الحديثة.",
+        heroDescriptionDesktop:
+          "سهّل إدارة وصول المستخدمين والأدوار والصلاحيات — مصمم لفرق التطوير الحديثة.",
+        title: "تسجيل الدخول",
+        subtitle: "أدخل بياناتك للوصول إلى حسابك.",
+        email: "البريد الإلكتروني",
+        password: "كلمة المرور",
+        passwordPlaceholder: "أدخل كلمة المرور",
+        showPassword: "إظهار كلمة المرور",
+        hidePassword: "إخفاء كلمة المرور",
+        rememberMe: "تذكرني",
+        forgotPassword: "هل نسيت كلمة المرور؟",
+        loginIncorrect: "بيانات تسجيل الدخول غير صحيحة",
+        sending: "جارٍ الإرسال...",
+        resendVerification: "إعادة إرسال بريد التحقق",
+        checkInbox: "تحقق من بريدك الوارد للحصول على رابط التحقق.",
+        signIn: "تسجيل الدخول",
+        signUp: "إنشاء حساب",
+      },
+      register: {
+        title: "إنشاء حساب",
+        name: "الاسم",
+        namePlaceholder: "محمد",
+        email: "البريد الإلكتروني",
+        password: "كلمة المرور",
+        passwordPlaceholder: "أدخل كلمة المرور",
+        confirmPassword: "تأكيد كلمة المرور",
+        confirmPasswordPlaceholder: "أكد كلمة المرور",
+        showPassword: "إظهار كلمة المرور",
+        hidePassword: "إخفاء كلمة المرور",
+        showConfirmPassword: "إظهار تأكيد كلمة المرور",
+        hideConfirmPassword: "إخفاء تأكيد كلمة المرور",
+        registrationFailed: "فشل إنشاء الحساب",
+        serverError: "تعذر الاتصال بالخادم. يرجى المحاولة مرة أخرى.",
+        signingUp: "جارٍ إنشاء الحساب...",
+        signUp: "إنشاء حساب",
+        haveAccount: "لديك حساب بالفعل؟",
+        login: "تسجيل الدخول",
+      },
+      resetPassword: {
+        title: "إعادة تعيين كلمة المرور",
+        newPassword: "كلمة المرور الجديدة",
+        confirmPassword: "إعادة إدخال كلمة المرور",
+        passwordPlaceholder: "أدخل كلمة المرور",
+        showPassword: "إظهار كلمة المرور",
+        hidePassword: "إخفاء كلمة المرور",
+        showConfirmPassword: "إظهار تأكيد كلمة المرور",
+        hideConfirmPassword: "إخفاء تأكيد كلمة المرور",
+        resetPassword: "إعادة تعيين كلمة المرور",
+        resetFailed: "فشل إعادة تعيين كلمة المرور",
       },
     },
   },
-},
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
+i18n.use(initReactI18next).init({
+  resources,
 
-    // Default language
-    lng: "en",
+  // Default language
+  lng: "en",
 
-    // Prevent showing the translation key if a translation is missing
-    fallbackLng: "en",
+  // Prevent showing the translation key if a translation is missing
+  fallbackLng: "en",
 
-    interpolation: {
-      escapeValue: false,
-    },
-  });
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
 export default i18n;

@@ -175,7 +175,7 @@ const Settings = () => {
       <Sidebar />
 
       <div className="dashboard-main">
-        <Header title="Settings" />
+        <Header title={t("settings.title")} />
 
         <main className="settings-content">
           <header className="settings-header">

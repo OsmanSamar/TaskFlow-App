@@ -2,9 +2,10 @@ import "./header.css";
 import { IoIosNotifications } from "react-icons/io";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const Header = ({ title }) => {
-
+  const { t } = useTranslation();
   const {user} =useContext(AuthContext);
   return (
     <header className="dashboard-header">
@@ -30,7 +31,7 @@ const Header = ({ title }) => {
                  )}
         </button>
 
-        <span className="header-user__name">Welcome, {user?.name} </span>
+        <span className="header-user__name">{t("header.welcome")}, {user?.name} </span>
       </div>
     </header>
   );

@@ -1,16 +1,24 @@
+
 import { useState } from "react";
-import { validatePassword, validateConfirmPassword } from "../utils/validators";
+import {
+  validatePassword,
+  validateConfirmPassword,
+} from "../utils/validators";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { PasswordCriteria } from "../components/PasswordCriteria";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./change-password.css";
 
 export const ChangePassword = () => {
+  const { t } = useTranslation();
+
   const [changeData, setChangeData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -25,14 +33,12 @@ export const ChangePassword = () => {
 
     const newErrors = {};
 
-    // Validate the new password.
     const passwordError = validatePassword(changeData.newPassword);
 
     if (passwordError) {
       newErrors.newPassword = passwordError;
     }
 
-    // Validate that the new password and confirmation match.
     const confirmPasswordError = validateConfirmPassword(
       changeData.newPassword,
       changeData.confirmPassword,
@@ -42,20 +48,18 @@ export const ChangePassword = () => {
       newErrors.confirmPassword = confirmPasswordError;
     }
 
-    // Current password is required.
     if (!changeData.currentPassword.trim()) {
-      newErrors.currentPassword = "Current password is required";
+      newErrors.currentPassword = t(
+        "changePassword.currentPasswordRequired",
+      );
     }
 
     setErrors(newErrors);
 
-    // Stop here if frontend validation failed.
     if (Object.keys(newErrors).length > 0) {
       return;
     }
 
-    //API request.
-    //Prevent duplicate requests while the password is being changed.
     setLoading(true);
 
     try {
@@ -77,29 +81,39 @@ export const ChangePassword = () => {
 
       const data = await response.json();
 
-      console.log("Change password response:", response.status, data);
+      console.log(
+        "Change password response:",
+        response.status,
+        data,
+      );
 
       if (!response.ok) {
-        // Show the backend error to the user.
         setErrors((prev) => ({
           ...prev,
-          currentPassword: data.message || "Failed to change password",
+          currentPassword:
+            data.message ||
+            t("changePassword.failed"),
         }));
 
         return;
-      } // Password was changed successfully.
+      }
 
-      //Keep the user on this page so they can clearly see the sucess message.
-      setSuccessMessage("Password changed successfully.");
+      setSuccessMessage(
+        t("changePassword.successMessage"),
+      );
     } catch (error) {
-      console.error("Change password request failed:", error);
+      console.error(
+        "Change password request failed:",
+        error,
+      );
 
       setErrors((prev) => ({
         ...prev,
-        currentPassword: "Something went wrong. Please try again.",
+        currentPassword: t(
+          "changePassword.somethingWentWrong",
+        ),
       }));
     } finally {
-      // Always stop loading, whether the request succeeds or fails.
       setLoading(false);
     }
   };
@@ -107,26 +121,44 @@ export const ChangePassword = () => {
   return (
     <div className="reset-password-page">
       <div className="reset-password-card">
-        <h1 className="reset-password-panel__title">Change password </h1>
+        <h1 className="reset-password-panel__title">
+          {t("changePassword.title")}
+        </h1>
+
         <form onSubmit={handleChangeData}>
           <div className="form-field">
-            <label className="form-label" htmlFor="currentPassword">
-              Current password
+            <label
+              className="form-label"
+              htmlFor="currentPassword"
+            >
+              {t("changePassword.currentPassword")}
             </label>
+
             <div className="form-input-wrap">
               <input
                 id="currentPassword"
-                type={!showCurrentPassword ? "password" : "text"}
+                type={
+                  !showCurrentPassword
+                    ? "password"
+                    : "text"
+                }
                 name="currentPassword"
                 autoComplete="current-password"
-                placeholder="Enter your password"
-                className={`form-input${errors.currentPassword ? " form-input--error" : ""}`}
+                placeholder={t(
+                  "changePassword.passwordPlaceholder",
+                )}
+                className={`form-input${
+                  errors.currentPassword
+                    ? " form-input--error"
+                    : ""
+                }`}
                 value={changeData.currentPassword}
                 onChange={(e) => {
                   setChangeData({
                     ...changeData,
                     currentPassword: e.target.value,
                   });
+
                   if (e.target.value.trim() !== "") {
                     setErrors((prev) => ({
                       ...prev,
@@ -138,41 +170,60 @@ export const ChangePassword = () => {
 
               <button
                 type="button"
-                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                onClick={() =>
+                  setShowCurrentPassword(
+                    !showCurrentPassword,
+                  )
+                }
                 className="form-input__eye"
                 aria-label={
-                  showCurrentPassword ? "Hide password" : "Show password"
+                  showCurrentPassword
+                    ? t("changePassword.hidePassword")
+                    : t("changePassword.showPassword")
                 }
               >
-                {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+                {showCurrentPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
               </button>
             </div>
-            {/* <PasswordCriteria password={changeData.currentPassword} />
-            {errors.currentPassword ? (
-              <span className="form-error ">{errors.currentPassword}</span>
-            ) : (
-              ""
-            )} */}
           </div>
 
           <div className="form-field">
-            <label className="form-label" htmlFor="newPassword">
-              New password
+            <label
+              className="form-label"
+              htmlFor="newPassword"
+            >
+              {t("changePassword.newPassword")}
             </label>
+
             <div className="form-input-wrap">
               <input
                 id="newPassword"
-                type={!showNewPassword ? "password" : "text"}
+                type={
+                  !showNewPassword
+                    ? "password"
+                    : "text"
+                }
                 name="newPassword"
                 autoComplete="new-password"
-                placeholder="Enter your password"
-                className={`form-input${errors.newPassword ? " form-input--error" : ""}`}
+                placeholder={t(
+                  "changePassword.passwordPlaceholder",
+                )}
+                className={`form-input${
+                  errors.newPassword
+                    ? " form-input--error"
+                    : ""
+                }`}
                 value={changeData.newPassword}
                 onChange={(e) => {
                   setChangeData({
                     ...changeData,
                     newPassword: e.target.value,
                   });
+
                   if (e.target.value.trim() !== "") {
                     setErrors((prev) => ({
                       ...prev,
@@ -184,39 +235,70 @@ export const ChangePassword = () => {
 
               <button
                 type="button"
-                onClick={() => setShowNewPassword(!showNewPassword)}
+                onClick={() =>
+                  setShowNewPassword(!showNewPassword)
+                }
                 className="form-input__eye"
-                aria-label={showNewPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showNewPassword
+                    ? t("changePassword.hidePassword")
+                    : t("changePassword.showPassword")
+                }
               >
-                {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                {showNewPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
               </button>
             </div>
-            <PasswordCriteria password={changeData.newPassword} />
+
+            <PasswordCriteria
+              password={changeData.newPassword}
+            />
+
             {errors.newPassword ? (
-              <span className="form-error ">{errors.newPassword}</span>
+              <span className="form-error">
+                {errors.newPassword}
+              </span>
             ) : (
               ""
             )}
           </div>
 
           <div className="form-field">
-            <label className="form-label" htmlFor="confirmPassword">
-              Confirm password
+            <label
+              className="form-label"
+              htmlFor="confirmPassword"
+            >
+              {t("changePassword.confirmPassword")}
             </label>
+
             <div className="form-input-wrap">
               <input
                 id="confirmPassword"
-                type={!showConfirmPassword ? "password" : "text"}
+                type={
+                  !showConfirmPassword
+                    ? "password"
+                    : "text"
+                }
                 name="confirmPassword"
                 autoComplete="new-password"
-                placeholder="Enter your password"
-                className={`form-input${errors.confirmPassword ? " form-input--error" : ""}`}
+                placeholder={t(
+                  "changePassword.passwordPlaceholder",
+                )}
+                className={`form-input${
+                  errors.confirmPassword
+                    ? " form-input--error"
+                    : ""
+                }`}
                 value={changeData.confirmPassword}
                 onChange={(e) => {
                   setChangeData({
                     ...changeData,
                     confirmPassword: e.target.value,
                   });
+
                   if (e.target.value.trim() !== "") {
                     setErrors((prev) => ({
                       ...prev,
@@ -228,26 +310,47 @@ export const ChangePassword = () => {
 
               <button
                 type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() =>
+                  setShowConfirmPassword(
+                    !showConfirmPassword,
+                  )
+                }
                 className="form-input__eye"
                 aria-label={
                   showConfirmPassword
-                    ? "Hide confirm password"
-                    : "Show confirm password"
+                    ? t(
+                        "changePassword.hideConfirmPassword",
+                      )
+                    : t(
+                        "changePassword.showConfirmPassword",
+                      )
                 }
               >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                {showConfirmPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
               </button>
             </div>
+
             {errors.confirmPassword ? (
-              <span className="form-error ">{errors.confirmPassword}</span>
+              <span className="form-error">
+                {errors.confirmPassword}
+              </span>
             ) : (
               ""
             )}
           </div>
 
-          <button type="submit" className="btn btn--primary" disabled={loading}>
-            {loading ? "Change Password..." : "Change Password"}
+          <button
+            type="submit"
+            className="btn btn--primary"
+            disabled={loading}
+          >
+            {loading
+              ? t("changePassword.changing")
+              : t("changePassword.change")}
           </button>
         </form>
       </div>
@@ -256,29 +359,31 @@ export const ChangePassword = () => {
         <div
           className="change-password-modal-overlay"
           role="presentation"
-          
         >
           <div
             className="change-password-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="change-password-success-title"
-          
           >
             <h2
               id="change-password-success-title"
               className="change-password-modal__title"
             >
-              Password updated
+              {t("changePassword.updated")}
             </h2>
-            <p className="change-password-modal__text">{successMessage}</p>
+
+            <p className="change-password-modal__text">
+              {successMessage}
+            </p>
+
             <div className="change-password-modal__actions">
               <button
                 type="button"
                 className="change-password-modal__btn change-password-modal__btn--primary"
                 onClick={() => navigate("/login")}
               >
-                Go to Login
+                {t("changePassword.goToLogin")}
               </button>
             </div>
           </div>
@@ -287,4 +392,6 @@ export const ChangePassword = () => {
     </div>
   );
 };
+
 export default ChangePassword;
+

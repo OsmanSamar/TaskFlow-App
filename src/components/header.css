@@ -53,7 +53,7 @@
   }
 
   .header-user__name {
-    @apply font-serif text-sm font-medium text-zinc-300 cursor-pointer
+    @apply font-sans text-sm font-medium text-zinc-300 cursor-pointer
     no-underline transition-colors duration-150
     hover:text-white
     dark:text-zinc-300

@@ -5,8 +5,10 @@ import "./tasks.css";
 import TaskInput from "../components/TaskInput";
 import FilterButtons from "../components/FilterButtons";
 import TaskList from "../components/TaskList";
+import { useTranslation, Trans } from "react-i18next";
 
 const Tasks = () => {
+  const { t } = useTranslation();
   const [input, setInput] = useState("");
   const [filter, setFilter] = useState("all");
   const [editId, setEditId] = useState(null);
@@ -116,14 +118,17 @@ const Tasks = () => {
       <Sidebar />
 
       <div className="tasks-main">
-        <Header title="Tasks" />
+        <Header title={t("tasks.title")} />
         <div className="tasks-content">
           <header className="tasks-header">
-            <h1>Task Manager</h1>
-            <p>Create, update, and organize your daily tasks in one place.</p>
+            <h1>{t("tasks.manager")}</h1>
+            <p>{t("tasks.description")}</p>
 
             <div className="tasks-subtitle">
-              {activeCount} {activeCount === 1 ? "task" : "tasks"} remaining
+              {activeCount}{" "}
+              {activeCount === 1
+                ? t("tasks.taskRemaining")
+                : t("tasks.tasksRemaining")}
             </div>
           </header>
 
@@ -151,8 +156,8 @@ const Tasks = () => {
             {filteredTasks.length === 0 && (
               <p className="tasks-empty-state">
                 {tasks.length === 0
-                  ? "No tasks yet — add one above!"
-                  : `No ${filter} tasks`}
+                  ? t("tasks.noTasks")
+                  : t("tasks.noFilteredTasks", { filter })}
               </p>
             )}
 
@@ -170,7 +175,7 @@ const Tasks = () => {
                   clearCompletedTask();
                 }}
               >
-                Clear Completed
+                {t("tasks.clearCompleted")}
               </button>
             </div>
           </div>
@@ -178,7 +183,11 @@ const Tasks = () => {
       </div>
 
       {taskToDelete && (
-        <div className="tasks-modal-overlay" role="presentation" onClick={cancelDelete}>
+        <div
+          className="tasks-modal-overlay"
+          role="presentation"
+          onClick={cancelDelete}
+        >
           <div
             className="tasks-modal"
             role="dialog"
@@ -187,12 +196,19 @@ const Tasks = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 id="delete-task-title" className="tasks-modal__title">
-              Delete task?
+              {t("tasks.deleteTitle")}
             </h2>
             <p className="tasks-modal__text">
-              Are you sure you want to delete{" "}
+              {/* Are you sure you want to delete{" "}
               <strong>&ldquo;{taskToDelete.text}&rdquo;</strong>? This cannot be
-              undone.
+              undone. */}
+              <Trans
+                i18nKey="tasks.deleteMessage"
+                values={{ task: taskToDelete.text }}
+                components={{
+                  strong: <strong />,
+                }}
+              />
             </p>
             <div className="tasks-modal__actions">
               <button
@@ -200,14 +216,14 @@ const Tasks = () => {
                 className="tasks-modal__btn tasks-modal__btn--cancel"
                 onClick={cancelDelete}
               >
-                Cancel
+                {t("tasks.cancel")}
               </button>
               <button
                 type="button"
                 className="tasks-modal__btn tasks-modal__btn--danger"
                 onClick={confirmDelete}
               >
-                Delete
+                {t("tasks.delete")}
               </button>
             </div>
           </div>

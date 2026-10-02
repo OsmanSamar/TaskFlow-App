@@ -1,82 +1,94 @@
 import "./forgot-password.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { validateEmail } from "../utils/validators";
 
 const ForgotPassword = () => {
+  const { t } = useTranslation();
+
   const [forgotData, setForgotData] = useState({
     email: "",
   });
+
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
 
+  const handleForgot = async (e) => {
+    e.preventDefault();
 
-const handleForgot = async (e) => {
-  e.preventDefault();
-  const newErrors = {};
+    const newErrors = {};
 
-  const emailError = validateEmail(forgotData.email);
-  if (emailError) {
-    newErrors.email = emailError;
-  }
+    const emailError = validateEmail(forgotData.email);
 
-  setErrors(newErrors);
-
-  // to ask if the object has errors
-  if (Object.keys(newErrors).length === 0) {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/users/forgot-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: forgotData.email,
-          }),
-        },
-      );
-
-      // Parse the response
-      const data = await response.json();
-
-      // Check if the response is not ok
-      if (!response.ok) {
-        setMessage(data.message);
-        return;
-      }
-
-      setMessage(data.message);
-    } catch {
-      setMessage("Something went wrong. Please try again.");
+    if (emailError) {
+      newErrors.email = emailError;
     }
-  }
-};
 
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/users/forgot-password",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: forgotData.email,
+            }),
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setMessage(data.message);
+          return;
+        }
+
+        setMessage(data.message);
+      } catch {
+        setMessage(t("forgotPassword.somethingWentWrong"));
+      }
+    }
+  };
 
   return (
     <div className="forgot-password-page">
       <div className="forgot-password-card">
-        <h1 className="forgot-panel__title">Forgot your password?</h1>
+        <h1 className="forgot-panel__title">
+          {t("forgotPassword.title")}
+        </h1>
+
         <p className="forgot-panel__subtitle">
-          Enter your Email to access your account.
+          {t("forgotPassword.subtitle")}
         </p>
+
         <form onSubmit={handleForgot}>
           <div className="form-field">
             <label className="form-label" htmlFor="email">
-              Email
+              {t("forgotPassword.email")}
             </label>
+
             <input
               id="email"
               type="email"
               name="email"
               autoComplete="email"
               placeholder="name@company.com"
-              className={`form-input${errors.email ? " form-input--error" : ""}`}
+              className={`form-input${
+                errors.email ? " form-input--error" : ""
+              }`}
               value={forgotData.email}
               onChange={(e) => {
-                setForgotData({ ...forgotData, email: e.target.value });
+                setForgotData({
+                  ...forgotData,
+                  email: e.target.value,
+                });
+
                 if (e.target.value.trim() !== "") {
                   setErrors((prev) => ({
                     ...prev,
@@ -85,15 +97,18 @@ const handleForgot = async (e) => {
                 }
               }}
             />
+
             {errors.email ? (
-              <span className="form-error ">{errors.email}</span>
+              <span className="form-error">
+                {errors.email}
+              </span>
             ) : (
               ""
             )}
           </div>
 
           <button type="submit" className="btn btn--primary">
-            Send Email
+            {t("forgotPassword.sendEmail")}
           </button>
 
           {message && (
@@ -102,9 +117,13 @@ const handleForgot = async (e) => {
             </p>
           )}
         </form>
+
         <p className="login-footer">
-          <Link className="login-footer-link" to="/login">
-            Back to Login
+          <Link
+            className="login-footer-link"
+            to="/login"
+          >
+            {t("forgotPassword.backToLogin")}
           </Link>
         </p>
       </div>
@@ -113,3 +132,4 @@ const handleForgot = async (e) => {
 };
 
 export default ForgotPassword;
+

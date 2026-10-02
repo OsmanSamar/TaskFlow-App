@@ -6,8 +6,10 @@ import { FaCamera, FaCalendarAlt } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const EditProfile = () => {
+  const { t } = useTranslation();
   const { user, setUser } = useContext(AuthContext);
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState();
@@ -128,7 +130,7 @@ const EditProfile = () => {
       <Sidebar />
 
       <div className="editprofile-main">
-        <Header title="Edit Profile" />
+        <Header title={t("editProfile.title")} />
 
         <main className="editprofile-content">
           <section className="editprofile-header">
@@ -175,7 +177,7 @@ const EditProfile = () => {
                 onClick={() => fileInputRef.current?.click()}
               >
                 <FaCamera />
-                Change Photo
+                {t("editProfile.changePhoto")}
               </button>
 
               <button
@@ -185,22 +187,26 @@ const EditProfile = () => {
                 disabled={deleting}
               >
                 <MdDeleteSweep />
-                {deleting ? "Deleting..." : " Delete Photo"}
+                {deleting
+                  ? t("editProfile.deleting")
+                  : t("editProfile.deletePhoto")}
               </button>
             </div>
             <div className="editprofile-header__info">
               <h1>{user?.name}</h1>
-              <p>Update your personal information</p>
+              <p>{t("editProfile.description")}</p>
             </div>
           </section>
 
           <div className="editprofile-sections">
             <section className="editprofile-card">
-              <h2 className="editprofile-card__title">Personal Information</h2>
+              <h2 className="editprofile-card__title">
+                {t("editProfile.personal.title")}
+              </h2>
 
               <div className="editprofile-field">
                 <label className="editprofile-label" htmlFor="full-name">
-                  Full name
+                  {t("editProfile.personal.fullName")}
                 </label>
                 <input
                   id="full-name"
@@ -215,7 +221,7 @@ const EditProfile = () => {
 
               <div className="editprofile-field">
                 <label className="editprofile-label" htmlFor="email">
-                  Email
+                  {t("editProfile.personal.email")}
                 </label>
                 <input
                   id="email"
@@ -228,13 +234,15 @@ const EditProfile = () => {
             </section>
 
             <section className="editprofile-card">
-              <h2 className="editprofile-card__title">Profile Information</h2>
+              <h2 className="editprofile-card__title">
+                {t("editProfile.profile.title")}
+              </h2>
 
               <div className="editprofile-readonly">
                 <div className="editprofile-readonly__row">
                   <span className="editprofile-readonly__label">
                     <FaCalendarAlt className="editprofile-readonly__icon" />
-                    Join date
+                    {t("editProfile.profile.joinDate")}
                   </span>
                   <span className="editprofile-readonly__value">
                     <dd>
@@ -254,7 +262,7 @@ const EditProfile = () => {
 
                 <div className="editprofile-readonly__row">
                   <span className="editprofile-readonly__label">
-                    Account status
+                    {t("editProfile.profile.accountStatus")}
                   </span>
 
                   <span
@@ -277,13 +285,15 @@ const EditProfile = () => {
                 onClick={handleSave}
                 disabled={saving}
               >
-                {saving ? "Saving..." : "Save Changes"}
+                {saving
+                  ? t("editProfile.saving")
+                  : t("editProfile.saveChanges")}
               </button>
               <Link
                 to="/profile"
                 className="editprofile-btn editprofile-btn--ghost"
               >
-                Cancel
+                {t("editProfile.cancel")}
               </Link>
             </div>
           </div>

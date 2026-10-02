@@ -1,3 +1,4 @@
+
 import { NavLink } from "react-router-dom";
 import "./sidebar.css";
 
@@ -10,17 +11,22 @@ import {
 } from "react-icons/fa";
 
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { AuthContext } from "../context/AuthContext";
 
 const Sidebar = () => {
   const { setUser } = useContext(AuthContext);
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/users/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/users/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Logout failed");
@@ -44,28 +50,33 @@ const Sidebar = () => {
         <nav className="dashboard-nav">
           <NavLink className="dashboard-nav__link" to="/dashboard">
             <FaTachometerAlt />
-            <span>Dashboard</span>
+            <span>{t("sidebar.dashboard")}</span>
           </NavLink>
+
           <NavLink className="dashboard-nav__link" to="/tasks">
             <FaTasks />
-            <span>Tasks</span>
+            <span>{t("sidebar.tasks")}</span>
           </NavLink>
+
           <NavLink className="dashboard-nav__link" to="/profile">
             <FaUser />
-            <span>Profile</span>
+            <span>{t("sidebar.profile")}</span>
           </NavLink>
         </nav>
 
         <div className="sidebar-bottom">
           <NavLink className="dashboard-nav__link" to="/settings">
             <FaCog />
-            <span>Settings</span>
+            <span>{t("sidebar.settings")}</span>
           </NavLink>
-          <button type="button" className="sidebar-logout"
-          onClick={handleLogout}
+
+          <button
+            type="button"
+            className="sidebar-logout"
+            onClick={handleLogout}
           >
             <FaSignOutAlt />
-            <span>Logout</span>
+            <span>{t("sidebar.logout")}</span>
           </button>
         </div>
       </div>

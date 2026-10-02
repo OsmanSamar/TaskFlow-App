@@ -5,15 +5,17 @@ import "./profile.css";
 import { FaCalendarAlt } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
+   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   return (
     <div className="profile-page">
       <Sidebar />
 
       <div className="profile-main">
-        <Header title="Profile" />
+        <Header title={t("profile.title")} />
 
         <main className="profile-content">
           <div className="profile-layout">
@@ -38,10 +40,10 @@ const Profile = () => {
 
                 <h2 className="profile-aside__name">{user?.name}</h2>
 
-                <span className="profile-aside__badge">TaskFlow User</span>
+                <span className="profile-aside__badge">  {t("profile.userBadge")}</span>
 
                 <Link className="profile-aside__edit" to="/editprofile">
-                  Edit Profile
+                  {t("profile.edit")}
                 </Link>
               </div>
             </aside>
@@ -49,28 +51,28 @@ const Profile = () => {
             {/* Main profile content */}
             <div className="profile-details">
               <header className="profile-details__header">
-                <h1>Profile Overview</h1>
-                <p>Manage your personal information and account preferences.</p>
+                <h1>{t("profile.overview")}</h1>
+                <p>{t("profile.description")}</p>
               </header>
 
               {/* Cards grid */}
               <div className="profile-cards">
                 {/* Personal Information */}
                 <section id="personal" className="profile-card">
-                  <h3 className="profile-card__title">Personal Information</h3>
+                  <h3 className="profile-card__title"> {t("profile.personal.title")}</h3>
                   <dl className="profile-info">
                     <div className="profile-info__row">
-                      <dt>Full name</dt>
+                      <dt>{t("profile.personal.fullName")}</dt>
                       <dd>{user?.name}</dd>
                     </div>
                     <div className="profile-info__row">
-                      <dt>Email</dt>
+                     <dt>{t("profile.personal.email")}</dt>
                       <dd>{user?.email}</dd>
                     </div>
                     <div className="profile-info__row">
                       <dt>
-                        <FaCalendarAlt className="profile-info__icon" /> Join
-                        date
+                        <FaCalendarAlt className="profile-info__icon" />   
+                        {t("profile.personal.joinDate")}
                       </dt>
                       <dd>
                         {user?.created_at
@@ -90,11 +92,13 @@ const Profile = () => {
 
                 {/* Account Status */}
                 <section className="profile-card">
-                  <h3 className="profile-card__title">Account Status</h3>
+                  <h3 className="profile-card__title"> 
+                    {t("profile.accountStatus.title")}
+                    </h3>
                   <ul className="profile-status-list">
                     <li className="profile-status-item">
-                      {/* TODO email verified   */}
-                      <span>Email verification</span>
+                     
+                     <span>{t("profile.accountStatus.emailVerification")}</span>
 
                       <span
                         className={`profile-chip ${
@@ -107,7 +111,7 @@ const Profile = () => {
                       </span>
                     </li>
                     <li className="profile-status-item">
-                      <span>Account status</span>
+                     <span>{t("profile.accountStatus.status")}</span>
 
                       <span
                         className={`profile-chip ${
@@ -120,7 +124,7 @@ const Profile = () => {
                       </span>
                     </li>
                     <li className="profile-status-item">
-                      <span>Last login</span>
+                     <span>{t("profile.accountStatus.lastLogin")}</span>
                       <span className="profile-status-item__meta">
                         {user?.last_login
                           ? new Date(user.last_login).toLocaleString("en-US", {
@@ -138,12 +142,12 @@ const Profile = () => {
 
                 {/* Security */}
                 <section id="security" className="profile-card">
-                  <h3 className="profile-card__title">Security</h3>
+                  <h3 className="profile-card__title">{t("profile.security.title")}</h3>
                   <div className="profile-setting">
                     <div>
-                      <p className="profile-setting__label">Change Password</p>
+                      <p className="profile-setting__label"> {t("profile.security.changePassword")}</p>
                       <p className="profile-setting__hint">
-                        Update your password regularly
+                         {t("profile.security.passwordHint")}
                       </p>
                     </div>
 
@@ -151,7 +155,7 @@ const Profile = () => {
                       className="profile-btn profile-btn--ghost"
                       to="/changepassword"
                     >
-                      Change
+                       {t("profile.security.change")}
                     </Link>
                   </div>
                 </section>

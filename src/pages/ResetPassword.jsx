@@ -1,43 +1,55 @@
 import { useState } from "react";
-import { validatePassword, validateConfirmPassword } from "../utils/validators";
+import {
+  validatePassword,
+  validateConfirmPassword,
+} from "../utils/validators";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { PasswordCriteria } from "../components/PasswordCriteria";
+import { useTranslation } from "react-i18next";
 import "./reset-password.css";
 
 export const ResetPassword = () => {
+  const { t } = useTranslation();
+
   console.log("ResetPassword component rendered");
+
   const [resetData, setResetData] = useState({
     password: "",
     confirmPassword: "",
   });
+
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const navigate = useNavigate();
+
   // Get token from URL query parameters
   const token = new URLSearchParams(window.location.search).get("token");
 
   const handleResetData = async (e) => {
     e.preventDefault();
+
     const newErrors = {};
 
     const passwordError = validatePassword(resetData.password);
+
     if (passwordError) {
       newErrors.password = passwordError;
     }
 
-    const ConfirmpasswordError = validateConfirmPassword(
+    const confirmPasswordError = validateConfirmPassword(
       resetData.password,
       resetData.confirmPassword,
     );
-    if (ConfirmpasswordError) {
-      newErrors.confirmPassword = ConfirmpasswordError;
+
+    if (confirmPasswordError) {
+      newErrors.confirmPassword = confirmPasswordError;
     }
 
     setErrors(newErrors);
 
-    // to ask if the object has errors
     if (Object.keys(newErrors).length === 0) {
       const response = await fetch(
         "http://localhost:3000/api/users/reset-password",
@@ -58,7 +70,7 @@ export const ResetPassword = () => {
 
       if (!response.ok) {
         setErrors({
-          form: data.message || "Password reset failed",
+          form: data.message || t("resetPassword.resetFailed"),
         });
         return;
       }
@@ -71,26 +83,33 @@ export const ResetPassword = () => {
   return (
     <div className="reset-password-page">
       <div className="reset-password-card">
-        <h1 className="reset-password-panel__title">Reset password </h1>
+        <h1 className="reset-password-panel__title">
+          {t("resetPassword.title")}
+        </h1>
+
         <form onSubmit={handleResetData}>
           <div className="form-field">
             <label className="form-label" htmlFor="password">
-              New password
+              {t("resetPassword.newPassword")}
             </label>
+
             <div className="form-input-wrap">
               <input
                 id="password"
                 type={!showPassword ? "password" : "text"}
                 name="password"
                 autoComplete="new-password"
-                placeholder="Enter your password"
-                className={`form-input${errors.password ? " form-input--error" : ""}`}
+                placeholder={t("resetPassword.passwordPlaceholder")}
+                className={`form-input${
+                  errors.password ? " form-input--error" : ""
+                }`}
                 value={resetData.password}
                 onChange={(e) => {
                   setResetData({
                     ...resetData,
                     password: e.target.value,
                   });
+
                   if (e.target.value.trim() !== "") {
                     setErrors((prev) => ({
                       ...prev,
@@ -104,14 +123,22 @@ export const ResetPassword = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="form-input__eye"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showPassword
+                    ? t("resetPassword.hidePassword")
+                    : t("resetPassword.showPassword")
+                }
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
+
             <PasswordCriteria password={resetData.password} />
+
             {errors.password ? (
-              <span className="form-error ">{errors.password}</span>
+              <span className="form-error">
+                {errors.password}
+              </span>
             ) : (
               ""
             )}
@@ -119,22 +146,28 @@ export const ResetPassword = () => {
 
           <div className="form-field">
             <label className="form-label" htmlFor="confirmPassword">
-              Re - enter password
+              {t("resetPassword.confirmPassword")}
             </label>
+
             <div className="form-input-wrap">
               <input
                 id="confirmPassword"
                 type={!showConfirmPassword ? "password" : "text"}
                 name="confirmPassword"
                 autoComplete="new-password"
-                placeholder="Enter your password"
-                className={`form-input${errors.confirmPassword ? " form-input--error" : ""}`}
+                placeholder={t("resetPassword.passwordPlaceholder")}
+                className={`form-input${
+                  errors.confirmPassword
+                    ? " form-input--error"
+                    : ""
+                }`}
                 value={resetData.confirmPassword}
                 onChange={(e) => {
                   setResetData({
                     ...resetData,
                     confirmPassword: e.target.value,
                   });
+
                   if (e.target.value.trim() !== "") {
                     setErrors((prev) => ({
                       ...prev,
@@ -146,19 +179,28 @@ export const ResetPassword = () => {
 
               <button
                 type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
                 className="form-input__eye"
                 aria-label={
                   showConfirmPassword
-                    ? "Hide confirm password"
-                    : "Show confirm password"
+                    ? t("resetPassword.hideConfirmPassword")
+                    : t("resetPassword.showConfirmPassword")
                 }
               >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                {showConfirmPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )}
               </button>
             </div>
+
             {errors.confirmPassword ? (
-              <span className="form-error ">{errors.confirmPassword}</span>
+              <span className="form-error">
+                {errors.confirmPassword}
+              </span>
             ) : (
               ""
             )}
@@ -167,12 +209,15 @@ export const ResetPassword = () => {
           {errors.form ? (
             <span className="form-error">{errors.form}</span>
           ) : null}
+
           <button type="submit" className="btn btn--primary">
-            Reset Password
+            {t("resetPassword.resetPassword")}
           </button>
         </form>
       </div>
     </div>
   );
 };
+
 export default ResetPassword;
+

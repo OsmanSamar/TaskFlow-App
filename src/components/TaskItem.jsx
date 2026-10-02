@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const TaskItem = ({
   task,
@@ -11,6 +12,7 @@ const TaskItem = ({
   setEditText,
   requestDelete,
 }) => {
+  const { t } = useTranslation();
   // useRef keeps a reference to the DOM input element without causing a re-render.
   // We use it here to automatically focus the input when editing a task starts.
   const inputRef = useRef(null);
@@ -28,7 +30,9 @@ const TaskItem = ({
       <button
         type="button"
         onClick={() => toggleDone(task.id)}
-        aria-label={task.done ? "Mark as incomplete" : "Mark as complete"}
+        aria-label={
+          task.done ? t("tasks.markIncomplete") : t("tasks.markComplete")
+        }
         className={`tasks-checkbox ${task.done ? "tasks-checkbox--done" : ""}`}
       >
         {task.done && (
@@ -80,7 +84,7 @@ const TaskItem = ({
             }}
             className="tasks-edit-btn"
           >
-            Save
+            {t("tasks.save")}
           </button>
 
           <button
@@ -91,7 +95,7 @@ const TaskItem = ({
             }}
             className="tasks-edit-btn"
           >
-            Cancel
+            {t("tasks.cancel")}
           </button>
         </>
       ) : (
@@ -100,7 +104,7 @@ const TaskItem = ({
           onClick={() => startEdit(task.id, task.text)}
           className="tasks-edit-btn"
         >
-          Edit
+          {t("tasks.edit")}
         </button>
       )}
 
@@ -110,7 +114,7 @@ const TaskItem = ({
         onClick={() => requestDelete(task)}
         className="delete-btn"
       >
-        Delete
+        {t("tasks.delete")}
       </button>
     </li>
   );

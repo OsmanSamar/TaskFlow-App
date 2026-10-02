@@ -1,14 +1,20 @@
+import { useTranslation } from "react-i18next";
+
 const FilterButtons = ({ filterButtons, filter, setFilter }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="filter-bar">
-      {filterButtons.map(({ key, label }) => (
+      {filterButtons.map(({ key }) => (
         <button
           key={key}
           type="button"
           onClick={() => setFilter(key)}
-          className={`filter-btn ${filter === key ? "filter-btn--active" : ""}`}
+          className={`filter-btn ${
+            filter === key ? "filter-btn--active" : ""
+          }`}
         >
-          {label}
+          {t(`tasks.filters.${key}`)}
         </button>
       ))}
     </div>
@@ -16,3 +22,4 @@ const FilterButtons = ({ filterButtons, filter, setFilter }) => {
 };
 
 export default FilterButtons;
+
