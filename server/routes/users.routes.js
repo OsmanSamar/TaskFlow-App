@@ -246,42 +246,40 @@ router.post("/login", async (req, res) => {
   const isMatch = await bcrypt.compare(password, user.password);
   // console.log("Password match:", isMatch);
 
-
   // Check if the entered password matches the hashed password stored in the database
- if (!isMatch) {
-  const result = db.prepare(`
+  if (!isMatch) {
+    const result = db
+      .prepare(
+        `
     UPDATE users
     SET failed_login_attempts = failed_login_attempts + 1
     WHERE id = ?
-  `).run(user.id);
+  `,
+      )
+      .run(user.id);
 
-  const failedAttempts = result.changes
-    ? db
-        .prepare(
-          "SELECT failed_login_attempts FROM users WHERE id = ?",
-        )
-        .get(user.id).failed_login_attempts
-    : 0;
+    const failedAttempts = result.changes
+      ? db
+          .prepare("SELECT failed_login_attempts FROM users WHERE id = ?")
+          .get(user.id).failed_login_attempts
+      : 0;
 
-  if (
-    failedAttempts === 3 &&
-    user.email_notifications === 1
-  ) {
-    await sendEmail({
-      to: user.email,
-      subject: "Security alert: Failed login attempts",
-      html: `
+    if (failedAttempts === 3 && user.email_notifications === 1) {
+      await sendEmail({
+        to: user.email,
+        subject: "Security alert: Failed login attempts",
+        html: `
         <h2>Security Alert</h2>
         <p>There have been 3 failed login attempts on your TaskFlow account.</p>
         <p>If this was not you, we recommend changing your password immediately.</p>
       `,
+      });
+    }
+
+    return res.status(401).json({
+      message: "Login incorrect",
     });
   }
-
-  return res.status(401).json({
-    message: "Login incorrect",
-  });
-}
 
   // Check if the user's email has been verified.
 
@@ -297,7 +295,11 @@ router.post("/login", async (req, res) => {
   // This allows the server to remember the logged-in user
   req.session.userId = user.id;
 
-  //
+  // Log the session user ID to confirm that login creates an authenticated session.
+  console.log("SESSION USER ID:", req.session.userId);
+
+  // Log the session user ID to confirm that login creates an authenticated session.
+  // This log message is used for debugging and can be removed in production.
   req.session.cookie.maxAge = rememberMe
     ? 30 * 24 * 60 * 60 * 1000 //Remember Me: 30 days
     : 30 * 60 * 1000; //Default: 30 minutes
@@ -1274,6 +1276,197 @@ router.post("/resend-verification", async (req, res) => {
 
   return res.json({
     message: "Verification email sent successfully",
+  });
+});
+
+// Create a new task for the currently authenticated user.
+// The session user ID ensures the task belongs to the correct account.
+router.post("/me/tasks", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  const { text } = req.body;
+
+  if (!text || text.trim() === "") {
+    return res.status(400).json({
+      message: "Task text is required",
+    });
+  }
+
+  const task = {
+    id: crypto.randomUUID(),
+    user_id: req.session.userId,
+    text: text.trim(),
+    done: 0,
+    created_at: new Date().toISOString(),
+  };
+
+  db.prepare(
+    `
+    INSERT INTO tasks (
+      id,
+      user_id,
+      text,
+      done,
+      created_at
+    )
+    VALUES (?, ?, ?, ?, ?)
+  `,
+  ).run(task.id, task.user_id, task.text, task.done, task.created_at);
+
+  res.status(201).json({
+    message: "Task created successfully",
+    task,
+  });
+});
+
+// Get all tasks belonging to the currently authenticated user.
+router.get("/me/tasks", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  const tasks = db
+    .prepare(
+      `
+      SELECT id, text, done, created_at
+      FROM tasks
+      WHERE user_id = ?
+      ORDER BY created_at DESC
+    `,
+    )
+    .all(req.session.userId);
+
+  res.json({
+    tasks,
+  });
+});
+
+// Update the text and/or completed status of a task owned by the authenticated user.
+router.put("/me/tasks/:id", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  const { id } = req.params;
+  const { text, done } = req.body;
+
+  if (text !== undefined && text.trim() === "") {
+    return res.status(400).json({
+      message: "Task text cannot be empty",
+    });
+  }
+
+  if (done !== undefined && done !== 0 && done !== 1) {
+    return res.status(400).json({
+      message: "done must be 0 or 1",
+    });
+  }
+
+  const currentTask = db
+    .prepare(
+      `
+      SELECT id, text, done, created_at
+      FROM tasks
+      WHERE id = ? AND user_id = ?
+    `,
+    )
+    .get(id, req.session.userId);
+
+  if (!currentTask) {
+    return res.status(404).json({
+      message: "Task not found",
+    });
+  }
+
+  db.prepare(
+    `
+    UPDATE tasks
+    SET
+      text = COALESCE(?, text),
+      done = COALESCE(?, done)
+    WHERE id = ? AND user_id = ?
+  `,
+  ).run(
+    text !== undefined ? text.trim() : null,
+    done !== undefined ? done : null,
+    id,
+    req.session.userId,
+  );
+
+  const updatedTask = db
+    .prepare(
+      `
+      SELECT id, text, done, created_at
+      FROM tasks
+      WHERE id = ? AND user_id = ?
+    `,
+    )
+    .get(id, req.session.userId);
+
+  res.json({
+    message: "Task updated successfully",
+    task: updatedTask,
+  });
+});
+
+// Delete all completed tasks owned by the authenticated user.
+router.delete("/me/tasks/completed", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  const result = db
+    .prepare(
+      `
+      DELETE FROM tasks
+      WHERE user_id = ? AND done = 1
+    `,
+    )
+    .run(req.session.userId);
+
+  res.json({
+    message: "Completed tasks deleted successfully",
+    deletedCount: result.changes,
+  });
+});
+
+// Delete a task owned by the authenticated user.
+router.delete("/me/tasks/:id", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Not authenticated",
+    });
+  }
+
+  const { id } = req.params;
+
+  const result = db
+    .prepare(
+      `
+      DELETE FROM tasks
+      WHERE id = ? AND user_id = ?
+    `,
+    )
+    .run(id, req.session.userId);
+
+  if (result.changes === 0) {
+    return res.status(404).json({
+      message: "Task not found",
+    });
+  }
+
+  res.json({
+    message: "Task deleted successfully",
   });
 });
 

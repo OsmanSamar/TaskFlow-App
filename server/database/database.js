@@ -26,6 +26,15 @@ db.exec(`
     task_reminders INTEGER NOT NULL DEFAULT 1,
     failed_login_attempts INTEGER NOT NULL DEFAULT 0
      );
+
+      CREATE TABLE IF NOT EXISTS tasks (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    text TEXT NOT NULL,
+    done INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
      `);
 
 //  console.log(db.prepare("PRAGMA table_info(users)").all());

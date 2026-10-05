@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "./tasks.css";
@@ -17,37 +17,70 @@ const Tasks = () => {
   const [showError, setShowError] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
 
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    if (!savedTasks) return [];
+  const [tasks, setTasks] = useState([]);
 
-    try {
-      const parsed = JSON.parse(savedTasks);
-      if (!Array.isArray(parsed)) {
-        localStorage.removeItem("tasks");
-        return [];
+  // Load the current user's tasks when the Tasks page opens.
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/users/me/tasks",
+          {
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error("Failed to load tasks:", data.message);
+          return;
+        }
+
+        setTasks(data.tasks);
+      } catch (error) {
+        console.error("Failed to load tasks:", error);
       }
+    };
 
-      return parsed.map((t) => ({
-        id: t?.id ?? crypto.randomUUID(),
-        text: typeof t?.text === "string" ? t.text : "",
-        done: Boolean(t?.done),
-      }));
-    } catch {
-      localStorage.removeItem("tasks");
-      return [];
-    }
-  });
+    loadTasks();
+  }, []);
 
   const activeCount = tasks.filter((task) => !task.done).length;
 
-  const addTask = () => {
+  // Send the new task to SQLite through the backend API.
+  const addTask = async () => {
     if (input.trim() === "") {
       setShowError(true);
       return;
     }
-    setTasks([...tasks, { id: crypto.randomUUID(), text: input, done: false }]);
-    setInput("");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users/me/tasks", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: input.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to create task:", data.message);
+        return;
+      }
+
+      // Add the task returned by SQLite to the visible task list.
+      setTasks((currentTasks) => [...currentTasks, data.task]);
+
+      setInput("");
+    } catch (error) {
+      console.error("Failed to create task:", error);
+    }
   };
 
   // Delete: open confirm popup first
@@ -55,22 +88,74 @@ const Tasks = () => {
     setTaskToDelete(task);
   };
 
-  const confirmDelete = () => {
+  // Delete the selected task from SQLite and remove it from the UI.
+  const confirmDelete = async () => {
     if (!taskToDelete) return;
-    setTasks(tasks.filter((task) => task.id !== taskToDelete.id));
-    setTaskToDelete(null);
-  };
 
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/users/me/tasks/${taskToDelete.id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to delete task:", data.message);
+        return;
+      }
+
+      // Remove the task locally after SQLite confirms the deletion.
+      setTasks((currentTasks) =>
+        currentTasks.filter((task) => task.id !== taskToDelete.id),
+      );
+
+      setTaskToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete task:", error);
+    }
+  };
   const cancelDelete = () => {
     setTaskToDelete(null);
   };
 
-  const toggleDone = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, done: !task.done } : task,
-      ),
-    );
+  // Update a task's completed status in SQLite and refresh it in the UI.
+  const toggleDone = async (id) => {
+    const task = tasks.find((task) => task.id === id);
+
+    if (!task) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/users/me/tasks/${id}`,
+        {
+          method: "PUT",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            done: task.done ? 0 : 1,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to update task:", data.message);
+        return;
+      }
+
+      setTasks((currentTasks) =>
+        currentTasks.map((task) => (task.id === id ? data.task : task)),
+      );
+    } catch (error) {
+      console.error("Failed to update task:", error);
+    }
   };
 
   //Edittask
@@ -80,24 +165,66 @@ const Tasks = () => {
     setEditText(text);
   };
 
-  const editTask = (id, editText) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, text: editText } : task,
-      ),
-    );
+  // Update the edited task text in SQLite and then refresh the task in the UI.
+  const editTask = async (id, editText) => {
+    if (editText.trim() === "") return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/users/me/tasks/${id}`,
+        {
+          method: "PUT",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: editText.trim(),
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to edit task:", data.message);
+        return;
+      }
+
+      // Replace the edited task with the updated task returned by SQLite.
+      setTasks((currentTasks) =>
+        currentTasks.map((task) => (task.id === id ? data.task : task)),
+      );
+    } catch (error) {
+      console.error("Failed to edit task:", error);
+    }
   };
 
-  // Clear CompletedTask
-  const clearCompletedTask = () => {
-    const completedTask = tasks.filter((task) => {
-      if (task.done === false) {
-        return true;
-      }
-      return false;
-    });
+  // Delete all completed tasks from SQLite and then refresh the UI state.
+  const clearCompletedTask = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/users/me/tasks/completed",
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
 
-    setTasks(completedTask);
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to clear completed tasks:", data.message);
+        return;
+      }
+
+      // Remove completed tasks from the visible list after SQLite confirms deletion.
+      setTasks((currentTasks) =>
+        currentTasks.filter((task) => task.done !== 1),
+      );
+    } catch (error) {
+      console.error("Failed to clear completed tasks:", error);
+    }
   };
 
   const filterButtons = [
