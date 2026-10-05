@@ -1,10 +1,9 @@
-
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import "./dashboard.css";
 import { PiHandWavingBold } from "react-icons/pi";
 import { FaCheck } from "react-icons/fa6";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../context/AuthContext";
 
@@ -26,13 +25,35 @@ const Dashboard = () => {
     return t("dashboard.goodEvening");
   };
 
-  const tasks = [
-    { id: 1, title: "Learn TypeScript", completed: false },
-    { id: 2, title: "Learn React", completed: true },
-    { id: 3, title: "Todo App", completed: true },
-    { id: 4, title: "Build dashboard", completed: false },
-    { id: 5, title: "Learn Backend", completed: false },
-  ];
+  // Store the authenticated user's real tasks from SQLite.
+  const [tasks, setTasks] = useState([]);
+
+  // Load tasks when the dashboard opens.
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/users/me/tasks",
+          {
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error("Failed to load dashboard tasks:", data.message);
+          return;
+        }
+
+        setTasks(data.tasks);
+      } catch (error) {
+        console.error("Failed to load dashboard tasks:", error);
+      }
+    };
+
+    loadTasks();
+  }, []);
 
   return (
     <div className="dashboard-page">
@@ -43,34 +64,27 @@ const Dashboard = () => {
 
         <main className="dashboard-content">
           <h1>
-            {getGreeting()}, <span>{user?.name}</span>{" "}
-            <PiHandWavingBold />
+            {getGreeting()}, <span>{user?.name}</span> <PiHandWavingBold />
           </h1>
 
           {/* Statistics Cards */}
           <div className="stats-grid">
             <article className="stat-card">
-              <p className="stat-card__label">
-                {t("dashboard.totalTasks")}
-              </p>
+              <p className="stat-card__label">{t("dashboard.totalTasks")}</p>
               <p className="stat-card__value">{tasks.length}</p>
             </article>
 
             <article className="stat-card">
-              <p className="stat-card__label">
-                {t("dashboard.completed")}
-              </p>
+              <p className="stat-card__label">{t("dashboard.completed")}</p>
               <p className="stat-card__value">
-                {tasks.filter((task) => task.completed).length}
+                {tasks.filter((task) => task.done === 1).length}
               </p>
             </article>
 
             <article className="stat-card">
-              <p className="stat-card__label">
-                {t("dashboard.pending")}
-              </p>
+              <p className="stat-card__label">{t("dashboard.pending")}</p>
               <p className="stat-card__value">
-                {tasks.filter((task) => !task.completed).length}
+                {tasks.filter((task) => task.done === 0).length}
               </p>
             </article>
           </div>
@@ -81,30 +95,23 @@ const Dashboard = () => {
             </h2>
 
             <div className="recent-tasks__list">
-              {/* TODO:
-                  Replace temporary slice with backend query
-                  for the latest 4 tasks
-              */}
-              {tasks.slice(-4).map((task) => (
+              {/* Show the latest 4 tasks from the SQLite-backed task list. */}
+              {tasks.slice(0, 4).map((task) => (
                 <article key={task.id} className="recent-task">
                   <span
                     className={`recent-task__status${
-                      task.completed
-                        ? " recent-task__status--done"
-                        : ""
+                      task.done === 1 ? " recent-task__status--done" : ""
                     }`}
                   >
-                    {task.completed ? <FaCheck /> : null}
+                    {task.done === 1 ? <FaCheck /> : null}
                   </span>
 
                   <span
                     className={`recent-task__title${
-                      task.completed
-                        ? " recent-task__title--done"
-                        : ""
+                      task.done === 1 ? " recent-task__title--done" : ""
                     }`}
                   >
-                    {task.title}
+                    {task.text}
                   </span>
                 </article>
               ))}
@@ -117,4 +124,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
