@@ -23,7 +23,8 @@ db.exec(`
     dark_mode INTEGER NOT NULL DEFAULT 0,
     language TEXT NOT NULL DEFAULT 'en',
     email_notifications INTEGER NOT NULL DEFAULT 1,
-    task_reminders INTEGER NOT NULL DEFAULT 1
+    task_reminders INTEGER NOT NULL DEFAULT 1,
+    failed_login_attempts INTEGER NOT NULL DEFAULT 0
      );
      `);
 

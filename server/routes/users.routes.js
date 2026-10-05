@@ -246,11 +246,42 @@ router.post("/login", async (req, res) => {
   const isMatch = await bcrypt.compare(password, user.password);
   // console.log("Password match:", isMatch);
 
-  if (!isMatch) {
-    return res.status(401).json({
-      message: "Login incorrect",
+
+  // Check if the entered password matches the hashed password stored in the database
+ if (!isMatch) {
+  const result = db.prepare(`
+    UPDATE users
+    SET failed_login_attempts = failed_login_attempts + 1
+    WHERE id = ?
+  `).run(user.id);
+
+  const failedAttempts = result.changes
+    ? db
+        .prepare(
+          "SELECT failed_login_attempts FROM users WHERE id = ?",
+        )
+        .get(user.id).failed_login_attempts
+    : 0;
+
+  if (
+    failedAttempts === 3 &&
+    user.email_notifications === 1
+  ) {
+    await sendEmail({
+      to: user.email,
+      subject: "Security alert: Failed login attempts",
+      html: `
+        <h2>Security Alert</h2>
+        <p>There have been 3 failed login attempts on your TaskFlow account.</p>
+        <p>If this was not you, we recommend changing your password immediately.</p>
+      `,
     });
   }
+
+  return res.status(401).json({
+    message: "Login incorrect",
+  });
+}
 
   // Check if the user's email has been verified.
 
@@ -276,11 +307,28 @@ router.post("/login", async (req, res) => {
 
   // Update the user's last login time
   const lastLogin = new Date().toISOString();
-  db.prepare("UPDATE users SET last_login = ? WHERE id = ?").run(
-    lastLogin,
-    user.id,
-  );
+  db.prepare(
+    `
+  UPDATE users
+  SET last_login = ?, failed_login_attempts = 0
+  WHERE id = ?
+`,
+  ).run(lastLogin, user.id);
   console.log("Last login:", lastLogin);
+
+  // Send email notification if email notifications are enabled
+  // This alerts the user of a new login, helping to prevent unauthorized access.
+  if (user.email_notifications === 1) {
+    await sendEmail({
+      to: user.email,
+      subject: "New login to your TaskFlow account",
+      html: `
+      <h2>New login detected</h2>
+      <p>Your TaskFlow account was just accessed.</p>
+      <p>If this was not you, please change your password immediately.</p>
+    `,
+    });
+  }
 
   // Login successful
   res.json({
@@ -445,11 +493,13 @@ router.get("/me/settings", (req, res) => {
 
   // Read only the settings fields needed by the frontend.
   const settings = db
-    .prepare(`
+    .prepare(
+      `
       SELECT dark_mode, language, email_notifications, task_reminders
       FROM users
       WHERE id = ?
-    `)
+    `,
+    )
     .get(req.session.userId);
 
   // The user may have been deleted while the session still exists.
@@ -470,7 +520,6 @@ router.get("/me/settings", (req, res) => {
   });
 });
 
-
 // Update settings for the currently authenticated user.
 // The session user ID ensures users can only modify their own settings.
 router.patch("/me/settings", (req, res) => {
@@ -482,20 +531,11 @@ router.patch("/me/settings", (req, res) => {
   }
 
   // Get the settings sent by the frontend.
-  const {
-    dark_mode,
-    language,
-    email_notifications,
-    task_reminders,
-  } = req.body;
+  const { dark_mode, language, email_notifications, task_reminders } = req.body;
 
   // Validate boolean-style settings when they are provided.
   // SQLite stores these values as 0 or 1.
-  if (
-    dark_mode !== undefined &&
-    dark_mode !== 0 &&
-    dark_mode !== 1
-  ) {
+  if (dark_mode !== undefined && dark_mode !== 0 && dark_mode !== 1) {
     return res.status(400).json({
       message: "dark_mode must be 0 or 1",
     });
@@ -521,19 +561,17 @@ router.patch("/me/settings", (req, res) => {
     });
   }
 
- // Only allow the languages supported by the application.
-if (
-  language !== undefined &&
-  !["en", "nl", "ar"].includes(language)
-) {
-  return res.status(400).json({
-    message: "Unsupported language",
-  });
-}
+  // Only allow the languages supported by the application.
+  if (language !== undefined && !["en", "nl", "ar"].includes(language)) {
+    return res.status(400).json({
+      message: "Unsupported language",
+    });
+  }
   // Update only the settings that were actually provided.
   // COALESCE keeps the existing database value for fields not included
   // in the request.
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE users
     SET
       dark_mode = COALESCE(?, dark_mode),
@@ -541,7 +579,8 @@ if (
       email_notifications = COALESCE(?, email_notifications),
       task_reminders = COALESCE(?, task_reminders)
     WHERE id = ?
-  `).run(
+  `,
+  ).run(
     dark_mode,
     language,
     email_notifications,
@@ -551,11 +590,13 @@ if (
 
   // Return the updated settings so the frontend can use the new values.
   const updatedSettings = db
-    .prepare(`
+    .prepare(
+      `
       SELECT dark_mode, language, email_notifications, task_reminders
       FROM users
       WHERE id = ?
-    `)
+    `,
+    )
     .get(req.session.userId);
 
   // The user may have been deleted while the session was active.
@@ -606,7 +647,9 @@ router.patch("/me/password", async (req, res) => {
   //Find the currently authenticated user by the ID  stored in the session.
   // We only select the password hash because that is all we need for verification.
   const user = db
-    .prepare("SELECT id, password FROM users WHERE id = ?")
+    .prepare(
+      "SELECT id, password, email, email_notifications FROM users WHERE id = ?",
+    )
     .get(req.session.userId);
 
   //The user may have been deleted after  the session was created.
@@ -647,6 +690,19 @@ router.patch("/me/password", async (req, res) => {
     hashedNewPassword,
     req.session.userId,
   );
+
+  // Send email notification if email notifications are enabled
+  if (user.email_notifications === 1) {
+    await sendEmail({
+      to: user.email,
+      subject: "Your TaskFlow password was changed",
+      html: `
+      <h2>Password changed</h2>
+      <p>Your TaskFlow account password was successfully changed.</p>
+      <p>If you did not make this change, please contact support immediately.</p>
+    `,
+    });
+  }
 
   // Return a success response after the password has been updated.
   res.json({
@@ -755,7 +811,21 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
   // Find the currently authenticated user
   const user = db
     .prepare(
-      "SELECT id, name, email, created_at, last_login, account_status, email_verified, profile_image_url, profile_image_public_id  FROM users WHERE id = ?",
+      `
+SELECT
+  id,
+  name,
+  email,
+  created_at,
+  last_login,
+  account_status,
+  email_verified,
+  profile_image_url,
+  profile_image_public_id,
+  email_notifications
+FROM users
+WHERE id = ?
+`,
     )
     .get(req.session.userId);
 
@@ -794,11 +864,28 @@ router.put("/me", upload.single("avatar"), async (req, res) => {
     console.log("Profile image uploaded", profileImageUrl);
   }
 
+  // Check what actually changed
+  const nameChanged = req.body.name.trim() !== user.name;
+  const imageChanged = Boolean(req.file);
+
   //Update the user's name, profile image URL, and Cloudinary public ID in the database
   // The public ID will be used later to delete the old Cloudinary image
   db.prepare(
     "UPDATE users SET name = ?, profile_image_url = ?, profile_image_public_id = ?  WHERE id =?",
   ).run(req.body.name.trim(), profileImageUrl, profileImagePublicId, user.id);
+
+  // Send email notification if email notifications are enabled and something changed
+  if (user.email_notifications === 1 && (nameChanged || imageChanged)) {
+    await sendEmail({
+      to: user.email,
+      subject: "Your TaskFlow profile was updated",
+      html: `
+      <h2>Profile updated</h2>
+      <p>Your TaskFlow profile was successfully updated.</p>
+      <p>If you did not make this change, please secure your account immediately.</p>
+    `,
+    });
+  }
 
   //Delete the old Cloudinary image only after the database has been
   // successfully updated to use the new image.
@@ -908,8 +995,6 @@ router.delete("/me/avatar", async (req, res) => {
     message: "Profile image deleted successfully",
   });
 });
-
-
 
 // We use avatar name for Postman / Multer
 router.post("/test-upload", upload.single("avatar"), async (req, res) => {

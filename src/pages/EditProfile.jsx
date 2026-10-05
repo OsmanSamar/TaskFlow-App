@@ -77,6 +77,7 @@ const EditProfile = () => {
     }
   };
 
+  
   //Delete the user's current profile image.
   // The backend removes the image from Cloudinary and clears
   // the image URL and public ID from the database.
