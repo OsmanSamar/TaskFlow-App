@@ -37,6 +37,19 @@ db.exec(`
   );
      `);
 
+     // Add due_date to existing databases without deleting current tasks.
+// try {
+//   db.prepare(`
+//     ALTER TABLE tasks
+//     ADD COLUMN due_date TEXT
+//   `).run();
+// } catch (error) {
+//   // Ignore the error when the column was already added previously.
+//   if (!error.message.includes("duplicate column name")) {
+//     throw error;
+//   }
+// }
+
 //  console.log(db.prepare("PRAGMA table_info(users)").all());
 
 

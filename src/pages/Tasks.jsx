@@ -10,6 +10,8 @@ import { useTranslation, Trans } from "react-i18next";
 const Tasks = () => {
   const { t } = useTranslation();
   const [input, setInput] = useState("");
+  // Store the optional deadline selected for the new task.
+  const [dueDate, setDueDate] = useState("");
   const [filter, setFilter] = useState("all");
   const [editId, setEditId] = useState(null);
   // Null thers are no tasks beign modified
@@ -64,6 +66,7 @@ const Tasks = () => {
         },
         body: JSON.stringify({
           text: input.trim(),
+          due_date: dueDate || null,
         }),
       });
 
@@ -78,6 +81,8 @@ const Tasks = () => {
       setTasks((currentTasks) => [...currentTasks, data.task]);
 
       setInput("");
+      // Clear the deadline after the task is successfully created.
+      setDueDate("");
     } catch (error) {
       console.error("Failed to create task:", error);
     }
@@ -266,6 +271,8 @@ const Tasks = () => {
               addTask={addTask}
               showError={showError}
               setShowError={setShowError}
+              dueDate={dueDate}
+              setDueDate={setDueDate}
             />
 
             <TaskList

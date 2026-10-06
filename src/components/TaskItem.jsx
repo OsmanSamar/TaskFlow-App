@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const TaskItem = ({
@@ -12,21 +12,56 @@ const TaskItem = ({
   setEditText,
   requestDelete,
 }) => {
-  const { t } = useTranslation();
-  // useRef keeps a reference to the DOM input element without causing a re-render.
-  // We use it here to automatically focus the input when editing a task starts.
+  const { t, i18n } = useTranslation();
+
+  // Keep a reference to the edit input so we can focus it automatically.
   const inputRef = useRef(null);
-  // When editId changes, the edit input appears.
-  // useEffect runs after render, then focus() places the cursor inside the input.
+
+  // Store the current time outside the render calculation.
+  const [now, setNow] = useState(() => new Date());
+
+  // Keep the current time updated once per minute.
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(new Date());
+    }, 60 * 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Focus the edit input whenever editing starts.
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, [editId]);
 
+  // Calculate the deadline status once so the JSX stays simple.
+  const dueDate = task.due_date ? new Date(task.due_date) : null;
+  // Calculate deadline status using the stored current time.
+  const today = now;
+  const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+  const dueDateColor = !dueDate
+    ? ""
+    : dueDate < today
+      ? "text-red-500 dark:text-red-400"
+      : dueDate <= threeDaysFromNow
+        ? "text-orange-500 dark:text-orange-400"
+        : "text-green-500 dark:text-green-400";
+
+  // Format the deadline according to the user's selected language.
+  const formattedDueDate = task.due_date
+    ? new Intl.DateTimeFormat(i18n.language, {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }).format(new Date(task.due_date))
+    : "";
+
   return (
     <li className="task-item">
-      {/* ToggleDone btn */}
+      {/* Toggle the task between completed and incomplete. */}
       <button
         type="button"
         onClick={() => toggleDone(task.id)}
@@ -37,7 +72,7 @@ const TaskItem = ({
       >
         {task.done && (
           <svg
-            className="tasks-check-icon "
+            className="tasks-check-icon"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -52,70 +87,84 @@ const TaskItem = ({
         )}
       </button>
 
-      {editId === task.id ? (
-        <input
-          className="task-input "
-          ref={inputRef}
-          value={editText}
-          onChange={(e) => setEditText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              editTask(task.id, editText);
-              setEditId(null);
-              setEditText("");
-            }
-          }}
-        />
-      ) : (
-        <span className={`task-text ${task.done ? "task-text--done" : ""}`}>
-          {task.text}
-        </span>
-      )}
-
-      {/* Save btn */}
-      {editId === task.id ? (
-        <>
-          <button
-            type="button"
-            onClick={() => {
-              editTask(task.id, editText);
-              setEditId(null);
-              setEditText("");
+      {/* Keep the task title on the first line and deadline/actions on the second line. */}
+      <div className="task-details">
+        {editId === task.id ? (
+          <input
+            className="task-input"
+            ref={inputRef}
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                editTask(task.id, editText);
+                setEditId(null);
+                setEditText("");
+              }
             }}
-            className="tasks-edit-btn"
-          >
-            {t("tasks.save")}
-          </button>
+          />
+        ) : (
+          <span className={`task-text ${task.done ? "task-text--done" : ""}`}>
+            {task.text}
+          </span>
+        )}
 
-          <button
-            type="button"
-            onClick={() => {
-              setEditId(null);
-              setEditText("");
-            }}
-            className="tasks-edit-btn"
-          >
-            {t("tasks.cancel")}
-          </button>
-        </>
-      ) : (
-        <button
-          type="button"
-          onClick={() => startEdit(task.id, task.text)}
-          className="tasks-edit-btn"
-        >
-          {t("tasks.edit")}
-        </button>
-      )}
+        {/* Keep deadline and action buttons together on the second row. */}
+        <div className="task-meta">
+          {/*  Color the deadline based on how close or overdue it is. */}
+          {/* Display the deadline using the calculated status color. */}
+          {task.due_date && (
+            <span className={`task-due-date ${dueDateColor}`}>
+              {/* Display the deadline using the user's current language. */}
+              Due: {formattedDueDate}
+            </span>
+          )}
+          <div className="task-actions">
+            {editId === task.id ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    editTask(task.id, editText);
+                    setEditId(null);
+                    setEditText("");
+                  }}
+                  className="tasks-edit-btn"
+                >
+                  {t("tasks.save")}
+                </button>
 
-      {/* Delete btn — opens confirm popup */}
-      <button
-        type="button"
-        onClick={() => requestDelete(task)}
-        className="delete-btn"
-      >
-        {t("tasks.delete")}
-      </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditId(null);
+                    setEditText("");
+                  }}
+                  className="tasks-edit-btn"
+                >
+                  {t("tasks.cancel")}
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => startEdit(task.id, task.text)}
+                className="tasks-edit-btn"
+              >
+                {t("tasks.edit")}
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => requestDelete(task)}
+              className="delete-btn"
+            >
+              {t("tasks.delete")}
+            </button>
+          </div>
+        </div>
+      </div>
     </li>
   );
 };

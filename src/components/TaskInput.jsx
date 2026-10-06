@@ -1,5 +1,13 @@
 import { useTranslation } from "react-i18next";
-const TaskInput = ({ input, setInput, addTask, showError, setShowError }) => {
+const TaskInput = ({
+  input,
+  setInput,
+  addTask,
+  showError,
+  setShowError,
+  dueDate,
+  setDueDate,
+}) => {
   const { t } = useTranslation();
   return (
     <div className="tasks-input-row">
@@ -20,7 +28,13 @@ const TaskInput = ({ input, setInput, addTask, showError, setShowError }) => {
           }
         }}
       />
-
+      {/* Let the user optionally choose a deadline for the task. */}
+      <input
+        className="task-due-date-input"
+        type="date"
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+      />
       {showError === true ? (
         <p className="tasks-error-message">{t("tasks.inputError")}</p>
       ) : (

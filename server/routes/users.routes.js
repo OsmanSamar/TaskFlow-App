@@ -1288,7 +1288,8 @@ router.post("/me/tasks", (req, res) => {
     });
   }
 
-  const { text } = req.body;
+  // Read the task text and optional deadline from the request.
+  const { text, due_date } = req.body;
 
   if (!text || text.trim() === "") {
     return res.status(400).json({
@@ -1296,14 +1297,17 @@ router.post("/me/tasks", (req, res) => {
     });
   }
 
+  // Build the new task object, including its optional deadline.
   const task = {
     id: crypto.randomUUID(),
     user_id: req.session.userId,
     text: text.trim(),
     done: 0,
     created_at: new Date().toISOString(),
+    due_date: due_date || null,
   };
 
+  // Save the task and its optional deadline in SQLite.
   db.prepare(
     `
     INSERT INTO tasks (
@@ -1311,11 +1315,19 @@ router.post("/me/tasks", (req, res) => {
       user_id,
       text,
       done,
-      created_at
+      created_at,
+       due_date
     )
-    VALUES (?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?)
   `,
-  ).run(task.id, task.user_id, task.text, task.done, task.created_at);
+  ).run(
+    task.id,
+    task.user_id,
+    task.text,
+    task.done,
+    task.created_at,
+    task.due_date,
+  );
 
   res.status(201).json({
     message: "Task created successfully",
@@ -1330,11 +1342,11 @@ router.get("/me/tasks", (req, res) => {
       message: "Not authenticated",
     });
   }
-
+  // Return the task deadline so the frontend can display it later.
   const tasks = db
     .prepare(
       `
-      SELECT id, text, done, created_at
+      SELECT id, text, done, created_at, due_date
       FROM tasks
       WHERE user_id = ?
       ORDER BY created_at DESC
@@ -1356,7 +1368,7 @@ router.put("/me/tasks/:id", (req, res) => {
   }
 
   const { id } = req.params;
-  const { text, done } = req.body;
+  const { text, done, due_date } = req.body;
 
   if (text !== undefined && text.trim() === "") {
     return res.status(400).json({
@@ -1370,10 +1382,11 @@ router.put("/me/tasks/:id", (req, res) => {
     });
   }
 
+  // Get the current task owned by this user before updating it.
   const currentTask = db
     .prepare(
       `
-      SELECT id, text, done, created_at
+      SELECT id, text, done, created_at, due_date
       FROM tasks
       WHERE id = ? AND user_id = ?
     `,
@@ -1391,12 +1404,14 @@ router.put("/me/tasks/:id", (req, res) => {
     UPDATE tasks
     SET
       text = COALESCE(?, text),
-      done = COALESCE(?, done)
+      done = COALESCE(?, done),
+      due_date = COALESCE(?, due_date)
     WHERE id = ? AND user_id = ?
   `,
   ).run(
     text !== undefined ? text.trim() : null,
     done !== undefined ? done : null,
+    due_date !== undefined ? due_date : null,
     id,
     req.session.userId,
   );
@@ -1404,7 +1419,7 @@ router.put("/me/tasks/:id", (req, res) => {
   const updatedTask = db
     .prepare(
       `
-      SELECT id, text, done, created_at
+      SELECT id, text, done, created_at, due_date
       FROM tasks
       WHERE id = ? AND user_id = ?
     `,

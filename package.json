@@ -22,6 +22,7 @@
     "express-session": "^1.19.0",
     "i18next": "^26.4.2",
     "multer": "^2.2.0",
+    "node-cron": "^4.6.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-i18next": "^17.0.15",

@@ -8,6 +8,8 @@ import cors from "cors";
 import session from "express-session";
 //import "dotenv/config"; to read it from root
 import "./config/cloudinary.js";
+import { startTaskReminders } from "./utils/taskReminders.js";
+// Load the scheduled task reminder service.
 
 // For test
 
@@ -82,8 +84,10 @@ app.get("/", (req, res) => {
   });
 });
 
-// Start the server
+// Start the daily task reminder scheduler when the backend starts.
+startTaskReminders();
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
