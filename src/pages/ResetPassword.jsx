@@ -1,13 +1,11 @@
 import { useState } from "react";
-import {
-  validatePassword,
-  validateConfirmPassword,
-} from "../utils/validators";
+import { validatePassword, validateConfirmPassword } from "../utils/validators";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { PasswordCriteria } from "../components/PasswordCriteria";
 import { useTranslation } from "react-i18next";
 import "./reset-password.css";
+import Button from "../components/Button";
 
 export const ResetPassword = () => {
   const { t } = useTranslation();
@@ -119,10 +117,10 @@ export const ResetPassword = () => {
                 }}
               />
 
-              <button
+              <Button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="form-input__eye"
+                className="btn--password-eye"
                 aria-label={
                   showPassword
                     ? t("resetPassword.hidePassword")
@@ -130,15 +128,13 @@ export const ResetPassword = () => {
                 }
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
+              </Button>
             </div>
 
             <PasswordCriteria password={resetData.password} />
 
             {errors.password ? (
-              <span className="form-error">
-                {errors.password}
-              </span>
+              <span className="form-error">{errors.password}</span>
             ) : (
               ""
             )}
@@ -157,9 +153,7 @@ export const ResetPassword = () => {
                 autoComplete="new-password"
                 placeholder={t("resetPassword.passwordPlaceholder")}
                 className={`form-input${
-                  errors.confirmPassword
-                    ? " form-input--error"
-                    : ""
+                  errors.confirmPassword ? " form-input--error" : ""
                 }`}
                 value={resetData.confirmPassword}
                 onChange={(e) => {
@@ -177,30 +171,23 @@ export const ResetPassword = () => {
                 }}
               />
 
-              <button
+             
+              <Button
                 type="button"
-                onClick={() =>
-                  setShowConfirmPassword(!showConfirmPassword)
-                }
-                className="form-input__eye"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="btn--password-eye"
                 aria-label={
                   showConfirmPassword
                     ? t("resetPassword.hideConfirmPassword")
                     : t("resetPassword.showConfirmPassword")
                 }
               >
-                {showConfirmPassword ? (
-                  <FaEyeSlash />
-                ) : (
-                  <FaEye />
-                )}
-              </button>
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </Button>
             </div>
 
             {errors.confirmPassword ? (
-              <span className="form-error">
-                {errors.confirmPassword}
-              </span>
+              <span className="form-error">{errors.confirmPassword}</span>
             ) : (
               ""
             )}
@@ -220,4 +207,3 @@ export const ResetPassword = () => {
 };
 
 export default ResetPassword;
-

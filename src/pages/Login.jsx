@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { validateEmail } from "../utils/validators";
 import { AuthContext } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import Button from "../components/Button";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -204,10 +205,10 @@ const Login = () => {
                   onChange={handlePasswordChange}
                 />
 
-                <button
+                <Button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="form-input__eye"
+                  className="btn--password-eye"
                   aria-label={
                     showPassword
                       ? t("login.hidePassword")
@@ -215,7 +216,7 @@ const Login = () => {
                   }
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
+                </Button>
               </div>
             </div>
 

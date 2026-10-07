@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+// Import the reusable button so task actions share one component.
+import Button from "../components/Button";
 const TaskInput = ({
   input,
   setInput,
@@ -40,9 +42,14 @@ const TaskInput = ({
       ) : (
         ""
       )}
-      <button onClick={addTask} className="tasks-add-btn">
+     
+      <Button
+        type="button"
+      onClick={addTask}
+        className="tasks-add-btn"
+      >
         {t("tasks.add")}
-      </button>
+      </Button>
     </div>
   );
 };

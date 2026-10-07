@@ -7,6 +7,7 @@ import { MdDeleteSweep } from "react-icons/md";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import Button from "../components/Button";
 
 const EditProfile = () => {
   const { t } = useTranslation();
@@ -172,16 +173,16 @@ const EditProfile = () => {
                 }}
               />
 
-              <button
+              <Button
                 type="button"
                 className="editprofile-header__photo-btn"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <FaCamera />
                 {t("editProfile.changePhoto")}
-              </button>
+              </Button>
 
-              <button
+              <Button
                 type="button"
                 className="editprofile-header__delete-btn"
                 onClick={handleDeletePhoto}
@@ -191,7 +192,7 @@ const EditProfile = () => {
                 {deleting
                   ? t("editProfile.deleting")
                   : t("editProfile.deletePhoto")}
-              </button>
+              </Button>
             </div>
             <div className="editprofile-header__info">
               <h1>{user?.name}</h1>
@@ -280,7 +281,7 @@ const EditProfile = () => {
             </section>
 
             <div className="editprofile-actions">
-              <button
+              <Button
                 type="button"
                 className="editprofile-btn editprofile-btn--primary"
                 onClick={handleSave}
@@ -289,7 +290,7 @@ const EditProfile = () => {
                 {saving
                   ? t("editProfile.saving")
                   : t("editProfile.saveChanges")}
-              </button>
+              </Button>
               <Link
                 to="/profile"
                 className="editprofile-btn editprofile-btn--ghost"

@@ -11,6 +11,7 @@ import {
 } from "../utils/validators";
 import { PasswordCriteria } from "../components/PasswordCriteria";
 import { useTranslation } from "react-i18next";
+import Button from "../components/Button";
 
 const Register = () => {
   const { t } = useTranslation();
@@ -215,10 +216,10 @@ const Register = () => {
                 }}
               />
 
-              <button
+              <Button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="form-input__eye"
+                className="btn--password-eye"
                 aria-label={
                   showPassword
                     ? t("register.hidePassword")
@@ -226,7 +227,7 @@ const Register = () => {
                 }
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
+              </Button>
             </div>
 
             <PasswordCriteria password={registerData.password} />
@@ -271,12 +272,12 @@ const Register = () => {
                 }}
               />
 
-              <button
+              <Button
                 type="button"
                 onClick={() =>
                   setShowConfirmPassword(!showConfirmPassword)
                 }
-                className="form-input__eye"
+                className="btn--password-eye"
                 aria-label={
                   showConfirmPassword
                     ? t("register.hideConfirmPassword")
@@ -288,7 +289,7 @@ const Register = () => {
                 ) : (
                   <FaEye />
                 )}
-              </button>
+              </Button>
             </div>
 
             {errors.confirmPassword ? (

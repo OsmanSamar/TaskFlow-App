@@ -1,7 +1,6 @@
 
 import { NavLink } from "react-router-dom";
 import "./sidebar.css";
-
 import {
   FaTachometerAlt,
   FaUser,
@@ -9,10 +8,10 @@ import {
   FaSignOutAlt,
   FaTasks,
 } from "react-icons/fa";
-
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../context/AuthContext";
+import Button from "../components/Button";
 
 const Sidebar = () => {
   const { setUser } = useContext(AuthContext);
@@ -70,14 +69,14 @@ const Sidebar = () => {
             <span>{t("sidebar.settings")}</span>
           </NavLink>
 
-          <button
+          <Button
             type="button"
             className="sidebar-logout"
             onClick={handleLogout}
           >
             <FaSignOutAlt />
             <span>{t("sidebar.logout")}</span>
-          </button>
+          </Button>
         </div>
       </div>
     </aside>

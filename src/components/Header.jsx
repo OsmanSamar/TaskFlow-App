@@ -3,6 +3,7 @@ import { IoIosNotifications } from "react-icons/io";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import Button from "../components/Button";
 
 const Header = ({ title }) => {
   const { t } = useTranslation();
@@ -14,9 +15,9 @@ const Header = ({ title }) => {
         {/* 
         Search 
         */}
-        <button className="header-icon-btn">
+        <Button className="header-icon-btn">
           <IoIosNotifications />
-        </button>
+        </Button>
         <button className="header-avatar">
         
           {user?.profile_image_url ?(

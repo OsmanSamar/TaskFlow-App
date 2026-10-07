@@ -16,6 +16,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import Button from "../components/Button";
 
 const Settings = () => {
   const { t, i18n } = useTranslation();
@@ -179,14 +180,17 @@ const Settings = () => {
 
         <main className="settings-content">
           <header className="settings-header">
-           <h1>{t("settings.title")}</h1>
-           <p>{t("settings.description")}</p>
+            <h1>{t("settings.title")}</h1>
+            <p>{t("settings.description")}</p>
           </header>
 
           <div className="settings-sections">
             {/* Account Settings */}
             <section className="settings-card">
-              <h2 className="settings-card__title"> {t("settings.account.title")}</h2>
+              <h2 className="settings-card__title">
+                {" "}
+                {t("settings.account.title")}
+              </h2>
 
               <div className="settings-row">
                 <div className="settings-row__info">
@@ -226,10 +230,10 @@ const Settings = () => {
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaLock className="settings-row__icon" />
-                   { t("settings.account.password")}
+                    {t("settings.account.password")}
                   </p>
                   <p className="settings-row__hint">
-                   {t("settings.account.passwordHint")}
+                    {t("settings.account.passwordHint")}
                   </p>
                 </div>
 
@@ -237,24 +241,25 @@ const Settings = () => {
                   className="settings-btn settings-btn--ghost"
                   to="/changepassword"
                 >
-                { t("settings.account.changePassword")}
-
+                  {t("settings.account.changePassword")}
                 </Link>
               </div>
             </section>
 
             {/* Appearance */}
             <section className="settings-card">
-              <h2 className="settings-card__title">{t("settings.appearance.title")}</h2>
+              <h2 className="settings-card__title">
+                {t("settings.appearance.title")}
+              </h2>
 
               <div className="settings-row">
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaMoon className="settings-row__icon" />
-                   { t("settings.appearance.darkMode")}
+                    {t("settings.appearance.darkMode")}
                   </p>
                   <p className="settings-row__hint">
-                  { t("settings.appearance.darkModeHint")}
+                    {t("settings.appearance.darkModeHint")}
                   </p>
                 </div>
                 <label className="settings-switch">
@@ -306,14 +311,14 @@ const Settings = () => {
                   onChange={(e) => {
                     const value = e.target.value;
 
-                     // Update the language in the i18n system immediately.
-                       i18n.changeLanguage(value);
+                    // Update the language in the i18n system immediately.
+                    i18n.changeLanguage(value);
 
-                   // Update the UI state immediately.
-                       setSettings({
-                     ...settings,
-                     language: value,
-                      });
+                    // Update the UI state immediately.
+                    setSettings({
+                      ...settings,
+                      language: value,
+                    });
 
                     // Save the new language in SQLite.
                     handleSettingChange("language", value);
@@ -328,16 +333,18 @@ const Settings = () => {
 
             {/* Notifications */}
             <section className="settings-card">
-              <h2 className="settings-card__title">{t("settings.notifications.title")}</h2>
+              <h2 className="settings-card__title">
+                {t("settings.notifications.title")}
+              </h2>
 
               <div className="settings-row">
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaBell className="settings-row__icon" />
-                {t("settings.notifications.email")}
+                    {t("settings.notifications.email")}
                   </p>
                   <p className="settings-row__hint">
-                  { t("settings.notifications.emailHint")}
+                    {t("settings.notifications.emailHint")}
                   </p>
                 </div>
                 <label className="settings-switch">
@@ -366,10 +373,10 @@ const Settings = () => {
                 <div className="settings-row__info">
                   <p className="settings-row__label">
                     <FaClock className="settings-row__icon" />
-                   { t("settings.notifications.reminders")}
+                    {t("settings.notifications.reminders")}
                   </p>
                   <p className="settings-row__hint">
-                  { t("settings.notifications.remindersHint")}
+                    {t("settings.notifications.remindersHint")}
                   </p>
                 </div>
                 <label className="settings-switch">
@@ -399,20 +406,22 @@ const Settings = () => {
             <section className="settings-card settings-card--danger">
               <h2 className="settings-card__title settings-card__title--danger">
                 <FaExclamationTriangle className="settings-card__title-icon" />
-               { t("settings.danger.title")}
+                {t("settings.danger.title")}
               </h2>
 
               <div className="settings-row settings-row--danger">
                 <div className="settings-row__info">
-                  <p className="settings-row__label"> { t("settings.danger.delete")}</p>
+                  <p className="settings-row__label">
+                    {" "}
+                    {t("settings.danger.delete")}
+                  </p>
                   <p className="settings-row__hint">
-                     { t("settings.danger.deleteHint")}
-                  
+                    {t("settings.danger.deleteHint")}
                   </p>
                 </div>
                 {/* Open the Delete Account confirmation UI. The actual
                 deletion will happen only after password confirmation. */}
-                <button
+                <Button
                   type="button"
                   className="settings-btn settings-btn--danger"
                   onClick={() => {
@@ -420,8 +429,8 @@ const Settings = () => {
                     setDeleteError("");
                   }}
                 >
-                { t("settings.danger.delete")}
-                </button>
+                  {t("settings.danger.delete")}
+                </Button>
               </div>
             </section>
 
@@ -430,7 +439,7 @@ const Settings = () => {
               <div className="delete-account-modal">
                 <div className="delete-account-modal__content">
                   <h2 className="delete-account__title">
-                   {t("settings.danger.confirmTitle")}
+                    {t("settings.danger.confirmTitle")}
                   </h2>
 
                   <p className="delete-account__message">
@@ -459,16 +468,19 @@ const Settings = () => {
                         setDeleteError("");
                       }}
                     />
-                    <button
+
+                    <Button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="form-input__eye"
+                      className="btn--password-eye"
                       aria-label={
-                        showPassword ? t("settings.danger.hidePassword") : t("settings.danger.showPassword")
+                        showPassword
+                          ? t("settings.danger.hidePassword")
+                          : t("settings.danger.showPassword")
                       }
                     >
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
-                    </button>
+                    </Button>
                   </div>
 
                   {/* Display an API or validation error when deletion fails. */}
@@ -498,7 +510,9 @@ const Settings = () => {
                       onClick={handleDeleteAccount}
                       disabled={isDeletingAccount}
                     >
-                      {isDeletingAccount ? t("settings.danger.deleting") : t("settings.danger.delete")}
+                      {isDeletingAccount
+                        ? t("settings.danger.deleting")
+                        : t("settings.danger.delete")}
                     </button>
                   </div>
                 </div>

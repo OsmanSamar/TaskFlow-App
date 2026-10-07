@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import "./verify-email.css";
+import Button from "../components/Button";
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
@@ -66,13 +67,13 @@ const VerifyEmail = () => {
             <p className="verify-email-panel__message">
               {message || "Your email has been verified successfully."}
             </p>
-            <button
+            <Button
               type="button"
               className="btn btn--primary"
               onClick={() => navigate("/login")}
             >
               Go to Login
-            </button>
+            </Button>
           </>
         )}
 
@@ -82,13 +83,13 @@ const VerifyEmail = () => {
             <p className="verify-email-panel__message verify-email-panel__message--error">
               {message}
             </p>
-            <button
+            <Button
               type="button"
               className="btn btn--primary"
               onClick={() => navigate("/login")}
             >
               Go to Login
-            </button>
+            </Button>
             <p className="login-footer">
               <Link className="login-footer-link" to="/register">
                 Back to Sign up

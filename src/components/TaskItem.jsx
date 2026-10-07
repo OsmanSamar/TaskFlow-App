@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Button from "../components/Button";
 
 const TaskItem = ({
   task,
@@ -122,7 +123,7 @@ const TaskItem = ({
           <div className="task-actions">
             {editId === task.id ? (
               <>
-                <button
+                <Button
                   type="button"
                   onClick={() => {
                     editTask(task.id, editText);
@@ -132,36 +133,25 @@ const TaskItem = ({
                   className="tasks-edit-btn"
                 >
                   {t("tasks.save")}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditId(null);
-                    setEditText("");
-                  }}
-                  className="tasks-edit-btn"
-                >
-                  {t("tasks.cancel")}
-                </button>
+                </Button>
               </>
             ) : (
-              <button
+              <Button
                 type="button"
                 onClick={() => startEdit(task.id, task.text)}
                 className="tasks-edit-btn"
               >
                 {t("tasks.edit")}
-              </button>
+              </Button>
             )}
 
-            <button
+            <Button
               type="button"
               onClick={() => requestDelete(task)}
               className="delete-btn"
             >
               {t("tasks.delete")}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { validateEmail } from "../utils/validators";
+import Button from "../components/Button";
 
 const ForgotPassword = () => {
   const { t } = useTranslation();
@@ -107,9 +108,9 @@ const ForgotPassword = () => {
             )}
           </div>
 
-          <button type="submit" className="btn btn--primary">
+          <Button type="submit" className="btn btn--primary">
             {t("forgotPassword.sendEmail")}
-          </button>
+          </Button>
 
           {message && (
             <p className="form-success">

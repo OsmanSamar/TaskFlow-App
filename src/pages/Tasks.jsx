@@ -6,6 +6,7 @@ import TaskInput from "../components/TaskInput";
 import FilterButtons from "../components/FilterButtons";
 import TaskList from "../components/TaskList";
 import { useTranslation, Trans } from "react-i18next";
+import Button from "../components/Button";
 
 const Tasks = () => {
   const { t } = useTranslation();
@@ -302,7 +303,7 @@ const Tasks = () => {
             />
 
             <div className="tasks-clear-bar">
-              <button
+              <Button
                 type="button"
                 className="tasks-clear-btn"
                 onClick={() => {
@@ -310,7 +311,7 @@ const Tasks = () => {
                 }}
               >
                 {t("tasks.clearCompleted")}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -345,20 +346,20 @@ const Tasks = () => {
               />
             </p>
             <div className="tasks-modal__actions">
-              <button
+              <Button
                 type="button"
                 className="tasks-modal__btn tasks-modal__btn--cancel"
                 onClick={cancelDelete}
               >
                 {t("tasks.cancel")}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 className="tasks-modal__btn tasks-modal__btn--danger"
                 onClick={confirmDelete}
               >
                 {t("tasks.delete")}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
