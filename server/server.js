@@ -15,18 +15,16 @@ import { startTaskReminders } from "./utils/taskReminders.js";
 
 //console.log(process.env.CLOUDINARY_CLOUD_NAME);
 
-
-
 // يشغل Express
 const app = express();
 const PORT = 3000;
 
 //Allow the frontend to send and receive authentication cookies
 app.use(
-cors({
-origin: "http://localhost:5173",
-credentials: true,
-})
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
 );
 
 //Important: Must be registered before routes that use req.session
@@ -34,14 +32,14 @@ credentials: true,
 // Important: Must be registered before routes that use req.session
 // We place it before express.json() to keep authentication middleware organized
 
-// For test 
+// For test
 //console.log("SESSION_SECRET loaded:", !!process.env.SESSION_SECRET);
 
 // Configure session middleware
 app.use(
   session({
     // Used to sign the session cookie
-     secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
 
     // Do not save the session again if it has not changed
     resave: false,
@@ -50,10 +48,10 @@ app.use(
     saveUninitialized: false,
 
     // Session cookie security settings
-    cookie:{
+    cookie: {
       httpOnly: true,
-      // TODO: Change secure to true after deploying on HTTPS
-      secure: false,
+      // Send the session cookie over HTTPS only in production.
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       // TODO: adjust maxAge based on Remember Me choice during login
       maxAge: 30 * 60 * 1000, // Defult session duration: 30 minutes

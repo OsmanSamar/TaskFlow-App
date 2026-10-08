@@ -2,6 +2,9 @@ import Database from "better-sqlite3";
 
 const db = new Database("./server/database/database.sqlite");
 
+// Enable SQLite foreign-key enforcement for relations such as ON DELETE CASCADE.
+db.pragma("foreign_keys = ON");
+
 // SQL code
 
 db.exec(`

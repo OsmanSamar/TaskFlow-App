@@ -55,7 +55,9 @@ const EditProfile = () => {
         body: formData,
       });
 
-      console.log("Response status:", response.status);
+
+      // For debugging purposes
+      // console.log("Response status:", response.status);
 
       const data = await response.json();
 
@@ -67,7 +69,9 @@ const EditProfile = () => {
       // Update the global authenticated user with the new profile data
       setUser(data.user);
 
-      console.log("Updated user:", data.user);
+
+      // For debugging purposes
+      // console.log("Updated user:", data.user);
     } catch (error) {
       console.error("Failed to save profile:", error);
     } finally {
@@ -100,7 +104,8 @@ const EditProfile = () => {
         },
       );
 
-      console.log("Delete photo response status:", response.status);
+      // For debugging purposes
+      // console.log("Delete photo response status:", response.status);
 
       const data = await response.json(); // Stop if the backend returned an error.
 
@@ -109,7 +114,8 @@ const EditProfile = () => {
         return;
       }
 
-      console.log("Profile image deleted:", data); // Remove the image from the global user state immediately.
+      // For debugging purposes
+      // console.log("Profile image deleted:", data); // Remove the image from the global user state immediately.
 
       setUser((currentUser) => ({
         ...currentUser,

@@ -358,14 +358,19 @@ router.post("/forgot-password", async (req, res) => {
   // Find user by email
   const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
 
+  // Always return the same response when the email does not exist, so account existence is not exposed.
   if (!user) {
-    return res.status(404).json({
-      message: "User not found",
+    return res.json({
+      message: "If an account exists, a password reset email has been sent.",
     });
   }
 
-  // Create a secure password reset token
+  // Create the raw token for the email and hash it before storing it in SQLite.
   const resetToken = crypto.randomBytes(32).toString("hex");
+  const resetTokenHash = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
   // Token expires after 15 minutes
   const resetExpires = new Date(Date.now() + 15 * 60 * 1000).toISOString();
@@ -378,7 +383,7 @@ router.post("/forgot-password", async (req, res) => {
         password_reset_expires = ?
     WHERE id = ?
   `,
-  ).run(resetToken, resetExpires, user.id);
+  ).run(resetTokenHash, resetExpires, user.id);
 
   const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
   // Send email with reset link
@@ -393,15 +398,18 @@ router.post("/forgot-password", async (req, res) => {
   `,
   });
 
+  // Use the same generic response so existing and non-existing emails look identical.
   res.json({
-    message: "Password reset token created",
+    message: "If an account exists, a password reset email has been sent.",
   });
 });
 
 // Reset password (POST)
 router.post("/reset-password", async (req, res) => {
   const { token, password } = req.body;
-  console.log("Reset password request:", { token, password });
+
+  // Just for debugging
+  //console.log("Reset password request:", { token, password });
 
   // Validation
   if (!token || !password) {
@@ -410,11 +418,15 @@ router.post("/reset-password", async (req, res) => {
     });
   }
 
+  // Hash the token from the reset link so it can be compared with the stored hash.
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+  // Find the user using the hashed token and its expiration time.
   const user = db
     .prepare(
-      `SELECT * FROM users WHERE password_reset_token= ? AND password_reset_expires > ?`,
+      `SELECT * FROM users WHERE password_reset_token = ? AND password_reset_expires > ?`,
     )
-    .get(token, new Date().toISOString());
+    .get(tokenHash, new Date().toISOString());
 
   // Check if user exists and token is valid
   if (!user) {
@@ -423,24 +435,34 @@ router.post("/reset-password", async (req, res) => {
     });
   }
 
-  // Hash the new password
+
+try {
+  // Hash the new password before storing it in SQLite.
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Update the user's password
-
-  db.prepare(
-    `
+  // Replace the old password and invalidate the reset token after successful reset.
+  db.prepare(`
     UPDATE users
-    SET password = ?, 
+    SET password = ?,
         password_reset_token = NULL,
         password_reset_expires = NULL
     WHERE id = ?
-  `,
-  ).run(hashedPassword, user.id);
+  `).run(hashedPassword, user.id);
 
+  // Confirm that the password reset completed successfully.
   res.json({
     message: "Password has been reset successfully",
   });
+} catch (error) {
+  // Prevent unexpected password-reset errors from crashing the request.
+  console.error("Failed to reset password:", error);
+
+  return res.status(500).json({
+    message: "Failed to reset password",
+  });
+}
+
+
 });
 
 //Get the currently authenticated user
@@ -849,11 +871,13 @@ WHERE id = ?
 
   //Check if a profile image was uploaded
   if (req.file) {
-    console.log("Profile image received:", {
-      originalname: req.file.originalname,
-      mimetype: req.file.mimetype,
-      size: req.file.size,
-    });
+
+    // For debugging purposes
+    // console.log("Profile image received:", {
+    //   originalname: req.file.originalname,
+    //   mimetype: req.file.mimetype,
+    //   size: req.file.size,
+    // });
 
     // Upload the profile image to Cloudinary
     const result = await uploadToCloudinary(req.file.buffer);
@@ -863,7 +887,8 @@ WHERE id = ?
     //Store the new Cloudinary public ID so the image can be deleted from Cloudinary later
     profileImagePublicId = result.public_id;
 
-    console.log("Profile image uploaded", profileImageUrl);
+    // For debugging purposes
+    // console.log("Profile image uploaded", profileImageUrl);
   }
 
   // Check what actually changed
