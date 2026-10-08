@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./change-password.css";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 export const ChangePassword = () => {
   const { t } = useTranslation();
@@ -114,7 +115,7 @@ export const ChangePassword = () => {
             </label>
 
             <div className="form-input-wrap">
-              <input
+              <Input
                 id="currentPassword"
                 type={!showCurrentPassword ? "password" : "text"}
                 name="currentPassword"

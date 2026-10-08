@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 // Import the reusable button so task actions share one component.
 import Button from "../components/Button";
+import Input from "../components/Input";
 const TaskInput = ({
   input,
   setInput,
@@ -13,7 +14,7 @@ const TaskInput = ({
   const { t } = useTranslation();
   return (
     <div className="tasks-input-row">
-      <input
+      <Input
         className="task-input"
         type="text"
         placeholder={t("tasks.inputPlaceholder")}
@@ -31,7 +32,7 @@ const TaskInput = ({
         }}
       />
       {/* Let the user optionally choose a deadline for the task. */}
-      <input
+      <Input
         className="task-due-date-input"
         type="date"
         value={dueDate}
@@ -42,12 +43,8 @@ const TaskInput = ({
       ) : (
         ""
       )}
-     
-      <Button
-        type="button"
-      onClick={addTask}
-        className="tasks-add-btn"
-      >
+
+      <Button type="button" onClick={addTask} className="tasks-add-btn">
         {t("tasks.add")}
       </Button>
     </div>

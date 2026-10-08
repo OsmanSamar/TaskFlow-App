@@ -6,7 +6,7 @@ import { validateEmail } from "../utils/validators";
 import { AuthContext } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
-
+import Input from "../components/Input";
 const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -176,7 +176,7 @@ const Login = () => {
                 {t("login.email")}
               </label>
 
-              <input
+              <Input
                 id="email"
                 type="email"
                 name="email"
@@ -194,7 +194,7 @@ const Login = () => {
               </label>
 
               <div className="form-input-wrap">
-                <input
+                <Input
                   id="password"
                   type={!showPassword ? "password" : "text"}
                   name="password"
@@ -222,7 +222,7 @@ const Login = () => {
 
             <div className="form-row">
               <label className="form-checkbox">
-                <input
+                <Input
                   type="checkbox"
                   id="rememberMe"
                   checked={loginData.rememberMe}

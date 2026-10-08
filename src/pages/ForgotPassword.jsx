@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { validateEmail } from "../utils/validators";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 const ForgotPassword = () => {
   const { t } = useTranslation();
@@ -74,7 +75,7 @@ const ForgotPassword = () => {
               {t("forgotPassword.email")}
             </label>
 
-            <input
+            <Input
               id="email"
               type="email"
               name="email"

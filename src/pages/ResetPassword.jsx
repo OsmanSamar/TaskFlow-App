@@ -6,6 +6,7 @@ import { PasswordCriteria } from "../components/PasswordCriteria";
 import { useTranslation } from "react-i18next";
 import "./reset-password.css";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 export const ResetPassword = () => {
   const { t } = useTranslation();
@@ -92,7 +93,7 @@ export const ResetPassword = () => {
             </label>
 
             <div className="form-input-wrap">
-              <input
+              <Input
                 id="password"
                 type={!showPassword ? "password" : "text"}
                 name="password"
@@ -146,7 +147,7 @@ export const ResetPassword = () => {
             </label>
 
             <div className="form-input-wrap">
-              <input
+              <Input
                 id="confirmPassword"
                 type={!showConfirmPassword ? "password" : "text"}
                 name="confirmPassword"

@@ -17,6 +17,7 @@ import { AuthContext } from "../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 const Settings = () => {
   const { t, i18n } = useTranslation();
@@ -264,7 +265,7 @@ const Settings = () => {
                 </div>
                 <label className="settings-switch">
                   {/* Keep the Dark Mode switch connected to the settings state. */}
-                  <input
+                  <Input
                     type="checkbox"
                     checked={settings.dark_mode === 1}
                     // Update Dark Mode locally and save the new value in SQLite.
@@ -349,7 +350,7 @@ const Settings = () => {
                 </div>
                 <label className="settings-switch">
                   {/* Keep Email Notifications synchronized with the saved backend setting. */}
-                  <input
+                  <Input
                     type="checkbox"
                     checked={settings.email_notifications === 1}
                     onChange={(e) => {
@@ -381,7 +382,7 @@ const Settings = () => {
                 </div>
                 <label className="settings-switch">
                   {/* Keep Task Reminders synchronized with the saved backend setting. */}
-                  <input
+                  <Input
                     type="checkbox"
                     checked={settings.task_reminders === 1}
                     onChange={(e) => {
@@ -454,7 +455,7 @@ const Settings = () => {
                   </label>
 
                   <div className="form-input-wrap">
-                    <input
+                    <Input
                       id="delete-password"
                       type={!showPassword ? "password" : "text"}
                       name="delete-password"

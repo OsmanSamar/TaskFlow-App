@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 const TaskItem = ({
   task,
@@ -91,7 +92,7 @@ const TaskItem = ({
       {/* Keep the task title on the first line and deadline/actions on the second line. */}
       <div className="task-details">
         {editId === task.id ? (
-          <input
+          <Input
             className="task-input"
             ref={inputRef}
             value={editText}

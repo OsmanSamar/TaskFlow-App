@@ -12,6 +12,7 @@ import {
 import { PasswordCriteria } from "../components/PasswordCriteria";
 import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 const Register = () => {
   const { t } = useTranslation();
@@ -118,7 +119,7 @@ const Register = () => {
               {t("register.name")}
             </label>
 
-            <input
+            <Input
               id="name"
               type="text"
               name="name"
@@ -153,7 +154,7 @@ const Register = () => {
               {t("register.email")}
             </label>
 
-            <input
+            <Input
               id="email"
               type="email"
               name="email"
@@ -191,7 +192,7 @@ const Register = () => {
             </label>
 
             <div className="form-input-wrap">
-              <input
+              <Input
                 id="password"
                 type={!showPassword ? "password" : "text"}
                 name="password"
@@ -245,7 +246,7 @@ const Register = () => {
             </label>
 
             <div className="form-input-wrap">
-              <input
+              <Input
                 id="confirmPassword"
                 type={!showConfirmPassword ? "password" : "text"}
                 name="confirmPassword"

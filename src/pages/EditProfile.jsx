@@ -8,6 +8,7 @@ import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 const EditProfile = () => {
   const { t } = useTranslation();
@@ -159,7 +160,7 @@ const EditProfile = () => {
                 )}
               </div>
 
-              <input
+              <Input
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
@@ -210,7 +211,7 @@ const EditProfile = () => {
                 <label className="editprofile-label" htmlFor="full-name">
                   {t("editProfile.personal.fullName")}
                 </label>
-                <input
+                <Input
                   id="full-name"
                   type="text"
                   className="editprofile-input"
@@ -225,7 +226,7 @@ const EditProfile = () => {
                 <label className="editprofile-label" htmlFor="email">
                   {t("editProfile.personal.email")}
                 </label>
-                <input
+                <Input
                   id="email"
                   type="email"
                   className="editprofile-input"
