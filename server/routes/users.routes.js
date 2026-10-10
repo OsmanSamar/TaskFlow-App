@@ -296,7 +296,7 @@ router.post("/login", async (req, res) => {
   req.session.userId = user.id;
 
   // Log the session user ID to confirm that login creates an authenticated session.
-  console.log("SESSION USER ID:", req.session.userId);
+ // console.log("SESSION USER ID:", req.session.userId);
 
   // Log the session user ID to confirm that login creates an authenticated session.
   // This log message is used for debugging and can be removed in production.
@@ -435,34 +435,33 @@ router.post("/reset-password", async (req, res) => {
     });
   }
 
+  try {
+    // Hash the new password before storing it in SQLite.
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-try {
-  // Hash the new password before storing it in SQLite.
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  // Replace the old password and invalidate the reset token after successful reset.
-  db.prepare(`
+    // Replace the old password and invalidate the reset token after successful reset.
+    db.prepare(
+      `
     UPDATE users
     SET password = ?,
         password_reset_token = NULL,
         password_reset_expires = NULL
     WHERE id = ?
-  `).run(hashedPassword, user.id);
+  `,
+    ).run(hashedPassword, user.id);
 
-  // Confirm that the password reset completed successfully.
-  res.json({
-    message: "Password has been reset successfully",
-  });
-} catch (error) {
-  // Prevent unexpected password-reset errors from crashing the request.
-  console.error("Failed to reset password:", error);
+    // Confirm that the password reset completed successfully.
+    res.json({
+      message: "Password has been reset successfully",
+    });
+  } catch (error) {
+    // Prevent unexpected password-reset errors from crashing the request.
+    console.error("Failed to reset password:", error);
 
-  return res.status(500).json({
-    message: "Failed to reset password",
-  });
-}
-
-
+    return res.status(500).json({
+      message: "Failed to reset password",
+    });
+  }
 });
 
 //Get the currently authenticated user
@@ -871,7 +870,6 @@ WHERE id = ?
 
   //Check if a profile image was uploaded
   if (req.file) {
-
     // For debugging purposes
     // console.log("Profile image received:", {
     //   originalname: req.file.originalname,
@@ -1455,6 +1453,8 @@ router.put("/me/tasks/:id", (req, res) => {
     message: "Task updated successfully",
     task: updatedTask,
   });
+
+
 });
 
 // Delete all completed tasks owned by the authenticated user.
@@ -1508,6 +1508,59 @@ router.delete("/me/tasks/:id", (req, res) => {
   res.json({
     message: "Task deleted successfully",
   });
+});
+
+// Get the authenticated user's notifications and unread count.
+router.get("/me/notifications", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  const notifications = db
+    .prepare(
+      `
+      SELECT id, title, message, type, is_read, created_at
+      FROM notifications
+      WHERE user_id = ?
+      ORDER BY created_at DESC
+    `,
+    )
+    .all(req.session.userId);
+
+  const unreadCount = db
+    .prepare(
+      `
+      SELECT COUNT(*) AS count
+      FROM notifications
+      WHERE user_id = ? AND is_read = 0
+    `,
+    )
+    .get(req.session.userId).count;
+
+  res.json({ notifications, unreadCount });
+});
+
+// Mark one of the authenticated user's notifications as read.
+router.patch("/me/notifications/:id/read", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  const result = db
+    .prepare(
+      `
+      UPDATE notifications
+      SET is_read = 1
+      WHERE id = ? AND user_id = ?
+    `,
+    )
+    .run(req.params.id, req.session.userId);
+
+  if (result.changes === 0) {
+    return res.status(404).json({ message: "Notification not found" });
+  }
+
+  res.json({ message: "Notification marked as read" });
 });
 
 export default router;

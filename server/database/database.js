@@ -38,9 +38,23 @@ db.exec(`
     created_at TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  type TEXT NOT NULL DEFAULT 'system',
+  is_read INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user_created
+ON notifications (user_id, created_at DESC);
      `);
 
-     // Add due_date to existing databases without deleting current tasks.
+// Add due_date to existing databases without deleting current tasks.
 // try {
 //   db.prepare(`
 //     ALTER TABLE tasks
@@ -55,5 +69,17 @@ db.exec(`
 
 //  console.log(db.prepare("PRAGMA table_info(users)").all());
 
+// Add task_id to existing notification tables without deleting saved data.
+// try {
+//   db.exec(`
+//     ALTER TABLE notifications
+//     ADD COLUMN task_id TEXT REFERENCES tasks(id) ON DELETE CASCADE
+//   `);
+// } catch (error) {
+//   // Ignore the error if task_id already exists.
+//   if (!error.message.includes("duplicate column name")) {
+//     throw error;
+//   }
+// }
 
 export default db;
