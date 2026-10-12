@@ -1,61 +1,84 @@
-
 import cron from "node-cron";
 import db from "../database/database.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "node:crypto";
 
 // Save a notification only if one already unread does not exist.
+
 const saveNotification = (userId, title, message, taskId, type) => {
   const existing = db
-    .prepare(`
+    .prepare(
+      `
       SELECT id
       FROM notifications
       WHERE user_id = ?
         AND task_id = ?
         AND type = ?
-       
-    `)
+    `,
+    )
     .get(userId, taskId, type);
 
   if (existing) return;
 
-  db.prepare(`
+  db.prepare(
+    `
     INSERT INTO notifications (
       id, user_id, task_id, title, message, type, is_read, created_at
     )
     VALUES (?, ?, ?, ?, ?, ?, 0, ?)
-  `).run(
+  `,
+  ).run(
     crypto.randomUUID(),
     userId,
     taskId,
     title,
     message,
     type,
-    new Date().toISOString()
+    new Date().toISOString(),
   );
 };
 
 // Check unfinished tasks and create in-app notifications.
 const checkTaskNotifications = () => {
-  const dates = db.prepare(`
+  const dates = db
+    .prepare(
+      `
     SELECT
       date('now') AS today,
       date('now', '+1 day') AS tomorrow
-  `).get();
+  `,
+    )
+    .get();
 
-  const tasks = db.prepare(`
+  const tasks = db
+    .prepare(
+      `
     SELECT id, user_id, text, due_date
     FROM tasks
     WHERE done = 0
       AND due_date IS NOT NULL
       AND date(due_date) <= date('now', '+1 day')
-  `).all();
+  `,
+    )
+    .all();
 
+ 
   for (const task of tasks) {
     const dueDate = task.due_date.slice(0, 10);
 
-    // Notify for tasks due tomorrow.
-    if (dueDate === dates.tomorrow) {
+    // Task due today.
+    if (dueDate === dates.today) {
+      saveNotification(
+        task.user_id,
+        "Task due today",
+        `Your task "${task.text}" is due today.`,
+        task.id,
+        "task_due_today"
+      );
+    }
+
+    // Task due tomorrow.
+    else if (dueDate === dates.tomorrow) {
       saveNotification(
         task.user_id,
         "Task reminder",
@@ -65,7 +88,7 @@ const checkTaskNotifications = () => {
       );
     }
 
-    // Notify only when the due date is before today.
+    // Task overdue: yesterday or earlier.
     else if (dueDate < dates.today) {
       saveNotification(
         task.user_id,
@@ -80,7 +103,9 @@ const checkTaskNotifications = () => {
 
 // Send email reminders for tasks due tomorrow, at 9 AM daily.
 const sendTaskReminderEmails = async () => {
-  const tasks = db.prepare(`
+  const tasks = db
+    .prepare(
+      `
     SELECT
       tasks.id,
       tasks.text,
@@ -92,7 +117,9 @@ const sendTaskReminderEmails = async () => {
     WHERE tasks.done = 0
       AND date(tasks.due_date) = date('now', '+1 day')
       AND users.task_reminders = 1
-  `).all();
+  `,
+    )
+    .all();
 
   for (const task of tasks) {
     try {
@@ -107,10 +134,7 @@ const sendTaskReminderEmails = async () => {
         `,
       });
     } catch (error) {
-      console.error(
-        `Failed to send reminder for task ${task.id}:`,
-        error
-      );
+      console.error(`Failed to send reminder for task ${task.id}:`, error);
     }
   }
 };
@@ -132,4 +156,3 @@ export const startTaskReminders = () => {
   // Run the notification check once at startup so you can test immediately.
   checkTaskNotifications();
 };
-

@@ -49,21 +49,20 @@ const Header = ({ title }) => {
     };
   }, [user]);
 
-  // Mark a notification as read and update the displayed unread count.
+  // Mark a notification as read and remove it from the dropdown.
   const markAsRead = async (notificationId) => {
     try {
       const response = await fetch(
         `http://localhost:3000/api/users/me/notifications/${notificationId}/read`,
         { method: "PATCH", credentials: "include" },
       );
+
       if (!response.ok) return;
+
       setNotifications((current) =>
-        current.map((notification) =>
-          notification.id === notificationId
-            ? { ...notification, is_read: 1 }
-            : notification,
-        ),
+        current.filter((notification) => notification.id !== notificationId),
       );
+
       setUnreadCount((count) => Math.max(0, count - 1));
     } catch (error) {
       console.error("Failed to mark notification as read:", error);

@@ -1521,7 +1521,7 @@ router.get("/me/notifications", (req, res) => {
       `
       SELECT id, title, message, type, is_read, created_at
       FROM notifications
-      WHERE user_id = ?
+     WHERE user_id = ? AND is_read = 0
       ORDER BY created_at DESC
     `,
     )
