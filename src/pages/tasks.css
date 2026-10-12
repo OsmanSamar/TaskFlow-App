@@ -68,6 +68,9 @@ dark:border-zinc-800;
 .task-details {
   @apply flex min-w-0 flex-1 flex-col gap-2;
 }
+.task-edit-fields {
+  @apply flex flex-col gap-2;
+}
 
 /* Keep the deadline on the left and actions on the right. */
 .task-meta {

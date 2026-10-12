@@ -17,6 +17,7 @@ const Tasks = () => {
   const [editId, setEditId] = useState(null);
   // Null thers are no tasks beign modified
   const [editText, setEditText] = useState("");
+  const [editDueDate, setEditDueDate] = useState("");
   const [showError, setShowError] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
 
@@ -166,9 +167,10 @@ const Tasks = () => {
 
   //Edittask
 
-  const startEdit = (id, text) => {
+  const startEdit = (id, text, dueDate) => {
     setEditId(id);
     setEditText(text);
+    setEditDueDate(dueDate ? dueDate.slice(0, 10) : "");
   };
 
   // Update the edited task text in SQLite and then refresh the task in the UI.

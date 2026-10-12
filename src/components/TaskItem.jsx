@@ -13,6 +13,8 @@ const TaskItem = ({
   editText,
   setEditText,
   requestDelete,
+  editDueDate,
+  setEditDueDate,
 }) => {
   const { t, i18n } = useTranslation();
 
@@ -92,19 +94,43 @@ const TaskItem = ({
       {/* Keep the task title on the first line and deadline/actions on the second line. */}
       <div className="task-details">
         {editId === task.id ? (
-          <Input
-            className="task-input"
-            ref={inputRef}
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                editTask(task.id, editText);
-                setEditId(null);
-                setEditText("");
-              }
-            }}
-          />
+          // <Input
+          //   className="task-input"
+          //   ref={inputRef}
+          //   value={editText}
+          //   onChange={(e) => setEditText(e.target.value)}
+          //   onKeyDown={(e) => {
+          //     if (e.key === "Enter") {
+          //       editTask(task.id, editText);
+          //       setEditId(null);
+          //       setEditText("");
+          //     }
+          //   }}
+          // />
+          <div className="task-edit-fields">
+            <Input
+              className="task-input"
+              ref={inputRef}
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  editTask(task.id, editText);
+                  setEditId(null);
+                  setEditText("");
+                }
+              }}
+            />
+
+            <input
+              type="date"
+              className="task-input"
+              value={editDueDate}
+              onChange={(e) => setEditDueDate(e.target.value)}
+            />
+
+
+          </div>
         ) : (
           <span className={`task-text ${task.done ? "task-text--done" : ""}`}>
             {task.text}
