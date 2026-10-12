@@ -146,9 +146,9 @@ const Login = () => {
             className="login-hero__logo"
           />
 
-          <p className="login-hero__eyebrow">
+          {/* <p className="login-hero__eyebrow">
             {t("login.userManagement")}
-          </p>
+          </p> */}
 
           <p className="login-hero__desc login-hero__desc--mobile">
             {t("login.heroDescriptionMobile")}
