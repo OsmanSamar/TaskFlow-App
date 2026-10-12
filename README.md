@@ -6,48 +6,48 @@ TaskFlow is a full-stack web application built with React, Node.js, Express, and
 
 ### Implemented
 
-* **Authentication:** User registration, login, logout, and session-based authentication.
-* **Password Security:** Password hashing with bcrypt and password change functionality.
-* **Email Verification:** Verification emails, expiring verification tokens, resend functionality, and protection against login before email verification.
-* **User Profiles:** View and edit profile details, including profile image uploads using Cloudinary.
-* **Task Management UI:** Create, edit, delete, complete, filter, and clear completed tasks.
-* **Persistent User Data:** Store user account data in SQLite.
-* **Email Reminders:** Scheduled email reminders for tasks due tomorrow.
-* **In-App Notifications:** Notifications for upcoming and overdue tasks, with read/unread status. Reminder behavior is still being tested.
+- **Authentication:** User registration, login, logout, and session-based authentication.
+- **Password Security:** Password hashing with bcrypt and password change functionality.
+- **Email Verification:** Verification emails, expiring verification tokens, resend functionality, and protection against login before email verification.
+- **User Profiles:** View and edit profile details, including profile image uploads using Cloudinary.
+- **Task Management UI:** Create, edit, delete, complete, filter, and clear completed tasks.
+- **Persistent User Data:** Store user account data in SQLite.
+- **Email Reminders:** Scheduled email reminders for tasks due tomorrow.
+- **In-App Notifications:** Notifications for upcoming and overdue tasks, with read/unread status. Reminder behavior is still being tested.
 
 ### In Progress
 
-* Backend integration for task persistence.
-* Connecting the dashboard to real task data.
-* Saving settings such as dark mode, language, and notification preferences.
-* Completing the forgot-password and reset-password backend flows.
-* Remember Me and account deletion.
-* Final testing and deployment.
+- Backend integration for task persistence.
+- Connecting the dashboard to real task data.
+- Saving settings such as dark mode, language, and notification preferences.
+- Completing the forgot-password and reset-password backend flows.
+- Remember Me and account deletion.
+- Final testing and deployment.
 
 ## Tech Stack
 
 **Frontend**
 
-* React
-* React Router
-* Vite
-* Tailwind CSS
-* React Icons
+- React
+- React Router
+- Vite
+- Tailwind CSS
+- React Icons
 
 **Backend**
 
-* Node.js
-* Express.js
-* bcrypt
-* express-session
-* CORS
-* Multer
-* Cloudinary
-* Resend
+- Node.js
+- Express.js
+- bcrypt
+- express-session
+- CORS
+- Multer
+- Cloudinary
+- Resend
 
 **Database**
 
-* SQLite with better-sqlite3
+- SQLite with better-sqlite3
 
 ## Project Structure
 
@@ -71,15 +71,15 @@ TaskFlow/
 └── README.md
 ```
 
-*The structure above is illustrative; update it to match the actual repository.*
+_The structure above is illustrative; update it to match the actual repository._
 
 ## Getting Started
 
 ### Prerequisites
 
-* Node.js 24.x
-* npm
-* Git
+- Node.js 24.x
+- npm
+- Git
 
 ### 1. Clone the repository
 
@@ -134,21 +134,29 @@ http://localhost:5173
 
 Screenshots of the actual TaskFlow application interface.
 
-Suggested screenshots:
+### Dashboard
 
-* Dashboard
-* Login page
-* Profile page
-* Registration page
-* Settings page
-* Tasks management
+![TaskFlow Dashboard](screenshots/dashboard.jpeg)
 
-screenshots/dashboard.jpeg
-screenshots/login.jpeg  
-screenshots/profile.jpeg  
-screenshots/registration.jpeg  
-screenshots/settings.jpeg  
-screenshots/tasks.jpeg  
+### Login Page
+
+![TaskFlow Login](screenshots/login.jpeg)
+
+### Profile Page
+
+![TaskFlow Profile](screenshots/profile.jpeg)
+
+### Registration Page
+
+![TaskFlow Registration](screenshots/registration.jpeg)
+
+### Settings Page
+
+![TaskFlow Settings](screenshots/settings.jpeg)
+
+### Tasks Management
+
+![TaskFlow Tasks](screenshots/tasks.jpeg)
 
 ## Testing
 
@@ -156,10 +164,10 @@ Authentication and user-data operations have been tested using Postman and SQLit
 
 ## Future Improvements
 
-* Complete backend persistence for tasks and settings.
-* Improve notification reliability and reminder scheduling.
-* Finish password recovery and account management flows.
-* Deploy the application.
+- Complete backend persistence for tasks and settings.
+- Improve notification reliability and reminder scheduling.
+- Finish password recovery and account management flows.
+- Deploy the application.
 
 ## Author
 
