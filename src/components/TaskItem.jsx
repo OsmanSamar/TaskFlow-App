@@ -94,19 +94,6 @@ const TaskItem = ({
       {/* Keep the task title on the first line and deadline/actions on the second line. */}
       <div className="task-details">
         {editId === task.id ? (
-          // <Input
-          //   className="task-input"
-          //   ref={inputRef}
-          //   value={editText}
-          //   onChange={(e) => setEditText(e.target.value)}
-          //   onKeyDown={(e) => {
-          //     if (e.key === "Enter") {
-          //       editTask(task.id, editText);
-          //       setEditId(null);
-          //       setEditText("");
-          //     }
-          //   }}
-          // />
           <div className="task-edit-fields">
             <Input
               className="task-input"
@@ -128,8 +115,6 @@ const TaskItem = ({
               value={editDueDate}
               onChange={(e) => setEditDueDate(e.target.value)}
             />
-
-
           </div>
         ) : (
           <span className={`task-text ${task.done ? "task-text--done" : ""}`}>
@@ -153,7 +138,7 @@ const TaskItem = ({
                 <Button
                   type="button"
                   onClick={() => {
-                    editTask(task.id, editText);
+                    editTask(task.id, editText, editDueDate);
                     setEditId(null);
                     setEditText("");
                   }}
@@ -165,7 +150,7 @@ const TaskItem = ({
             ) : (
               <Button
                 type="button"
-                onClick={() => startEdit(task.id, task.text)}
+                onClick={() => startEdit(task.id, task.text, task.due_date)}
                 className="tasks-edit-btn"
               >
                 {t("tasks.edit")}

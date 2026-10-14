@@ -1384,6 +1384,7 @@ router.get("/me/tasks", (req, res) => {
 
 // Update the text and/or completed status of a task owned by the authenticated user.
 router.put("/me/tasks/:id", (req, res) => {
+  
   if (!req.session.userId) {
     return res.status(401).json({
       message: "Not authenticated",
@@ -1428,12 +1429,16 @@ router.put("/me/tasks/:id", (req, res) => {
     SET
       text = COALESCE(?, text),
       done = COALESCE(?, done),
-      due_date = COALESCE(?, due_date)
+       due_date = CASE
+        WHEN ? = 1 THEN ?
+        ELSE due_date
+      END
     WHERE id = ? AND user_id = ?
   `,
   ).run(
     text !== undefined ? text.trim() : null,
     done !== undefined ? done : null,
+    due_date !== undefined ? 1 : 0,
     due_date !== undefined ? due_date : null,
     id,
     req.session.userId,

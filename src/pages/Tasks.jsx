@@ -174,7 +174,7 @@ const Tasks = () => {
   };
 
   // Update the edited task text in SQLite and then refresh the task in the UI.
-  const editTask = async (id, editText) => {
+  const editTask = async (id, editText, editDueDate) => {
     if (editText.trim() === "") return;
 
     try {
@@ -188,6 +188,7 @@ const Tasks = () => {
           },
           body: JSON.stringify({
             text: editText.trim(),
+            due_date: editDueDate || null,
           }),
         },
       );
@@ -288,6 +289,8 @@ const Tasks = () => {
               editText={editText}
               setEditText={setEditText}
               requestDelete={requestDelete}
+              editDueDate={editDueDate}
+              setEditDueDate={setEditDueDate}
             />
 
             {filteredTasks.length === 0 && (

@@ -10,6 +10,8 @@ const TaskList = ({
   editText,
   setEditText,
   requestDelete,
+  editDueDate,
+  setEditDueDate,
 }) => {
   return (
     <ul className="task-list">
@@ -25,6 +27,8 @@ const TaskList = ({
           editText={editText}
           setEditText={setEditText}
           requestDelete={requestDelete}
+          editDueDate={editDueDate}
+          setEditDueDate={setEditDueDate}
         />
       ))}
     </ul>
