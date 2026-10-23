@@ -32,13 +32,81 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
+
+// Middleware: Allows access only to active admin accounts.
+function requireAdmin(req, res, next) {
+  // Reject requests from users who are not logged in.
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Please log in first",
+    });
+  }
+
+  // Fetch the user's current role and account status from the database.
+  const user = db
+    .prepare("SELECT role, account_status FROM users WHERE id = ?")
+    .get(req.session.userId);
+
+  // Reject missing, inactive, or non-admin accounts.
+  if (
+    !user ||
+    user.role !== "admin" ||
+    user.account_status !== "active"
+  ) {
+    return res.status(403).json({
+      message: "Admin access required",
+    });
+  }
+
+  // Continue to the requested route after authorization succeeds.
+  next();
+} // End of requireAdmin middleware.
+
+// Admin route: Returns a safe list of all registered users.
+router.get("/admin/users", requireAdmin, (req, res) => {
+  try {
+    // Retrieve user details without exposing passwords or security tokens.
+    const users = db.prepare(`
+      SELECT
+        id,
+        name,
+        email,
+        created_at,
+        last_login,
+        account_status,
+        email_verified,
+        role
+      FROM users
+      ORDER BY created_at DESC
+    `).all();
+
+    // Send the users list to the frontend as JSON.
+    res.json({ users });
+  } catch (error) {
+    // Log the error for debugging.
+    console.error("Failed to fetch users:", error);
+
+    // Return an error response if the query fails.
+    res.status(500).json({
+      message: "Failed to fetch users",
+    });
+  }
+}); // End of admin users route.
+
+
+
 // Get read Router
+// router.get("/", (req, res) => {
+//   const users = db.prepare("SELECT * FROM users").all();
+//   res.json(users);
+// });
+
+// Get users — disabled for public access
 router.get("/", (req, res) => {
-  const users = db.prepare("SELECT * FROM users").all();
-
-  res.json(users);
+  return res.status(403).json({
+    message: "Access denied",
+  });
 });
-
 // Post Create
 router.post("/", async (req, res) => {
   // Validation
@@ -80,8 +148,8 @@ router.post("/", async (req, res) => {
   // Create the email verification link using the verification token
   const verificationUrl = `http://localhost:5173/verify-email?token=${verificationToken}`;
 
-  console.log("Sending verification emai to:", newUser.email);
-  console.log("verification URL", verificationUrl);
+  // console.log("Sending verification email to:", newUser.email);
+  // console.log("verification URL", verificationUrl);
 
   //Send the email verification link to the new user
   await sendEmail({
@@ -155,7 +223,7 @@ Verify Email
 router.get("/verify-email", (req, res) => {
   const { token } = req.query;
 
-  console.log("Token received by backend: ", token);
+  // console.log("Token received by backend: ", token);
 
   // Check if a verification token was provided
   if (!token) {
@@ -175,7 +243,7 @@ router.get("/verify-email", (req, res) => {
     )
     .get(token);
 
-  console.log("User found token : ", user);
+  // console.log("User found token : ", user);
 
   // Token does not exist or was already used
   if (!user) {
@@ -294,9 +362,10 @@ router.post("/login", async (req, res) => {
   // Store the authenticated user's ID in the session
   // This allows the server to remember the logged-in user
   req.session.userId = user.id;
+  req.session.userRole = user.role;
 
   // Log the session user ID to confirm that login creates an authenticated session.
- // console.log("SESSION USER ID:", req.session.userId);
+  // console.log("SESSION USER ID:", req.session.userId);
 
   // Log the session user ID to confirm that login creates an authenticated session.
   // This log message is used for debugging and can be removed in production.
@@ -1042,24 +1111,41 @@ router.post("/test-upload", upload.single("avatar"), async (req, res) => {
 });
 
 // Get user by id Read
+// router.get("/:id", (req, res) => {
+//   const userId = req.params.id;
+//   const user = db.prepare("SELECT * FROM users WHERE id =?").get(userId);
+//   // Error Handling
+//   if (!user) {
+//     return res.status(404).json({
+//       message: "User not found",
+//     });
+//   }
+//   res.json(user);
+// });
+
+// Get user by ID — disabled for public access
 router.get("/:id", (req, res) => {
-  const userId = req.params.id;
-
-  const user = db.prepare("SELECT * FROM users WHERE id =?").get(userId);
-
-  // Error Handling
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found",
-    });
-  }
-
-  res.json(user);
+  return res.status(403).json({
+    message: "Access denied",
+  });
 });
 
 // Update user by id Put(PUT)
 router.put("/:id", (req, res) => {
   const userId = req.params.id;
+  // Require an authenticated user
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Please log in first",
+    });
+  }
+
+  // Users can update only their own account
+  if (req.session.userId !== userId) {
+    return res.status(403).json({
+      message: "You can only update your own account",
+    });
+  }
 
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userId);
 
@@ -1110,6 +1196,19 @@ router.put("/:id", (req, res) => {
 // Patch user by id
 router.patch("/:id", (req, res) => {
   const userId = req.params.id;
+  // Require an authenticated user
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Please log in first",
+    });
+  }
+
+  // Users can update only their own account
+  if (req.session.userId !== userId) {
+    return res.status(403).json({
+      message: "You can only update your own account",
+    });
+  }
 
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userId);
 
@@ -1165,12 +1264,45 @@ router.patch("/:id", (req, res) => {
 });
 
 // Delete by id
+// router.delete("/:id", (req, res) => {
+//   const userId = req.params.id;
+
+//   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userId);
+
+//   // Error Handling
+//   if (!user) {
+//     return res.status(404).json({
+//       message: "User not found",
+//     });
+//   }
+
+//   db.prepare("DELETE FROM users WHERE id = ?").run(userId);
+
+//   res.json({
+//     message: "User deleted successfully",
+//   });
+// });
+
+// Delete user by ID
 router.delete("/:id", (req, res) => {
   const userId = req.params.id;
 
-  const user = db.prepare("SELECT * FROM users WHERE id = ?").get(userId);
+  // Require an authenticated user
+  if (!req.session.userId) {
+    return res.status(401).json({
+      message: "Please log in first",
+    });
+  }
 
-  // Error Handling
+  // Users can delete only their own account
+  if (req.session.userId !== userId) {
+    return res.status(403).json({
+      message: "You can only delete your own account",
+    });
+  }
+
+  const user = db.prepare("SELECT id FROM users WHERE id = ?").get(userId);
+
   if (!user) {
     return res.status(404).json({
       message: "User not found",
@@ -1384,7 +1516,6 @@ router.get("/me/tasks", (req, res) => {
 
 // Update the text and/or completed status of a task owned by the authenticated user.
 router.put("/me/tasks/:id", (req, res) => {
-  
   if (!req.session.userId) {
     return res.status(401).json({
       message: "Not authenticated",
@@ -1458,8 +1589,6 @@ router.put("/me/tasks/:id", (req, res) => {
     message: "Task updated successfully",
     task: updatedTask,
   });
-
-
 });
 
 // Delete all completed tasks owned by the authenticated user.

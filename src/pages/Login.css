@@ -233,7 +233,6 @@ dark:text-zinc-100 dark:hover:text-indigo-400;
 @apply items-start pt-10;
 }
 
-```
 .login-card {
   @apply max-w-md min-h-0;
 }

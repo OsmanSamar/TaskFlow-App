@@ -3,10 +3,12 @@
  * Configures Express middleware, mounts routes, and starts the HTTP server.
  */
 import express from "express";
+// console.log("SESSION_SECRET loaded:", Boolean(process.env.SESSION_SECRET));
+// // Verify that SESSION_SECRET is loaded from environment variables during server startup. 
 import usersRouter from "./routes/users.routes.js";
 import cors from "cors";
 import session from "express-session";
-//import "dotenv/config"; to read it from root
+import "dotenv/config"; // to read it from root
 import "./config/cloudinary.js";
 import { startTaskReminders } from "./utils/taskReminders.js";
 // Load the scheduled task reminder service.
@@ -17,7 +19,7 @@ import { startTaskReminders } from "./utils/taskReminders.js";
 
 // يشغل Express
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 //Allow the frontend to send and receive authentication cookies
 app.use(
@@ -64,12 +66,6 @@ app.use(express.json());
 
 // API routes
 // Session must already be available befor
-app.use("/api/users", usersRouter);
-
-// Parse incoming JSON request bodies  يجهز Middleware
-app.use(express.json());
-
-// API routes
 app.use("/api/users", usersRouter);
 
 // for test

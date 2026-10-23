@@ -1,0 +1,158 @@
+@reference "../index.css";
+
+@layer components {
+  /* Admin dashboard page layout and default appearance. */
+  .admindashboard-page {
+    @apply min-h-screen bg-zinc-50 p-4 text-zinc-900
+      transition-colors duration-200
+      dark:bg-zinc-950 dark:text-white
+      md:p-6;
+
+       background-image:
+      radial-gradient(
+        ellipse 80% 60% at 15% 85%,
+        rgba(99, 102, 241, 0.35),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 70% 55% at 85% 15%,
+        rgba(139, 92, 246, 0.3),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 50% 40% at 50% 50%,
+        rgba(59, 130, 246, 0.15),
+        transparent
+      );
+  }
+
+  /* Use the same dark background style as the other TaskFlow pages. */
+  .dark .admindashboard-page {
+    background-color: #000;
+    background-image:
+      radial-gradient(
+        ellipse 70% 45% at 10% 0%,
+        rgba(99, 102, 241, 0.12),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 90% 100%,
+        rgba(139, 92, 246, 0.08),
+        transparent 70%
+      );
+  }
+
+  /* Center the dashboard content and limit its maximum width. */
+  .admindashboard-content {
+    @apply mx-auto w-full max-w-7xl;
+  }
+
+  /* Dashboard heading and header layout. */
+  .admindashboard-header {
+    @apply mb-6 flex items-center justify-between
+      border-b border-zinc-200 pb-5
+      dark:border-zinc-800;
+  }
+
+  .admindashboard-title {
+    @apply font-sans text-2xl font-semibold tracking-tight
+      text-zinc-900 dark:text-white
+      md:text-3xl;
+  }
+
+  /* Responsive grid for dashboard summary cards. */
+  .admindashboard-summary {
+    @apply mb-6 grid grid-cols-1 gap-4
+      sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  /* Summary cards follow the application's existing card style. */
+  .admindashboard-summary-card {
+    @apply rounded-2xl border border-zinc-200
+      bg-white p-5 shadow-sm
+      dark:border-zinc-800 dark:bg-zinc-900;
+  }
+
+  .admindashboard-summary-title {
+    @apply text-sm font-medium text-zinc-600
+      dark:text-zinc-400;
+  }
+
+  .admindashboard-summary-count {
+    @apply mt-2 text-3xl font-semibold tracking-tight
+      text-zinc-900 dark:text-white;
+  }
+
+  /* Users section spacing. */
+  .admindashboard-users {
+    @apply mt-6;
+  }
+
+  /* Search input styling, including keyboard focus states. */
+  .admindashboard-users-search {
+    @apply mb-4 flex items-center gap-3;
+  }
+
+  .admindashboard-users-search-input {
+    @apply w-full rounded-lg border border-zinc-300
+      bg-white px-4 py-2.5 text-sm text-zinc-900
+      shadow-sm outline-none
+      placeholder:text-zinc-400
+      focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20
+      dark:border-zinc-800 dark:bg-zinc-900
+      dark:text-white dark:placeholder:text-zinc-500
+      dark:focus:border-indigo-500;
+  }
+
+  /* Keep wide user tables usable on smaller screens. */
+  .admindashboard-users-table {
+    @apply w-full overflow-x-auto rounded-2xl
+      border border-zinc-200 bg-white shadow-sm
+      dark:border-zinc-800 dark:bg-zinc-900;
+  }
+
+  .admindashboard-users-table table {
+    @apply min-w-full border-collapse text-left;
+  }
+
+  /* Table heading colors match the existing zinc and indigo palette. */
+  .admindashboard-users-table-header {
+    @apply bg-zinc-100 text-xs font-semibold uppercase
+      tracking-wide text-zinc-600
+      dark:bg-zinc-800 dark:text-zinc-300;
+  }
+
+  .admindashboard-users-table-row {
+    @apply border-t border-zinc-200 bg-white
+      transition-colors hover:bg-zinc-50
+      dark:border-zinc-800 dark:bg-zinc-900
+      dark:hover:bg-zinc-800/60;
+  }
+
+  .admindashboard-users-table-cell {
+    @apply whitespace-nowrap px-4 py-4 text-sm
+      text-zinc-800 dark:text-zinc-200
+      md:px-6;
+  }
+
+  /* Loading, empty, and error states. */
+  .admindashboard-loading,
+  .admindashboard-empty,
+  .admindashboard-error {
+    @apply flex min-h-64 items-center justify-center
+      rounded-2xl border border-zinc-200 bg-white p-6
+      text-center dark:border-zinc-800 dark:bg-zinc-900;
+  }
+
+  .admindashboard-loading {
+    @apply text-zinc-600 dark:text-zinc-300;
+  }
+
+  .admindashboard-empty {
+    @apply text-zinc-500 dark:text-zinc-400;
+  }
+
+  .admindashboard-error {
+    @apply text-red-600 dark:text-red-400;
+  }
+}

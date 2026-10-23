@@ -1,7 +1,7 @@
 @reference "tailwindcss";
 @layer components {
   .spinner-container {
-    @apply flex min-h-screen justify-center items-center ;
+    @apply flex min-h-screen justify-center items-center;
   }
   .spinner {
     @apply w-10 h-10 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin;

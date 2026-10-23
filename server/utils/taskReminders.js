@@ -143,7 +143,7 @@ const sendTaskReminderEmails = async () => {
 export const startTaskReminders = () => {
   // Check for in-app notifications every minute.
   cron.schedule("* * * * *", () => {
-    console.log("Checking in-app task notifications...");
+    // console.log("Checking in-app task notifications...");
     checkTaskNotifications();
   });
 

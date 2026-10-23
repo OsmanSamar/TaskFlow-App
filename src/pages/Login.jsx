@@ -91,23 +91,20 @@ const Login = () => {
     setLoginError("");
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/users/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          credentials: "include",
-
-          body: JSON.stringify({
-            email: loginData.email,
-            password: loginData.password,
-            rememberMe: loginData.rememberMe,
-          }),
+      const response = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+
+        credentials: "include",
+
+        body: JSON.stringify({
+          email: loginData.email,
+          password: loginData.password,
+          rememberMe: loginData.rememberMe,
+        }),
+      });
 
       const data = await response.json();
 
@@ -116,12 +113,9 @@ const Login = () => {
         return;
       }
 
-      const meResponse = await fetch(
-        "http://localhost:3000/api/users/me",
-        {
-          credentials: "include",
-        },
-      );
+      const meResponse = await fetch("http://localhost:3000/api/users/me", {
+        credentials: "include",
+      });
 
       const meData = await meResponse.json();
 
@@ -140,11 +134,7 @@ const Login = () => {
     <div className="login-page">
       <div className="login-card">
         <aside className="login-hero" aria-hidden="true">
-          <img
-            src="/favicon.svg"
-            alt=""
-            className="login-hero__logo"
-          />
+          <img src="/favicon.svg" alt="" className="login-hero__logo" />
 
           {/* <p className="login-hero__eyebrow">
             {t("login.userManagement")}
@@ -162,13 +152,9 @@ const Login = () => {
         </aside>
 
         <main className="login-panel">
-          <h1 className="login-panel__title">
-            {t("login.title")}
-          </h1>
+          <h1 className="login-panel__title">{t("login.title")}</h1>
 
-          <p className="login-panel__subtitle">
-            {t("login.subtitle")}
-          </p>
+          <p className="login-panel__subtitle">{t("login.subtitle")}</p>
 
           <form onSubmit={handleLogin}>
             <div className="form-field">
@@ -186,6 +172,10 @@ const Login = () => {
                 value={loginData.email}
                 onChange={handleEmailChange}
               />
+
+              {errors.email ? (
+                <span className="form-error">{errors.email}</span>
+              ) : null}
             </div>
 
             <div className="form-field">
@@ -237,22 +227,16 @@ const Login = () => {
                 <span>{t("login.rememberMe")}</span>
               </label>
 
-              <Link
-                className="form-link"
-                to="/forgotpassword"
-              >
+              <Link className="form-link" to="/forgotpassword">
                 {t("login.forgotPassword")}
               </Link>
             </div>
 
             {loginError ? (
-              <span className="form-error form-error--login">
-                {loginError}
-              </span>
+              <span className="form-error form-error--login">{loginError}</span>
             ) : null}
 
-            {loginError ===
-            "Please verify your email before logging in." ? (
+            {loginError === "Please verify your email before logging in." ? (
               <div className="resend-verification">
                 <button
                   type="button"
@@ -310,10 +294,7 @@ const Login = () => {
           </form>
 
           <p className="login-footer">
-            <Link
-              className="login-footer-link"
-              to="/register"
-            >
+            <Link className="login-footer-link" to="/register">
               {t("login.signUp")}
             </Link>
           </p>
@@ -324,4 +305,3 @@ const Login = () => {
 };
 
 export default Login;
-

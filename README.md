@@ -56,6 +56,7 @@ TaskFlow/
 ├── public/
 ├── src/
 │   ├── components/
+│   ├── context/
 │   ├── pages/
 │   ├── utils/
 │   ├── App.jsx
